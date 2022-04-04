@@ -14,7 +14,9 @@
     <property name="hibernate.format_sql">true</property>
     <property name="hibernate.hbm2ddl.auto">update</property>
 
-    <mapping class="com.stuart.models.ЭлементСправочника"/>
+    <mapping class="com.stuart.models.entity.справочники.ЗаписьКонтрагент"/>
+    <mapping class="com.stuart.models.entity.справочники.ЗаписьНоменклатура"/>
+    <mapping class="com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства"/>
 
   </session-factory>
 </hibernate-configuration>
