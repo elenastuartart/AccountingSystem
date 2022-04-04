@@ -1,4 +1,4 @@
-package com.stuart;
+package com.stuart.application;
 
 
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
