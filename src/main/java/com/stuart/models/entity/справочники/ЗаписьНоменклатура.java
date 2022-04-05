@@ -22,8 +22,8 @@ public class ЗаписьНоменклатура extends ЭлементСпра
     private String Категория;
     private String Подкатегория;
 
-
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+//(optional = false, cascade = CascadeType.)
+    @ManyToOne
     @JoinColumn(name= "Производитель_ID")
     private ЗаписьКонтрагент Производитель;
 

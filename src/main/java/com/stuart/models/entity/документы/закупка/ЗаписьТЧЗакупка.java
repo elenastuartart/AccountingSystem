@@ -4,8 +4,8 @@ import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 
 
-public class ЗаписьТабличнойЧастиЗакупка extends ЗаписьБД {
-    public Закупка Документ;
+public class ЗаписьТЧЗакупка extends ЗаписьБД {
+
     public int НомерСтроки;
     public ЗаписьНоменклатура Номенклатура;
     public int Количество;

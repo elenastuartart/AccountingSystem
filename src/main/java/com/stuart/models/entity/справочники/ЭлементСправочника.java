@@ -1,17 +1,14 @@
 package com.stuart.models.entity.справочники;
 
-import com.stuart.models.entity.ОбъектБД;
+import com.stuart.models.entity.ЗаписьБД;
 
 
-public class ЭлементСправочника extends ОбъектБД {
+public class ЭлементСправочника extends ЗаписьБД {
 
-    public ЭлементСправочника() {
-        super();
-    }
 
     @Override
     public void ПередЗаписью() {
-        super.ПередЗаписью();
+
     }
 
 }

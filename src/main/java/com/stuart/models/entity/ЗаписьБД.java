@@ -4,7 +4,8 @@ public class ЗаписьБД {
 
     public int НомерСтроки;
 
-    public ЗаписьБД() {
-        super();
+    public void ПередЗаписью() {
+
     }
+
 }

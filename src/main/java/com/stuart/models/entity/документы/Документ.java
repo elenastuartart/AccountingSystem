@@ -1,14 +1,13 @@
 package com.stuart.models.entity.документы;
 
 import com.stuart.models.entity.ЗаписьБД;
-import com.stuart.models.entity.ОбъектБД;
 import lombok.AllArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
-public abstract class Документ extends ОбъектБД {
+public abstract class Документ extends ЗаписьБД {
 
     public Date Дата;
     public int Номер;
