@@ -2,10 +2,8 @@ package com.stuart.models.entity.справочники;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Collection;
 import java.util.UUID;
 
 
@@ -15,21 +13,38 @@ import java.util.UUID;
 @Setter
 @Builder
 @Entity
-@ToString
 public class ЗаписьКонтрагент extends ЭлементСправочника {
 
     @Id
     @GeneratedValue
-    private UUID ПервичныйКлюч;
+    private UUID ID;
     private int Код;
     private String Наименование;
     private String КонтактноеЛицоКА;
     private String АдресКА;
     private String ТипКонтрагента; //поставщик/покупатель
     private boolean ПризнакУдаления;
+    @OneToMany(mappedBy = "Производитель")
+    private Collection<ЗаписьНоменклатура> Номенклатуры;
 
     @Override
     public void ПередЗаписью() {
         super.ПередЗаписью();
     }
+
+    @Override
+    public String toString() {
+        return "ЗаписьКонтрагент{" +
+                "Код=" + Код +
+                ", Наименование='" + Наименование + '\'' +
+                ", КонтактноеЛицоКА='" + КонтактноеЛицоКА + '\'' +
+                ", АдресКА='" + АдресКА + '\'' +
+                ", ТипКонтрагента='" + ТипКонтрагента + '\'' +
+                ", ПризнакУдаления=" + ПризнакУдаления +
+                '}';
+    }
+
+
+
+
 }

@@ -15,15 +15,23 @@ import java.util.UUID;
 public class ЗаписьНоменклатура extends ЭлементСправочника {
     @Id
     @GeneratedValue
-    private UUID ПервичныйКлюч;
+    private UUID ID;
     private int Код;
     private String Наименование;
     private int Артикул;
     private String Категория;
     private String Подкатегория;
-    //private ЗаписьКонтрагент Производитель;
+
+
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name= "Производитель_ID")
+    private ЗаписьКонтрагент Производитель;
+
     private boolean ПризнакУдаления;
 
+    public void setПроизводитель(ЗаписьКонтрагент производитель) {
+        Производитель = производитель;
+    }
 
     @Override
     public void ПередЗаписью() {

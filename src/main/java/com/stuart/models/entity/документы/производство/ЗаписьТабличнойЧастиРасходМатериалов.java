@@ -1,7 +1,7 @@
 package com.stuart.models.entity.документы.производство;
 
-import models.ЗаписьБД;
-import models.справочники.ЗаписьНоменклатура;
+import com.stuart.models.entity.ЗаписьБД;
+import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 
 public class ЗаписьТабличнойЧастиРасходМатериалов extends ЗаписьБД {
     public Производство Документ;

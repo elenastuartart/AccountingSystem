@@ -1,8 +1,8 @@
 package com.stuart.models.entity.регистры;
 
-import models.ЗаписьБД;
-import models.документ.Документ;
-import models.справочники.ЗаписьНоменклатура;
+import com.stuart.models.entity.ЗаписьБД;
+import com.stuart.models.entity.документы.Документ;
+import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 
 import java.util.Date;
 

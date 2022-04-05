@@ -1,5 +1,10 @@
 package com.stuart.models.entity;
 
-public abstract class ЗаписьБД {
+public class ЗаписьБД {
 
+    public int НомерСтроки;
+
+    public ЗаписьБД() {
+        super();
+    }
 }
