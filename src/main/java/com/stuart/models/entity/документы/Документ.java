@@ -1,36 +1,23 @@
 package com.stuart.models.entity.документы;
 
 import com.stuart.models.entity.ЗаписьБД;
+import com.stuart.models.entity.документы.продажа.ЗаписьТЧСписокТоваров;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
 
-@AllArgsConstructor
-public abstract class Документ extends ЗаписьБД {
+@Getter
+@Setter
+public class Документ extends ЗаписьБД {
 
-    public Date Дата;
-    public int Номер;
-
-    public Документ() {
-        super();
-    }
-
-
-    //public List <ЗаписьТЧ> КоллекцияЗаписей;
-
-    public abstract void Проведение();
-
-    public abstract void ОтменаПроведения();
+    public boolean ПометкаПроведения;
 
     @Override
-    public void ПередЗаписью() {
-
+    public boolean ПередЗаписью() {
+        return super.ПередЗаписью();
     }
-
-    public void ЗаписатьТабЧастиВКоллекцию(List <ЗаписьБД> КоллекцияЗаписей) {
-
-    }
-
 
 }

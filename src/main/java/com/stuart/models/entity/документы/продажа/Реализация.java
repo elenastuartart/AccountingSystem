@@ -1,5 +1,6 @@
 package com.stuart.models.entity.документы.продажа;
 
+import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
@@ -7,15 +8,20 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+@Getter
+@Setter
 public class Реализация extends Документ {
 
-    //основные реквизиты, наследуются от Документ:
+    //основные реквизиты:
     //дата
     //номер
-
+    //пометка проведения
+    public Date Дата;
+    public Integer Номер;
+    public boolean ПометкаПроведения;
     //Допольнительные реквизиты
     public ЗаписьКонтрагент Контрагент;
-    public int ИтоговаяСумма;
+    public Integer ИтоговаяСумма;
 
    //табличная часть документа
     @Getter
@@ -23,8 +29,10 @@ public class Реализация extends Документ {
     public ArrayList<ЗаписьТЧСписокТоваров> ТабличнаяЧасть = new ArrayList<>();
 
     //записываем основные реквизиты
-    public Реализация(Date Дата, int Номер, ЗаписьКонтрагент контрагент) {
-        super(Дата, Номер);
+    public Реализация(Date дата, Integer номер, ЗаписьКонтрагент контрагент) {
+        Дата = дата;
+        Номер = номер;
+        this.ПометкаПроведения = false;
         Контрагент = контрагент;
     }
 
@@ -48,33 +56,22 @@ public class Реализация extends Документ {
         this.ИтоговаяСумма = sum;
     }
 
-    public void ЗаписатьДокумент() {
-        //проверяем перед записью, что все поля объекта не нул
-        //получаем объект
-        // записываем в бд
-        //public void create(ОбъектБД объектБД)
-    }
-
     @Override
-    public void ПередЗаписью() {
+    public boolean ПередЗаписью() {
 
-    }
-
-    @Override
-    public void Проведение() {
-
-    }
-
-    @Override
-    public void ОтменаПроведения() {
-
+        if ((this.getДата() == null || this.getНомер() == null
+                || this.getКонтрагент() == null || this.getИтоговаяСумма() == null
+                || this.getТабличнаяЧасть() == null))
+            return false;
+        else
+            return true;
     }
 
     @Override
     public String toString() {
         return "Реализация " + Номер + " от "
                 + Дата.toString() + " на сумму " + ИтоговаяСумма
-                + " контрагент " + Контрагент.getНаименование() ;
+                + " контрагент " + Контрагент.getНаименование() + " проведение " + ПометкаПроведения ;
     }
 
     public void toStringTable () {

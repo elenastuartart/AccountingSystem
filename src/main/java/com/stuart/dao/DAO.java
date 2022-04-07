@@ -1,6 +1,8 @@
 package com.stuart.dao;
 
 import com.stuart.models.entity.ЗаписьБД;
+import com.stuart.models.entity.документы.Документ;
+import com.stuart.models.entity.регистры.ЗаписьРегистра;
 
 //public interface DAO {
 //    public void create(final ЭлементСправочника ЭлементСправочника);
@@ -15,6 +17,9 @@ public interface DAO {
     public void save();
     public void update ();
     public void delete();
+
+    public void Проведение(Документ документ, ЗаписьРегистра регистр);
+    public void ОтменаПроведения();
 
     //public ЭлементСправочника read(final int code);
 }

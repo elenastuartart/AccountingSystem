@@ -11,24 +11,8 @@ public class Закупка extends Документ {
 
     public ЗаписьКонтрагент Контрагент;
 
-    public Закупка(Date Дата, int Номер, ЗаписьКонтрагент контрагент) {
-        super(Дата, Номер);
-        Контрагент = контрагент;
-    }
 
 
-    @Override
-    public void Проведение() {
 
-    }
 
-    @Override
-    public void ОтменаПроведения() {
-
-    }
-
-    @Override
-    public String toString() {
-        return "Закупка " + Номер + " от " + Дата.toString();
-    }
 }

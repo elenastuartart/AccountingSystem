@@ -16,25 +16,27 @@ public class ЗаписьНоменклатура extends ЭлементСпра
     @Id
     @GeneratedValue
     private UUID ID;
-    private int Код;
+    private Integer Код;
     private String Наименование;
-    private int Артикул;
+    private Integer Артикул;
     private String Категория;
     private String Подкатегория;
-
-//(optional = false, cascade = CascadeType.)
+    //(optional = false, cascade = CascadeType.)
     @ManyToOne
-    @JoinColumn(name= "Производитель_ID")
     private ЗаписьКонтрагент Производитель;
-
-    private boolean ПризнакУдаления;
 
     public void setПроизводитель(ЗаписьКонтрагент производитель) {
         Производитель = производитель;
     }
 
     @Override
-    public void ПередЗаписью() {
-        super.ПередЗаписью();
+    public boolean ПередЗаписью() {
+        if ( this.getКод() == null
+                || this.getНаименование() == null || this.getАртикул() == 0
+                || this.getКатегория() == null || this.getПодкатегория()==null
+                || this.getПроизводитель() == null)
+            return false;
+        else
+            return true;
     }
 }

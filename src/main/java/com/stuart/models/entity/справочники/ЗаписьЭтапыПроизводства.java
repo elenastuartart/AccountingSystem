@@ -17,16 +17,19 @@ import java.util.UUID;
 public class ЗаписьЭтапыПроизводства extends ЭлементСправочника {
     @Id
     @GeneratedValue
-    private UUID ПервичныйКлюч;
-    private int Код;
+    private UUID ID;
+    private Long Код;
     private String Наименование;
     private String ОписаниеЭтапа;
-    private boolean ПризнакУдаления;
-
 
     @Override
-    public void ПередЗаписью() {
-        super.ПередЗаписью();
+    public boolean ПередЗаписью() {
+        if ( this.getКод() == null
+                    || this.getНаименование() == null
+                    || this.getОписаниеЭтапа() == null)
+            return false;
+        else
+            return true;
     }
 }
 

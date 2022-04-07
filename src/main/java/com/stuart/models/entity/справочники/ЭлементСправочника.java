@@ -6,9 +6,10 @@ import com.stuart.models.entity.ЗаписьБД;
 public class ЭлементСправочника extends ЗаписьБД {
 
 
+
+
     @Override
-    public void ПередЗаписью() {
-
+    public boolean ПередЗаписью() {
+        return super.ПередЗаписью();
     }
-
 }

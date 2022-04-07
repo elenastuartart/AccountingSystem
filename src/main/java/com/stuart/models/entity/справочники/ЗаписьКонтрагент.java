@@ -18,18 +18,22 @@ public class ЗаписьКонтрагент extends ЭлементСправо
     @Id
     @GeneratedValue
     private UUID ID;
-    private int Код;
+    private Integer Код;
     private String Наименование;
     private String КонтактноеЛицоКА;
     private String АдресКА;
     private String ТипКонтрагента; //поставщик/покупатель
-    private boolean ПризнакУдаления;
     @OneToMany(mappedBy = "Производитель")
     private Collection<ЗаписьНоменклатура> Номенклатуры;
 
     @Override
-    public void ПередЗаписью() {
-        super.ПередЗаписью();
+    public boolean ПередЗаписью() {
+        if (this.getКод() == null
+                || this.getНаименование() == null || this.getКонтактноеЛицоКА() == null
+                ||this.getТипКонтрагента()==null)
+            return false;
+        else
+            return true;
     }
 
     @Override
@@ -40,11 +44,7 @@ public class ЗаписьКонтрагент extends ЭлементСправо
                 ", КонтактноеЛицоКА='" + КонтактноеЛицоКА + '\'' +
                 ", АдресКА='" + АдресКА + '\'' +
                 ", ТипКонтрагента='" + ТипКонтрагента + '\'' +
-                ", ПризнакУдаления=" + ПризнакУдаления +
                 '}';
     }
-
-
-
 
 }

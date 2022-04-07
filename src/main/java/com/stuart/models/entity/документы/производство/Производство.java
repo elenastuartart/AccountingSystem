@@ -10,23 +10,6 @@ public class Производство extends Документ {
 
     public ЗаписьЭтапыПроизводства Этап;
 
-    public Производство(Date Дата, int Номер) {
-        super(Дата, Номер);
-    }
 
 
-    @Override
-    public void ОтменаПроведения() {
-
-    }
-
-    @Override
-    public void Проведение() {
-
-    }
-
-    @Override
-    public String toString() {
-        return "Производство " + Номер + " от " + Дата.toString();
-    }
 }
