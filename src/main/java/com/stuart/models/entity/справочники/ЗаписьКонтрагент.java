@@ -1,11 +1,9 @@
 package com.stuart.models.entity.справочники;
 
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.UUID;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +14,7 @@ import java.util.UUID;
 public class ЗаписьКонтрагент extends ЭлементСправочника {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private UUID ID;
     private Integer Код;
     private String Наименование;

@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.UUID;
 
@@ -16,9 +17,9 @@ import java.util.UUID;
 @ToString
 public class ЗаписьЭтапыПроизводства extends ЭлементСправочника {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID ID;
-    private Long Код;
+    private Integer Код;
     private String Наименование;
     private String ОписаниеЭтапа;
 

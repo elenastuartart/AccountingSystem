@@ -1,34 +1,31 @@
 package com.stuart.models.entity.документы.продажа;
 
-import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
+import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
+import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class Реализация extends Документ {
 
-    //основные реквизиты:
-    //дата
-    //номер
-    //пометка проведения
+    public UUID Код;
     public Date Дата;
     public Integer Номер;
     public boolean ПометкаПроведения;
-    //Допольнительные реквизиты
     public ЗаписьКонтрагент Контрагент;
-    public Integer ИтоговаяСумма;
+    public Double ИтоговаяСумма;
 
-   //табличная часть документа
+
     @Getter
     @Setter
     public ArrayList<ЗаписьТЧСписокТоваров> ТабличнаяЧасть = new ArrayList<>();
 
-    //записываем основные реквизиты
     public Реализация(Date дата, Integer номер, ЗаписьКонтрагент контрагент) {
         Дата = дата;
         Номер = номер;
@@ -36,19 +33,18 @@ public class Реализация extends Документ {
         Контрагент = контрагент;
     }
 
-    //пользователь передает данные, заполняем табличную часть
-    public void ДобавитьЗаписьВТабличнуюЧасть(ЗаписьТЧСписокТоваров Запись) {
-        if(ТабличнаяЧасть.isEmpty()) {
-            Запись.НомерСтроки = 1;
-        }
-        else {
-            Запись.НомерСтроки = ТабличнаяЧасть.size() + 1;
-        }
+    public void ЗаполнитьТЧ(ЗаписьТЧСписокТоваров Запись) {
+//        if(ТабличнаяЧасть.isEmpty()) {
+//            Запись.НомерСтроки = 1;
+//        }
+//        else {
+//            Запись.НомерСтроки = ТабличнаяЧасть.size() + 1;
+//        }
         this.ТабличнаяЧасть.add(Запись); //по мере создания записей добавляем их в табличную часть документа
     }
 
     public void ПосчитатьИтоговуюСумму() {
-        int sum = 0;
+        double sum = 0;
         for (int i = 0; i < ТабличнаяЧасть.size(); i++) {
             ЗаписьТЧСписокТоваров запись = ТабличнаяЧасть.get(i);
             sum = sum + запись.Сумма;
@@ -85,4 +81,30 @@ public class Реализация extends Документ {
         }
     }
 
+    @Override
+    public boolean ЗаписатьТабЧасти(SessionFactory factory) {
+        boolean result = true;
+        for (int i = 0; i < ТабличнаяЧасть.size(); i ++) {
+            var СтрТЧ = ТабличнаяЧасть.get(i);
+            СтрТЧ.setНомерСтроки(i+1);
+            if(СтрТЧ.ДобавитьЗапись_в_БД(factory) == false) {
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean ЗаписатьРегистры(SessionFactory factory) {
+        boolean result = true;
+        var СтрРегистра = new ЗаписьРегистраВзаиморасчеты() ;
+        СтрРегистра.setРегистратор(this);
+        СтрРегистра.setДата(this.getДата());
+        СтрРегистра.setКонтрагент(this.getКонтрагент());
+        СтрРегистра.setСумма((double)0);
+        if(СтрРегистра.ДобавитьЗапись_в_БД(factory) == false) {
+            result = false;
+        }
+        return result;
+    }
 }

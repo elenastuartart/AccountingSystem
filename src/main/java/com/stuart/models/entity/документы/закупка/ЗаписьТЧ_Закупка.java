@@ -1,4 +1,4 @@
-package com.stuart.models.entity.документы.продажа;
+package com.stuart.models.entity.документы.закупка;
 
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
@@ -11,17 +11,18 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ЗаписьТЧСписокТоваров extends ЗаписьБД {
+public class ЗаписьТЧ_Закупка extends ЗаписьБД {
 
     public UUID Код;
     public Integer НомерСтроки;
     public ЗаписьНоменклатура Номенклатура;
-    public Integer Количество;
+    public Double Количество;
     public Double Цена;
     public Double Сумма;
 
 
-    public ЗаписьТЧСписокТоваров(ЗаписьНоменклатура номенклатура, Integer количество, Double цена) {
+    public ЗаписьТЧ_Закупка(ЗаписьНоменклатура номенклатура,
+                            Double количество, Double цена) {
         Номенклатура = номенклатура;
         Количество = количество;
         Цена = цена;
@@ -30,9 +31,9 @@ public class ЗаписьТЧСписокТоваров extends ЗаписьБД
 
     @Override
     public boolean ПередЗаписью() {
-        if (this.getНомерСтроки() == null || this.getНоменклатура() == null
+        if (this.getНоменклатура() == null
                 || this.getКоличество() == null || this.getЦена() == null
-                || this.getСумма() == null)
+                || this.getСумма() == null )
             return false;
         else
             return true;

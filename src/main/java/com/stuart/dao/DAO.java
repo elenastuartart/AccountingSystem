@@ -4,6 +4,8 @@ import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.регистры.ЗаписьРегистра;
 
+import java.util.UUID;
+
 //public interface DAO {
 //    public void create(final ЭлементСправочника ЭлементСправочника);
 //    public void save(final ЭлементСправочника ЭлементСправочника);
@@ -13,13 +15,9 @@ import com.stuart.models.entity.регистры.ЗаписьРегистра;
 //}
 
 public interface DAO {
-    public void create(final ЗаписьБД записьБД);
-    public void save();
-    public void update ();
-    public void delete();
-
-    public void Проведение(Документ документ, ЗаписьРегистра регистр);
-    public void ОтменаПроведения();
+    public boolean create(final ЗаписьБД записьБД);
+    public void update ( UUID записьБД);
+    public void delete(ЗаписьБД записьБД) ;
 
     //public ЭлементСправочника read(final int code);
 }

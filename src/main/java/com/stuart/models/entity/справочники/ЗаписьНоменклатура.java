@@ -14,7 +14,7 @@ import java.util.UUID;
 @ToString
 public class ЗаписьНоменклатура extends ЭлементСправочника {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private UUID ID;
     private Integer Код;
     private String Наименование;
@@ -33,8 +33,8 @@ public class ЗаписьНоменклатура extends ЭлементСпра
     public boolean ПередЗаписью() {
         if ( this.getКод() == null
                 || this.getНаименование() == null || this.getАртикул() == 0
-                || this.getКатегория() == null || this.getПодкатегория()==null
-                || this.getПроизводитель() == null)
+                || this.getКатегория() == null || this.getПодкатегория()==null)
+//                || this.getПроизводитель() == null)
             return false;
         else
             return true;
