@@ -1,7 +1,6 @@
 package com.stuart.models.entity.справочники;
 
 import com.stuart.models.entity.ЗаписьБД;
-import org.hibernate.SessionFactory;
 
 
 public class ЭлементСправочника extends ЗаписьБД {
@@ -11,11 +10,12 @@ public class ЭлементСправочника extends ЗаписьБД {
         return super.ПередЗаписью();
     }
 
-    public boolean ЗаписатьСправочник(SessionFactory factory) {
+    public boolean Записать() {
         boolean result = true;
-        if(this.ПередЗаписью() == false || this.ДобавитьЗапись_в_БД(factory)==false) {
+        if(this.ПередЗаписью() == false || this.save()==false) {
             result = false;
         }
         return  result;
     }
+
 }

@@ -1,13 +1,11 @@
 package com.stuart.models.entity.документы.производство;
 
 import com.stuart.models.entity.документы.Документ;
-import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
-import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.SessionFactory;
 
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -20,8 +18,9 @@ public class Производство extends Документ {
     public Date Дата;
     public Integer Номер;
     public boolean ПометкаПроведения;
-
+    @OneToMany
     public ArrayList<ЗаписьТЧРасходМатериалов> РасходМатериалов = new ArrayList<>();
+    @OneToMany
     public ArrayList<ЗаписьТЧПроизведеноПродукции> ПроизведеноПродукции = new ArrayList<>();
 
     public Производство(Date дата, Integer номер) {
@@ -60,23 +59,23 @@ public class Производство extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьТабЧасти(SessionFactory factory) {
+    public boolean ЗаписатьТабЧасти() {
 
         boolean result1 = true;
         boolean result2 = true;
 
         for (int i = 0; i < РасходМатериалов.size(); i ++) {
             var СтрТЧ = РасходМатериалов.get(i);
-            СтрТЧ.setНомерСтроки(i+1);
-            if(СтрТЧ.ДобавитьЗапись_в_БД(factory) == false) {
+            СтрТЧ.setLineNumber(i+1);
+            if(СтрТЧ.save() == false) {
                 result1 = false;
             }
         }
 
         for (int i = 0; i < ПроизведеноПродукции.size(); i ++) {
             var СтрТЧ = ПроизведеноПродукции.get(i);
-            СтрТЧ.setНомерСтроки(i+1);
-            if(СтрТЧ.ДобавитьЗапись_в_БД(factory) == false) {
+            СтрТЧ.setLineNumber(i+1);
+            if(СтрТЧ.save() == false) {
                 result2 = false;
             }
         }
@@ -88,7 +87,7 @@ public class Производство extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьРегистры(SessionFactory factory) {
+    public boolean ЗаписатьРегистры() {
         boolean result1 = true;
         boolean result2 = true;
         for (int i = 0; i < РасходМатериалов.size(); i ++) {
@@ -96,10 +95,10 @@ public class Производство extends Документ {
                     РасходМатериалов.get(i);
             ЗаписьРегистраТоварыНаСкладах СтрРегистраРасход = new ЗаписьРегистраТоварыНаСкладах();
             СтрРегистраРасход.setРегистратор(this);
-            СтрРегистраРасход.setНоменклатура(записьТЧРасходМатериалов.getНоменклатура());
-            СтрРегистраРасход.setКоличество(записьТЧРасходМатериалов.getКоличество());
+            СтрРегистраРасход.setНоменклатура(записьТЧРасходМатериалов.getNomenclature_());
+            СтрРегистраРасход.setКоличество(записьТЧРасходМатериалов.getAmount());
             СтрРегистраРасход.setСумма((double)0);
-            if(СтрРегистраРасход.ДобавитьЗапись_в_БД(factory) == false) {
+            if(СтрРегистраРасход.save() == false) {
                 result1 = false;
             }
         }
@@ -109,10 +108,10 @@ public class Производство extends Документ {
                     ПроизведеноПродукции.get(i);
             ЗаписьРегистраТоварыНаСкладах СтрРегистраПроизведено = new ЗаписьРегистраТоварыНаСкладах();
             СтрРегистраПроизведено.setРегистратор(this);
-            СтрРегистраПроизведено.setНоменклатура(записьТЧПроизведеноПродукции.getНоменклатура());
-            СтрРегистраПроизведено.setКоличество(записьТЧПроизведеноПродукции.getКоличество());
+            СтрРегистраПроизведено.setНоменклатура(записьТЧПроизведеноПродукции.getNomenclature_());
+            СтрРегистраПроизведено.setКоличество(записьТЧПроизведеноПродукции.getAmount());
             СтрРегистраПроизведено.setСумма((double) 0);
-            if(СтрРегистраПроизведено.ДобавитьЗапись_в_БД(factory) == false) {
+            if(СтрРегистраПроизведено.save() == false) {
                 result2 = false;
             }
         }

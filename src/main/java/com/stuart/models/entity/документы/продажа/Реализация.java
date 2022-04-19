@@ -4,8 +4,9 @@ import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
-import org.hibernate.SessionFactory;
 
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -18,12 +19,11 @@ public class Реализация extends Документ {
     public Date Дата;
     public Integer Номер;
     public boolean ПометкаПроведения;
+    @ManyToMany
     public ЗаписьКонтрагент Контрагент;
     public Double ИтоговаяСумма;
 
-
-    @Getter
-    @Setter
+    @OneToMany
     public ArrayList<ЗаписьТЧСписокТоваров> ТабличнаяЧасть = new ArrayList<>();
 
     public Реализация(Date дата, Integer номер, ЗаписьКонтрагент контрагент) {
@@ -34,12 +34,12 @@ public class Реализация extends Документ {
     }
 
     public void ЗаполнитьТЧ(ЗаписьТЧСписокТоваров Запись) {
-//        if(ТабличнаяЧасть.isEmpty()) {
-//            Запись.НомерСтроки = 1;
-//        }
-//        else {
-//            Запись.НомерСтроки = ТабличнаяЧасть.size() + 1;
-//        }
+        if(ТабличнаяЧасть.isEmpty()) {
+            Запись.lineNumber = 1;
+        }
+        else {
+            Запись.lineNumber = ТабличнаяЧасть.size() + 1;
+        }
         this.ТабличнаяЧасть.add(Запись); //по мере создания записей добавляем их в табличную часть документа
     }
 
@@ -47,7 +47,7 @@ public class Реализация extends Документ {
         double sum = 0;
         for (int i = 0; i < ТабличнаяЧасть.size(); i++) {
             ЗаписьТЧСписокТоваров запись = ТабличнаяЧасть.get(i);
-            sum = sum + запись.Сумма;
+            sum = sum + запись.sum;
         }
         this.ИтоговаяСумма = sum;
     }
@@ -67,27 +67,26 @@ public class Реализация extends Документ {
     public String toString() {
         return "Реализация " + Номер + " от "
                 + Дата.toString() + " на сумму " + ИтоговаяСумма
-                + " контрагент " + Контрагент.getНаименование() + " проведение " + ПометкаПроведения ;
+                + " контрагент " + Контрагент.getName() + " проведение " + ПометкаПроведения ;
     }
 
     public void toStringTable () {
         for (int i = 0; i < this.ТабличнаяЧасть.size(); i++) {
-            System.out.println( ТабличнаяЧасть.get(i).НомерСтроки + " " +
-                    ТабличнаяЧасть.get(i).Номенклатура.getНаименование() +" " +
-                    ТабличнаяЧасть.get(i).Цена + " руб. " +
-                    ТабличнаяЧасть.get(i).Количество + " " +
-                    ТабличнаяЧасть.get(i).Сумма )  ;
+            System.out.println( ТабличнаяЧасть.get(i).lineNumber + " " +
+                    ТабличнаяЧасть.get(i).nomenclature_.getName() +" " +
+                    ТабличнаяЧасть.get(i).price + " руб. " +
+                    ТабличнаяЧасть.get(i).amount + " " +
+                    ТабличнаяЧасть.get(i).sum)  ;
             System.out.println( );
         }
     }
 
     @Override
-    public boolean ЗаписатьТабЧасти(SessionFactory factory) {
+    public boolean ЗаписатьТабЧасти() {
         boolean result = true;
         for (int i = 0; i < ТабличнаяЧасть.size(); i ++) {
             var СтрТЧ = ТабличнаяЧасть.get(i);
-            СтрТЧ.setНомерСтроки(i+1);
-            if(СтрТЧ.ДобавитьЗапись_в_БД(factory) == false) {
+            if(СтрТЧ.save() == false) {
                 result = false;
             }
         }
@@ -95,14 +94,14 @@ public class Реализация extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьРегистры(SessionFactory factory) {
+    public boolean ЗаписатьРегистры() {
         boolean result = true;
         var СтрРегистра = new ЗаписьРегистраВзаиморасчеты() ;
         СтрРегистра.setРегистратор(this);
         СтрРегистра.setДата(this.getДата());
         СтрРегистра.setКонтрагент(this.getКонтрагент());
         СтрРегистра.setСумма((double)0);
-        if(СтрРегистра.ДобавитьЗапись_в_БД(factory) == false) {
+        if(СтрРегистра.save() == false) {
             result = false;
         }
         return result;

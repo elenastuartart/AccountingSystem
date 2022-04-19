@@ -1,6 +1,5 @@
 package com.stuart.models.entity.регистры;
 
-import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 @Getter
@@ -18,7 +17,9 @@ import java.util.UUID;
 public class ЗаписьРегистраТоварыНаСкладах extends ЗаписьРегистра {
 
     private UUID ID;
-    private Документ Регистратор;
+    @ManyToOne//manytoany
+    private Документ Регистратор;// в качестве регистратора могут выступать 3 типа документов
+    @ManyToOne
     public ЗаписьНоменклатура Номенклатура;
     public Double Количество;
     public Double Сумма;
@@ -36,7 +37,7 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
     @Override
     public String toString() {
         return "ЗаписьРегистраТоварыНаСкладах{" +
-                "Дата: " + Номенклатура.getНаименование().toString() +
+                "Дата: " + Номенклатура.getName().toString() +
                 "; Контрагент: " + Количество +
                 "; Сумма: " + Сумма +
                 '}';

@@ -1,7 +1,8 @@
 package com.stuart.models.entity;
 
-import com.stuart.dao.записьБД.ЗаписьБД_DAO;
+import com.stuart.dao.записьБД.DataAccessObject;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 public class ЗаписьБД {
 
@@ -9,9 +10,12 @@ public class ЗаписьБД {
         return false;
     }
 
-    public boolean ДобавитьЗапись_в_БД(SessionFactory factory) {
-        ЗаписьБД_DAO ЭлементDAO = new ЗаписьБД_DAO(factory);
-        return ЭлементDAO.create(this);
+    public boolean save() {
+        return DataAccessObject.save(this);
     }
 
+    public ЗаписьБД findByValueDAO(String fieldName, Object fieldValue) {
+        return null;
+    }
 }
+

@@ -1,11 +1,10 @@
 package com.stuart.models.entity.регистры;
 
 import com.stuart.models.entity.документы.Документ;
-import com.stuart.models.entity.документы.закупка.Закупка;
-import com.stuart.models.entity.документы.продажа.Реализация;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
 
+import javax.persistence.ManyToOne;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,8 +15,10 @@ import java.util.UUID;
 public class ЗаписьРегистраВзаиморасчеты extends ЗаписьРегистра {
 
     private UUID ID;
+    @ManyToOne // в качестве регистратора могут быть два типа документов продажа и закупка
     private Документ Регистратор;
     private Date Дата;
+    @ManyToOne
     private ЗаписьКонтрагент Контрагент;
     private Double Сумма;
 
@@ -37,7 +38,7 @@ public class ЗаписьРегистраВзаиморасчеты extends За
     public String toString() {
         return "ЗаписьРегистраВзаиморасчеты{" +
                 "Дата: " + Дата.toString() +
-                "; Контрагент: " + Контрагент.getНаименование() +
+                "; Контрагент: " + Контрагент.getName() +
                 "; Сумма: " + Сумма +
                 '}';
     }
