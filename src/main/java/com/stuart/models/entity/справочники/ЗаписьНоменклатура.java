@@ -20,15 +20,15 @@ import java.util.UUID;
 @Table(name = "nomenclature", schema = "study_db")
 public class ЗаписьНоменклатура extends ЭлементСправочника {
     @Id
-    @GeneratedValue
-    private UUID id;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
     private Integer code;
     private String name;
     private Integer article_number;
     private String category;
     private String subcategory;
     @ManyToOne
-    @JoinColumn(name = "contragent_id", referencedColumnName = "id") //по каким полям связывать (foreign key)
+    @JoinColumn(name = "contragent_id", referencedColumnName = "id")
     private ЗаписьКонтрагент contragent_;//  ЗАПИСЬ_НОМЕНКЛАТУРА-ЗАПИСЬ_КОНТРАГЕНТ связь с классом "ЗаписьКонтрагент" (таблица БД "contragent")
                                      //(таблица БД " nomenclature "-"contragent") list nomenclaturies_
 

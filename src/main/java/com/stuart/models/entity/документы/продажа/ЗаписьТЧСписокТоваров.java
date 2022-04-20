@@ -1,6 +1,7 @@
 package com.stuart.models.entity.документы.продажа;
 
 import com.stuart.models.entity.ЗаписьБД;
+import com.stuart.models.entity.документы.закупка.Закупка;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import lombok.*;
 
@@ -16,20 +17,23 @@ import java.util.UUID;
 @Table(name = "table_part_list_of_products", schema = "study_db")
 public class ЗаписьТЧСписокТоваров extends ЗаписьБД {
     @Id
-    @GeneratedValue
-    public UUID id;
-    public Integer lineNumber; //номер строки
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
+    private Integer lineNumber; //номер строки
 
     @ManyToOne
     @JoinColumn(name = "nomenclature_id", referencedColumnName = "id")
-    public ЗаписьНоменклатура nomenclature_; //ТЧ_СПИСОК_ТОВАРОВ-ЗАПИСЬ_НОМЕНКЛАТУРА связь с классом ЗаписьНоменклатура
+    private ЗаписьНоменклатура nomenclature_; //ТЧ_СПИСОК_ТОВАРОВ-ЗАПИСЬ_НОМЕНКЛАТУРА связь с классом ЗаписьНоменклатура
                                             // (таблица БД "table_part_ListOfProducts"-"nomenclature"), list listsOfProductstTableParts
-    public Double amount; //количество
-    public Double price; //цена
-    public Double sum; //сумма
+    @ManyToOne
+    @JoinColumn(name = "doc_sale_id", referencedColumnName = "id")
+    private Реализация doc_sale_; //ЗаписьТЧСписокТоваров-Реализация
+                                // (таблица БД "table_part_list_of_products"-"doc_sale")
+    private Double amount; //количество
+    private Double price; //цена
+    private Double sum; //сумма
 
-
-    public ЗаписьТЧСписокТоваров(ЗаписьНоменклатура nomenclature_, Double amount, Double price) {
+    private ЗаписьТЧСписокТоваров(ЗаписьНоменклатура nomenclature_, Double amount, Double price) {
         nomenclature_ = nomenclature_;
         this.amount = amount;
         price = price;

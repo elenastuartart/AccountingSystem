@@ -19,13 +19,16 @@
     <mapping class="com.stuart.models.entity.справочники.ЗаписьКонтрагент"/>
     <mapping class="com.stuart.models.entity.справочники.ЗаписьНоменклатура"/>
     <mapping class="com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства"/>
+    <mapping class="com.stuart.models.entity.справочники.test"/>
 
     <mapping class="com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка"/>
     <mapping class="com.stuart.models.entity.документы.продажа.ЗаписьТЧСписокТоваров"/>
     <mapping class="com.stuart.models.entity.документы.производство.ЗаписьТЧПроизведеноПродукции"/>
     <mapping class="com.stuart.models.entity.документы.производство.ЗаписьТЧРасходМатериалов"/>
 
-<!--    <mapping class="com.stuart.models.entity.документы.закупка.Закупка"/>-->
+    <mapping class="com.stuart.models.entity.документы.закупка.Закупка"/>
+    <mapping class="com.stuart.models.entity.документы.продажа.Реализация"/>
+    <mapping class="com.stuart.models.entity.документы.производство.Производство"/>
 
   </session-factory>
 </hibernate-configuration>

@@ -25,8 +25,11 @@ public class ЗаписьТЧРасходМатериалов extends Запис
     @ManyToOne
     @JoinColumn (name = "production_stages_id", referencedColumnName = "id")
     private ЗаписьЭтапыПроизводства stage_; //ТЧ_РАСХОД_МАТЕРИАЛОВ_ЭТАПЫ_ПРОИЗВОДСТВА- связь с классом ЗаписьЭтапыПроизводства
-                                //(таблица БД -table_part_material_consuption"-"production_stages")
-
+                                        //(таблица БД -table_part_material_consuption"-"production_stages")
+    @ManyToOne
+    @JoinColumn(name = "doc_manufacture_id", referencedColumnName = "id")
+    private Производство doc_manufacture_; //ЗаписьТЧРасходМатериалов-Производство
+                                            //таблица БД "table_part_material_consuption"-"doc_manufacture№
 
     @ManyToOne
     @JoinColumn(name = "nomenclature_id", referencedColumnName = "id")

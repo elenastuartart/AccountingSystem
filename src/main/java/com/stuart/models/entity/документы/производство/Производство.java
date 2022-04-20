@@ -2,33 +2,44 @@ package com.stuart.models.entity.документы.производство;
 
 import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "doc_manufacture", schema = "study_db")
 public class Производство extends Документ {
+    @Id
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
+    private Date date;
+    private Integer number;
+    private boolean pometkaProvedeniya;
+    @OneToMany(mappedBy = "doc_manufacture_", fetch = FetchType.LAZY)
+    private List<ЗаписьТЧРасходМатериалов> table_part_material_consuption_
+            = new ArrayList<>(); //Производство-ЗаписьТЧРасходМатериалов
+                                 //таблица БД "doc_manufacture"-"table_part_material_consuption"
 
-    public UUID Код;
-    public Date Дата;
-    public Integer Номер;
-    public boolean ПометкаПроведения;
-    @OneToMany
-    public ArrayList<ЗаписьТЧРасходМатериалов> РасходМатериалов = new ArrayList<>();
-    @OneToMany
-    public ArrayList<ЗаписьТЧПроизведеноПродукции> ПроизведеноПродукции = new ArrayList<>();
+    @OneToMany (mappedBy = "doc_manufacture_", fetch = FetchType.LAZY)
+    private List<ЗаписьТЧПроизведеноПродукции> table_part_produced_of_products_
+            = new ArrayList<>(); //Производство-ЗаписьТЧПроизведеноПродукции
+                                  //таблица БД "doc_manufacture"-"table_part_produced_of_products"
 
-    public Производство(Date дата, Integer номер) {
-        Дата = дата;
-        Номер = номер;
-        ПометкаПроведения = false;
+
+    public Производство(Date date, Integer number) {
+        this.date = date;
+        this.number = number;
+        pometkaProvedeniya = false;
     }
-
 
     public void ЗаполнитьТЧ_Расход(ЗаписьТЧРасходМатериалов запись) {
 //        if(РасходМатериалов.isEmpty()) {
@@ -37,7 +48,7 @@ public class Производство extends Документ {
 //        else {
 //            запись.НомерСтроки = РасходМатериалов.size() + 1;
 //        }
-        this.РасходМатериалов.add(запись); //по мере создания записей добавляем их в табличную часть документа
+        this.table_part_material_consuption_.add(запись); //по мере создания записей добавляем их в табличную часть документа
     }
 
     public void ЗаполнитьТЧ_Произведено(ЗаписьТЧПроизведеноПродукции запись) {
@@ -47,12 +58,12 @@ public class Производство extends Документ {
 //        else {
 //            запись.НомерСтроки = РасходМатериалов.size() + 1;
 //        }
-        this.ПроизведеноПродукции.add(запись); //по мере создания записей добавляем их в табличную часть документа
+        this.table_part_produced_of_products_.add(запись); //по мере создания записей добавляем их в табличную часть документа
     }
 
     @Override
     public boolean ПередЗаписью() {
-        if ((this.getДата() == null || this.getНомер() == null))
+        if ((this.getDate() == null || this.getNumber() == null))
             return false;
         else
             return true;
@@ -64,16 +75,16 @@ public class Производство extends Документ {
         boolean result1 = true;
         boolean result2 = true;
 
-        for (int i = 0; i < РасходМатериалов.size(); i ++) {
-            var СтрТЧ = РасходМатериалов.get(i);
+        for (int i = 0; i < table_part_material_consuption_.size(); i ++) {
+            var СтрТЧ = table_part_material_consuption_.get(i);
             СтрТЧ.setLineNumber(i+1);
             if(СтрТЧ.save() == false) {
                 result1 = false;
             }
         }
 
-        for (int i = 0; i < ПроизведеноПродукции.size(); i ++) {
-            var СтрТЧ = ПроизведеноПродукции.get(i);
+        for (int i = 0; i < table_part_produced_of_products_.size(); i ++) {
+            var СтрТЧ = table_part_produced_of_products_.get(i);
             СтрТЧ.setLineNumber(i+1);
             if(СтрТЧ.save() == false) {
                 result2 = false;
@@ -90,9 +101,9 @@ public class Производство extends Документ {
     public boolean ЗаписатьРегистры() {
         boolean result1 = true;
         boolean result2 = true;
-        for (int i = 0; i < РасходМатериалов.size(); i ++) {
+        for (int i = 0; i < table_part_material_consuption_.size(); i ++) {
             ЗаписьТЧРасходМатериалов записьТЧРасходМатериалов =
-                    РасходМатериалов.get(i);
+                    table_part_material_consuption_.get(i);
             ЗаписьРегистраТоварыНаСкладах СтрРегистраРасход = new ЗаписьРегистраТоварыНаСкладах();
             СтрРегистраРасход.setРегистратор(this);
             СтрРегистраРасход.setНоменклатура(записьТЧРасходМатериалов.getNomenclature_());
@@ -103,9 +114,9 @@ public class Производство extends Документ {
             }
         }
 
-        for (int i = 0; i < ПроизведеноПродукции.size(); i ++) {
+        for (int i = 0; i < table_part_produced_of_products_.size(); i ++) {
             ЗаписьТЧПроизведеноПродукции записьТЧПроизведеноПродукции =
-                    ПроизведеноПродукции.get(i);
+                    table_part_produced_of_products_.get(i);
             ЗаписьРегистраТоварыНаСкладах СтрРегистраПроизведено = new ЗаписьРегистраТоварыНаСкладах();
             СтрРегистраПроизведено.setРегистратор(this);
             СтрРегистраПроизведено.setНоменклатура(записьТЧПроизведеноПродукции.getNomenclature_());
@@ -125,7 +136,7 @@ public class Производство extends Документ {
 
     @Override
     public String toString() {
-        return "Производство № " + Номер + " от "
-                + Дата.toString() ;
+        return "Производство № " + number + " от "
+                + date.toString() ;
     }
 }

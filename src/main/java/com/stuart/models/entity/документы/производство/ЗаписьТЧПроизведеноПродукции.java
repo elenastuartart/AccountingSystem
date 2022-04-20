@@ -24,7 +24,13 @@ public class ЗаписьТЧПроизведеноПродукции extends З
     @JoinColumn(name = "nomenclature_id", referencedColumnName = "id")
     private ЗаписьНоменклатура nomenclature_; //  ТЧ_ПРОИЗВЕДЕНО_ПРОДУКЦИИ-ЗАПИСЬ_НОМЕНКЛАТУРА связь с классом "ЗаписьНоменклатура" (таблица БД "nomenclature")
                                             //(таблица БД "table_part_produced_of_products"-"nomenclature") list productsOfGoodsTableParts
+    @ManyToOne
+    @JoinColumn(name = "doc_manufacture_id", referencedColumnName = "id")
+    private Производство doc_manufacture_; //ЗаписьТЧПроизведеноПродукции-Производство
+                                            //таблица БД "table_part_produced_of_products"-"doc_manufacture"
+
     private Double amount;
+
 
     public ЗаписьТЧПроизведеноПродукции(ЗаписьНоменклатура nomenclature_, Double amount) {
         this.nomenclature_ = nomenclature_;

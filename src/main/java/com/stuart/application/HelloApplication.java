@@ -1,5 +1,6 @@
 package com.stuart.application;
 
+import com.stuart.models.entity.справочники.test;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;
@@ -21,9 +22,19 @@ public class HelloApplication {
             final Session session = factory.openSession();
 
             //ЗаписьБД_DAO записьБД_dao = new ЗаписьБД_DAO(factory);
+//
+//            final test test1 = new test();
+//            test1.setName("test1");
+//            test1.setNumber(1231);
+//            session.beginTransaction();
+//            session.save(test1);
+//            session.getTransaction().commit();
+//            session.close();
 
 
-            final ЗаписьКонтрагент КА1 = new ЗаписьКонтрагент();
+
+
+            //final ЗаписьКонтрагент КА1 = new ЗаписьКонтрагент();
 //            КА1.setCode(10103);
 //            КА1.setAddress("Москва");
 //            КА1.setContact_person("aaa2@mail.ru");
@@ -33,10 +44,12 @@ public class HelloApplication {
 //            session.save(КА1);
 //            session.getTransaction().commit();
 //            session.close();
+//
+//            Query<test> query = session.createQuery("from test node1 where node1.number = :param");
+//            query.setParameter("param", 1231);
+//            test testX = query.uniqueResult();
+//            System.out.println(testX.getId().toString());
 
-//            Query<ЗаписьКонтрагент> query = session.createQuery("from ЗаписьКонтрагент node1 where node1.code = :param");
-//            query.setParameter("param", 10103);
-//            ЗаписьКонтрагент записьКонтрагент = query.uniqueResult();
 //
 //
 //            final ЗаписьНоменклатура Ном1 = new ЗаписьНоменклатура();
@@ -48,6 +61,11 @@ public class HelloApplication {
 //            Ном1.setProducer(записьКонтрагент);
 //            session.beginTransaction();
 //            session.save(Ном1);
+//            session.getTransaction().commit();
+//            session.close();
+
+//            session.beginTransaction();
+//            session.delete(testX);
 //            session.getTransaction().commit();
 //            session.close();
 
@@ -68,35 +86,6 @@ public class HelloApplication {
 //            transaction.commit();
 //            session.close();
 
-
-            //ЗаписьНоменклатура Ном2 = session.get(ЗаписьНоменклатура.class,);
-//            Ном1.ЗаписатьЭлементСправочника(factory);
-
-            //-+++Ном1.ИзменитьЗаписьСправочникаНоменклатура(factory, "Карина");
-
-//            Ном1.ЗаписатьСправочник(factory);
-//            int res = Ном1.УдалитьЗапись_Из_БД(factory, Ном1.getКод());
-//            System.out.println(res);
-
-//            Реализация док1 = new Реализация(new Date(), 12231234, КА1);
-//            ЗаписьТЧСписокТоваров запись1 = new ЗаписьТЧСписокТоваров(Ном1, (double)2, (double)200);
-//            ЗаписьТЧСписокТоваров запись2 = new ЗаписьТЧСписокТоваров( Ном1, (double)4, (double)50);
-//            ЗаписьТЧСписокТоваров запись3 = new ЗаписьТЧСписокТоваров( Ном1, (double)3, (double)30);
-////
-//            док1.ЗаполнитьТЧ(запись1);
-//            док1.ЗаполнитьТЧ(запись2);
-//            док1.ЗаполнитьТЧ(запись3);
-//            док1.ПосчитатьИтоговуюСумму();
-
-//            System.out.println(док1.toString());
-//            док1.toStringTable();
-////
-//            ЗаписьРегистраВзаиморасчеты взаиморасчеты1 = new ЗаписьРегистраВзаиморасчеты();
-//            System.out.println(взаиморасчеты1.toString());
-//
-//            ЭлементDAO.create(док1);
-//            boolean проверка = взаиморасчеты1.ПередЗаписью();
-//            System.out.println(проверка);
        }
         finally {
             if (factory != null) {

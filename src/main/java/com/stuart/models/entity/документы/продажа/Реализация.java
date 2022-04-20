@@ -5,59 +5,68 @@ import com.stuart.models.entity.регистры.ЗаписьРегистраВ�
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
 
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "doc_sale",schema = "study_db")
 public class Реализация extends Документ {
 
-    public UUID Код;
-    public Date Дата;
-    public Integer Номер;
-    public boolean ПометкаПроведения;
-    @ManyToMany
-    public ЗаписьКонтрагент Контрагент;
-    public Double ИтоговаяСумма;
+    @Id
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
+    private Date date;
+    private Integer number;
+    private boolean pometkaProvedeniya;
+    @ManyToOne
+    @JoinColumn(name = "contragent_id", referencedColumnName = "id")
+    private ЗаписьКонтрагент contragent_; //Реализация-ЗаписьКонтрагент
+                                        // таблица БД "doc_sale"-"contragent"
+    private Double finalSum;
+    @OneToMany (mappedBy = "doc_sale_", fetch = FetchType.LAZY)
+    private List<ЗаписьТЧСписокТоваров> table_part_list_of_products_ = new ArrayList<>(); //Реализация-ЗаписьТЧСписокТоваров
+                                                                                                //таблица БД "doc_sale"-"table_part_list_of_products"
 
-    @OneToMany
-    public ArrayList<ЗаписьТЧСписокТоваров> ТабличнаяЧасть = new ArrayList<>();
-
-    public Реализация(Date дата, Integer номер, ЗаписьКонтрагент контрагент) {
-        Дата = дата;
-        Номер = номер;
-        this.ПометкаПроведения = false;
-        Контрагент = контрагент;
+    public Реализация(Date date, Integer number, ЗаписьКонтрагент contragent) {
+        this.date = date;
+        this.number = number;
+        this.pometkaProvedeniya = false;
+        contragent_ = contragent;
     }
 
     public void ЗаполнитьТЧ(ЗаписьТЧСписокТоваров Запись) {
-        if(ТабличнаяЧасть.isEmpty()) {
-            Запись.lineNumber = 1;
+        if(table_part_list_of_products_.isEmpty()) {
+            Запись.setLineNumber(1);
         }
         else {
-            Запись.lineNumber = ТабличнаяЧасть.size() + 1;
+            Запись.setLineNumber(table_part_list_of_products_.size() + 1);
         }
-        this.ТабличнаяЧасть.add(Запись); //по мере создания записей добавляем их в табличную часть документа
+        this.table_part_list_of_products_.add(Запись); //по мере создания записей добавляем их в табличную часть документа
     }
 
     public void ПосчитатьИтоговуюСумму() {
         double sum = 0;
-        for (int i = 0; i < ТабличнаяЧасть.size(); i++) {
-            ЗаписьТЧСписокТоваров запись = ТабличнаяЧасть.get(i);
-            sum = sum + запись.sum;
+        for (int i = 0; i < table_part_list_of_products_.size(); i++) {
+            ЗаписьТЧСписокТоваров запись = table_part_list_of_products_.get(i);
+            sum = sum + запись.getSum();
         }
-        this.ИтоговаяСумма = sum;
+        this.finalSum = sum;
     }
 
     @Override
     public boolean ПередЗаписью() {
 
-        if ((this.getДата() == null || this.getНомер() == null
-                || this.getКонтрагент() == null || this.getИтоговаяСумма() == null
-                || this.getТабличнаяЧасть() == null))
+        if ((this.getDate() == null || this.getNumber() == null
+                || this.getContragent_() == null || this.getFinalSum() == null
+                || this.getTable_part_list_of_products_() == null))
             return false;
         else
             return true;
@@ -65,18 +74,18 @@ public class Реализация extends Документ {
 
     @Override
     public String toString() {
-        return "Реализация " + Номер + " от "
-                + Дата.toString() + " на сумму " + ИтоговаяСумма
-                + " контрагент " + Контрагент.getName() + " проведение " + ПометкаПроведения ;
+        return "Реализация " + number + " от "
+                + date.toString() + " на сумму " + finalSum
+                + " контрагент " + contragent_.getName() + " проведение " + pometkaProvedeniya;
     }
 
     public void toStringTable () {
-        for (int i = 0; i < this.ТабличнаяЧасть.size(); i++) {
-            System.out.println( ТабличнаяЧасть.get(i).lineNumber + " " +
-                    ТабличнаяЧасть.get(i).nomenclature_.getName() +" " +
-                    ТабличнаяЧасть.get(i).price + " руб. " +
-                    ТабличнаяЧасть.get(i).amount + " " +
-                    ТабличнаяЧасть.get(i).sum)  ;
+        for (int i = 0; i < this.table_part_list_of_products_.size(); i++) {
+            System.out.println( table_part_list_of_products_.get(i).getLineNumber() + " " +
+                    table_part_list_of_products_.get(i).getNomenclature_().getName() +" " +
+                    table_part_list_of_products_.get(i).getPrice() + " руб. " +
+                    table_part_list_of_products_.get(i).getAmount() + " " +
+                    table_part_list_of_products_.get(i).getSum())  ;
             System.out.println( );
         }
     }
@@ -84,8 +93,8 @@ public class Реализация extends Документ {
     @Override
     public boolean ЗаписатьТабЧасти() {
         boolean result = true;
-        for (int i = 0; i < ТабличнаяЧасть.size(); i ++) {
-            var СтрТЧ = ТабличнаяЧасть.get(i);
+        for (int i = 0; i < table_part_list_of_products_.size(); i ++) {
+            var СтрТЧ = table_part_list_of_products_.get(i);
             if(СтрТЧ.save() == false) {
                 result = false;
             }
@@ -98,8 +107,8 @@ public class Реализация extends Документ {
         boolean result = true;
         var СтрРегистра = new ЗаписьРегистраВзаиморасчеты() ;
         СтрРегистра.setРегистратор(this);
-        СтрРегистра.setДата(this.getДата());
-        СтрРегистра.setКонтрагент(this.getКонтрагент());
+        СтрРегистра.setДата(this.getDate());
+        СтрРегистра.setКонтрагент(this.getContragent_());
         СтрРегистра.setСумма((double)0);
         if(СтрРегистра.save() == false) {
             result = false;
