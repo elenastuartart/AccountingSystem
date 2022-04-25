@@ -15,14 +15,14 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@Builder
 @Entity
 @Table(name = "doc_purchase", schema = "study_db")
 public class Закупка extends Документ {
     @Id
     @Column(columnDefinition = "BINARY(16)")
     private UUID id = UUID.randomUUID();
-    public Date date;
+    private Date date;
     private Integer number;
     private boolean pometkaProvedeniya;
     @ManyToOne
@@ -34,6 +34,10 @@ public class Закупка extends Документ {
     private List<ЗаписьТЧ_Закупка> table_part_purchase_ = new ArrayList<>(); //  Закупка-ЗаписьТЧЗакупка
                                                                             // (таблица БД "doc_purchase"-"table_part_purchase"
 
+//    @OneToMany(mappedBy = doc_purchase_, fetch = FetchType.LAZY)
+//    private List<ЗаписьРегистраВзаиморасчеты> register_calculation_ = new ArrayList<>();
+
+
     public Закупка(Date date, Integer number, ЗаписьКонтрагент contragent_) {
         this.date = date;
         this.number = number;
@@ -41,17 +45,22 @@ public class Закупка extends Документ {
         this.contragent_ = contragent_;
     }
 
+    public void setPometkaProvedeniya() {
+        this.pometkaProvedeniya = false;
+    }
+
     public void ЗаполнитьТЧ(ЗаписьТЧ_Закупка запись) {
-//        if(ТабличнаяЧасть.isEmpty()) {
-//            запись.НомерСтроки = 1;
-//        }
-//        else {
-//            запись.НомерСтроки = ТабличнаяЧасть.size() + 1;
-//        }
+        if(table_part_purchase_.isEmpty()) {
+            запись.setLineNumber(1);
+        }
+        else {
+            запись.setLineNumber(table_part_purchase_.size() + 1);
+        }
         this.table_part_purchase_.add(запись); //по мере создания записей добавляем их в табличную часть документа
     }
 
-    public void ПосчитатьИтоговуюСумму() {
+    public void setFinalSum() {
+        //если табличная часть не заполнена обработать исключение
         double sum1 = 0;
         for (int i = 0; i < table_part_purchase_.size(); i++) {
             ЗаписьТЧ_Закупка запись = table_part_purchase_.get(i);
@@ -59,6 +68,7 @@ public class Закупка extends Документ {
         }
         this.finalSum = sum1;
     }
+
 
     @Override
     public boolean ПередЗаписью() {
@@ -99,24 +109,24 @@ public class Закупка extends Документ {
                 result = false;
             }
         }
+        this.setFinalSum();
         return result;
     }
 
     @Override
     public boolean ЗаписатьРегистры() {
-        boolean result = true;
+//        boolean result = true;
         var СтрРегистра = new ЗаписьРегистраВзаиморасчеты();
-        СтрРегистра.setРегистратор(this);
-        СтрРегистра.setДата(this.getDate());
-        СтрРегистра.setКонтрагент(this.getContragent_());
-        СтрРегистра.setСумма(this.getFinalSum());
+//        СтрРегистра.setRegistrarDoc(this);
+        СтрРегистра.setDate(this.getDate());
+        СтрРегистра.setContragent_(this.getContragent_());
+        СтрРегистра.setSum(this.getFinalSum());
 
-        if(СтрРегистра.save() == false) {
-            result = false;
-        }
-        return result;
+//        if(СтрРегистра.save() == false) {
+//            result = false;
+//        }
+//        return result;
+        return false;
     }
-
-
 
 }

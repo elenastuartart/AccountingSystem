@@ -1,15 +1,40 @@
 package com.stuart.models.entity.документы;
 
 import com.stuart.models.entity.ЗаписьБД;
-import lombok.Getter;
-import lombok.Setter;
+import com.stuart.models.entity.документы.закупка.Закупка;
+import com.stuart.models.entity.документы.продажа.Реализация;
+import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
+import jdk.jfr.MetadataDefinition;
+import lombok.*;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.Any;
+import org.hibernate.annotations.AnyMetaDef;
+import org.hibernate.annotations.MetaValue;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name = "document",schema = "study_db")
 public class Документ extends ЗаписьБД {
 
-    public boolean ПометкаПроведения;
+    @Id
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
+
+    @ManyToMany(mappedBy = "documents_", fetch = FetchType.LAZY)
+    private Set<ЗаписьРегистраВзаиморасчеты>  registersCalculations_;
+
+    @Transient
+    private boolean ПометкаПроведения;
 
     @Override
     public boolean ПередЗаписью() {

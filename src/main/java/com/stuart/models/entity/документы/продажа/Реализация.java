@@ -4,6 +4,7 @@ import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
+import org.hibernate.annotations.Any;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@Builder
 @Entity
 @Table(name = "doc_sale",schema = "study_db")
 public class Реализация extends Документ {
@@ -33,7 +34,18 @@ public class Реализация extends Документ {
     private Double finalSum;
     @OneToMany (mappedBy = "doc_sale_", fetch = FetchType.LAZY)
     private List<ЗаписьТЧСписокТоваров> table_part_list_of_products_ = new ArrayList<>(); //Реализация-ЗаписьТЧСписокТоваров
-                                                                                                //таблица БД "doc_sale"-"table_part_list_of_products"
+                                                                                           //таблица БД "doc_sale"-"table_part_list_of_products"
+
+//    @OneToMany(mappedBy = doc_sale_, fetch = FetchType.LAZY)
+//    private List<ЗаписьРегистраВзаиморасчеты> register_calculation_ = new ArrayList<>();
+
+//    @Any(metaDef = "type", metaColumn = @Column(name = "type_id"), fetch = FetchType.LAZY, optional = true)
+//    @JoinColumn(name = "register_calculation_id", referencedColumnName = "id")
+//    private List<ЗаписьРегистраВзаиморасчеты> DocMetaDef = new ArrayList<>();
+
+    public void setPometkaProvedeniya() {
+        this.pometkaProvedeniya = false;
+    }
 
     public Реализация(Date date, Integer number, ЗаписьКонтрагент contragent) {
         this.date = date;
@@ -106,10 +118,10 @@ public class Реализация extends Документ {
     public boolean ЗаписатьРегистры() {
         boolean result = true;
         var СтрРегистра = new ЗаписьРегистраВзаиморасчеты() ;
-        СтрРегистра.setРегистратор(this);
-        СтрРегистра.setДата(this.getDate());
-        СтрРегистра.setКонтрагент(this.getContragent_());
-        СтрРегистра.setСумма((double)0);
+//        СтрРегистра.setRegistrarDoc(this);
+        СтрРегистра.setDate(this.getDate());
+        СтрРегистра.setContragent_(this.getContragent_());
+        СтрРегистра.setSum((double)0);
         if(СтрРегистра.save() == false) {
             result = false;
         }

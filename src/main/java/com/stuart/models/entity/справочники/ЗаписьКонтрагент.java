@@ -3,6 +3,7 @@ package com.stuart.models.entity.справочники;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.закупка.Закупка;
 import com.stuart.models.entity.документы.продажа.Реализация;
+import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
 import lombok.*;
 
 import javax.persistence.*;
@@ -36,6 +37,10 @@ public class ЗаписьКонтрагент extends ЭлементСправо
     @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
     private List<Реализация> doc_sale_;//ЗаписьКонтрагент-Реализация
                                         //таблица БД БД "contragent"-"doc_sale"
+
+    @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
+    private List<ЗаписьРегистраВзаиморасчеты> register_calculation_; //ЗаписьКонтрагент-ЗаписьРегистраВзаиморасчеты
+                                                                    //таблица БД "contragent"-"register_calculation"
 
     @Override
     public boolean ПередЗаписью() {

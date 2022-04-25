@@ -35,13 +35,16 @@ public class ЗаписьТЧ_Закупка extends ЗаписьБД {
                                     // (таблица БД "table_part_purchase"-"doc_purchase"), list table_part_purchase_
 
 
-
     public ЗаписьТЧ_Закупка(ЗаписьНоменклатура nomenclature_,
                             Double amount, Double price) {
         nomenclature_ = nomenclature_;
         this.amount = amount;
         this.price = price;
         sum = price * amount;
+    }
+
+    public void setSum() {
+        this.sum = price * amount;
     }
 
     @Override

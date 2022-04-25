@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@Builder
 @Entity
 @Table(name = "doc_manufacture", schema = "study_db")
 public class Производство extends Документ {
@@ -34,6 +34,9 @@ public class Производство extends Документ {
             = new ArrayList<>(); //Производство-ЗаписьТЧПроизведеноПродукции
                                   //таблица БД "doc_manufacture"-"table_part_produced_of_products"
 
+    public void setPometkaProvedeniya() {
+        this.pometkaProvedeniya = false;
+    }
 
     public Производство(Date date, Integer number) {
         this.date = date;
@@ -97,42 +100,42 @@ public class Производство extends Документ {
             return false;
     }
 
-    @Override
-    public boolean ЗаписатьРегистры() {
-        boolean result1 = true;
-        boolean result2 = true;
-        for (int i = 0; i < table_part_material_consuption_.size(); i ++) {
-            ЗаписьТЧРасходМатериалов записьТЧРасходМатериалов =
-                    table_part_material_consuption_.get(i);
-            ЗаписьРегистраТоварыНаСкладах СтрРегистраРасход = new ЗаписьРегистраТоварыНаСкладах();
-            СтрРегистраРасход.setРегистратор(this);
-            СтрРегистраРасход.setНоменклатура(записьТЧРасходМатериалов.getNomenclature_());
-            СтрРегистраРасход.setКоличество(записьТЧРасходМатериалов.getAmount());
-            СтрРегистраРасход.setСумма((double)0);
-            if(СтрРегистраРасход.save() == false) {
-                result1 = false;
-            }
-        }
-
-        for (int i = 0; i < table_part_produced_of_products_.size(); i ++) {
-            ЗаписьТЧПроизведеноПродукции записьТЧПроизведеноПродукции =
-                    table_part_produced_of_products_.get(i);
-            ЗаписьРегистраТоварыНаСкладах СтрРегистраПроизведено = new ЗаписьРегистраТоварыНаСкладах();
-            СтрРегистраПроизведено.setРегистратор(this);
-            СтрРегистраПроизведено.setНоменклатура(записьТЧПроизведеноПродукции.getNomenclature_());
-            СтрРегистраПроизведено.setКоличество(записьТЧПроизведеноПродукции.getAmount());
-            СтрРегистраПроизведено.setСумма((double) 0);
-            if(СтрРегистраПроизведено.save() == false) {
-                result2 = false;
-            }
-        }
-
-        if(result1 == true && result2 == true)
-            return true;
-        else
-            return false;
-
-    }
+//    @Override
+//    public boolean ЗаписатьРегистры() {
+//        boolean result1 = true;
+//        boolean result2 = true;
+//        for (int i = 0; i < table_part_material_consuption_.size(); i ++) {
+//            ЗаписьТЧРасходМатериалов записьТЧРасходМатериалов =
+//                    table_part_material_consuption_.get(i);
+//            ЗаписьРегистраТоварыНаСкладах СтрРегистраРасход = new ЗаписьРегистраТоварыНаСкладах();
+//            СтрРегистраРасход.setRegistrarDoc(this);
+//            СтрРегистраРасход.setNomenclature_(записьТЧРасходМатериалов.getNomenclature_());
+//            СтрРегистраРасход.setAmount(записьТЧРасходМатериалов.getAmount());
+//            СтрРегистраРасход.setSum((double)0);
+//            if(СтрРегистраРасход.save() == false) {
+//                result1 = false;
+//            }
+//        }
+//
+//        for (int i = 0; i < table_part_produced_of_products_.size(); i ++) {
+//            ЗаписьТЧПроизведеноПродукции записьТЧПроизведеноПродукции =
+//                    table_part_produced_of_products_.get(i);
+//            ЗаписьРегистраТоварыНаСкладах СтрРегистраПроизведено = new ЗаписьРегистраТоварыНаСкладах();
+//            СтрРегистраПроизведено.setRegistrarDoc(this);
+//            СтрРегистраПроизведено.setNomenclature_(записьТЧПроизведеноПродукции.getNomenclature_());
+//            СтрРегистраПроизведено.setAmount(записьТЧПроизведеноПродукции.getAmount());
+//            СтрРегистраПроизведено.setSum((double) 0);
+//            if(СтрРегистраПроизведено.save() == false) {
+//                result2 = false;
+//            }
+//        }
+//
+//        if(result1 == true && result2 == true)
+//            return true;
+//        else
+//            return false;
+//
+//    }
 
     @Override
     public String toString() {

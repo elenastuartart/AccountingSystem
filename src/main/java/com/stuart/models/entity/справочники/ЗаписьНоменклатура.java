@@ -4,6 +4,7 @@ import com.stuart.models.entity.документы.закупка.ЗаписьТ
 import com.stuart.models.entity.документы.продажа.ЗаписьТЧСписокТоваров;
 import com.stuart.models.entity.документы.производство.ЗаписьТЧПроизведеноПродукции;
 import com.stuart.models.entity.документы.производство.ЗаписьТЧРасходМатериалов;
+import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,6 @@ import java.util.UUID;
 @Setter
 @Builder
 @Entity
-@ToString
 @Table(name = "nomenclature", schema = "study_db")
 public class ЗаписьНоменклатура extends ЭлементСправочника {
     @Id
@@ -44,7 +44,6 @@ public class ЗаписьНоменклатура extends ЭлементСпра
     @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
     private List<ЗаписьТЧРасходМатериалов> table_part_material_consuption_;//НОМЕНКЛАТУРА-ТЧ_РАСХОД_МАТЕРИАЛОВ  связь с классом ЗаписьТЧРасходМатериалов
                                                                             //(таблица БД "nomenclature"-table_part_material_consuption")
-
     @Override
     public boolean ПередЗаписью() {
         if ( this.getCode() == null
@@ -55,5 +54,3 @@ public class ЗаписьНоменклатура extends ЭлементСпра
             return true;
     }
 }
-//nomenclature_fkey_mat_cons
-//pr_stages_fkey_mat_cons
