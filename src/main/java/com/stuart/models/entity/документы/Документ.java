@@ -6,6 +6,7 @@ import com.stuart.models.entity.документы.продажа.Реализа
 import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
 import jdk.jfr.MetadataDefinition;
 import lombok.*;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
@@ -21,20 +22,13 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Entity
-@Table(name = "document",schema = "study_db")
 public class Документ extends ЗаписьБД {
 
-    @Id
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id = UUID.randomUUID();
-
-    @ManyToMany(mappedBy = "documents_", fetch = FetchType.LAZY)
-    private Set<ЗаписьРегистраВзаиморасчеты>  registersCalculations_;
-
-    @Transient
     private boolean ПометкаПроведения;
+
+    public Документ getДокумент (Session session) {
+        return null;
+    }
 
     @Override
     public boolean ПередЗаписью() {
@@ -49,32 +43,44 @@ public class Документ extends ЗаписьБД {
         return true;
     }
 
-    public boolean Проведение() {
-
-        boolean result = true;
-        ПометкаПроведения = true;
-        if (ЗаписатьДокумент()==false) {
-            result = false;
-        }
-        return result;
-    }
-
     public boolean ЗаписатьДокумент() {
 
         boolean result = true;
-        if(this.ПередЗаписью() == false || this.save()==false) {
+
+        if(this.ПередЗаписью() == false) {
+            System.out.println("Не прошло проверку перед записью");
             result = false;
         }
         if(result!=false) {
+            if (this.save() == false) {
+                System.out.println("Ошибка при записи документа");
+                result = false;
+            }
+        }
+        if(result!=false) {
             if(this.ЗаписатьТабЧасти()==false) {
+                System.out.println("Не удалось записать табличную часть");
                 result = false;
             }
         }
         if (result!=false && ПометкаПроведения==true) {
             if(this.ЗаписатьРегистры()==false) {
+                System.out.println("Не удалось записать регистры");
                 result = false;
             }
         }
+        if(result==false)
+            System.out.println("Не удалось записать документ");
+
         return  result;
+    }
+
+    public static ЗаписьБД ПолучитьСтрокуТЧ() {
+        return null;
+    }
+
+    public boolean Проведение() {
+
+        return true;
     }
 }

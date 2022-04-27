@@ -14,8 +14,9 @@ public class ЗаписьБД {
         return DataAccessObject.save(this);
     }
 
-    public ЗаписьБД findByValueDAO(String fieldName, Object fieldValue) {
-        return null;
+    public boolean delete() {
+        return  DataAccessObject.delete(this);
     }
+
 }
 

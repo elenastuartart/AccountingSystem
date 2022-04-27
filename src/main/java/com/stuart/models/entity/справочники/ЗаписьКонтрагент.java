@@ -1,5 +1,6 @@
 package com.stuart.models.entity.справочники;
 
+import com.stuart.dao.записьБД.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.закупка.Закупка;
 import com.stuart.models.entity.документы.продажа.Реализация;
@@ -8,6 +9,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +21,21 @@ import java.util.UUID;
 @Entity
 @Table(name = "contragent", schema = "study_db")
 public class ЗаписьКонтрагент extends ЭлементСправочника {
+
+    public static ЗаписьКонтрагент findObjectByValue(String fieldName, Object fieldValue) {
+        return (ЗаписьКонтрагент)DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
+    }
+
+    public static List<ЗаписьКонтрагент> findObjectsByValue(String fieldName, Object fieldValue){
+        List<ЗаписьКонтрагент> Result = new ArrayList<ЗаписьКонтрагент>();
+        List<ЗаписьБД> Записи = DataAccessObject.findObjectsByValue(getType(), fieldName, fieldValue);
+        for(var Запись:Записи) Result.add((ЗаписьКонтрагент)Запись);
+        return Result;
+    }
+
+    public static String getType() {
+        return "ЗаписьКонтрагент";
+    }
 
     @Id
     @Column(columnDefinition = "BINARY(16)")
@@ -62,11 +79,5 @@ public class ЗаписьКонтрагент extends ЭлементСправо
                 ", ТипКонтрагента='" + type_KA + '\'' +
                 '}';
     }
-
-    @Override
-    public ЗаписьБД findByValueDAO(String fieldName, Object fieldValue) {
-        return super.findByValueDAO(fieldName, fieldValue);
-    }
-
 
 }

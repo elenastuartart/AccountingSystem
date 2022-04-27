@@ -1,8 +1,13 @@
 package com.stuart.models.entity.документы.производство;
 
+import com.stuart.dao.записьБД.DataAccessObject;
+import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
+import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import lombok.*;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,6 +23,22 @@ import java.util.UUID;
 @Entity
 @Table(name = "doc_manufacture", schema = "study_db")
 public class Производство extends Документ {
+
+    public static Производство findObjectByValue(String fieldName, Object fieldValue) {
+        return (Производство) DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
+    }
+
+    public static List<Производство> findObjectsByValue(String fieldName, Object fieldValue){
+        List<Производство> Result = new ArrayList<Производство>();
+        List<ЗаписьБД> Записи = DataAccessObject.findObjectsByValue(getType(), fieldName, fieldValue);
+        for(var Запись:Записи) Result.add((Производство)Запись);
+        return Result;
+    }
+
+    public static String getType() {
+        return "Производство";
+    }
+
     @Id
     @Column(columnDefinition = "BINARY(16)")
     private UUID id = UUID.randomUUID();
@@ -34,6 +55,12 @@ public class Производство extends Документ {
             = new ArrayList<>(); //Производство-ЗаписьТЧПроизведеноПродукции
                                   //таблица БД "doc_manufacture"-"table_part_produced_of_products"
 
+    @Transient
+    public List<ЗаписьРегистраТоварыНаСкладах> registerProductsInStock;
+    public void initRegisterCalculation (Session session) {
+        this.registerProductsInStock = ЗаписьРегистраТоварыНаСкладах.findObjectsByValue("idDoc", this.id);
+    }
+
     public void setPometkaProvedeniya() {
         this.pometkaProvedeniya = false;
     }
@@ -45,22 +72,10 @@ public class Производство extends Документ {
     }
 
     public void ЗаполнитьТЧ_Расход(ЗаписьТЧРасходМатериалов запись) {
-//        if(РасходМатериалов.isEmpty()) {
-//            запись.НомерСтроки = 1;
-//        }
-//        else {
-//            запись.НомерСтроки = РасходМатериалов.size() + 1;
-//        }
         this.table_part_material_consuption_.add(запись); //по мере создания записей добавляем их в табличную часть документа
     }
 
     public void ЗаполнитьТЧ_Произведено(ЗаписьТЧПроизведеноПродукции запись) {
-//        if(РасходМатериалов.isEmpty()) {
-//            запись.НомерСтроки = 1;
-//        }
-//        else {
-//            запись.НомерСтроки = РасходМатериалов.size() + 1;
-//        }
         this.table_part_produced_of_products_.add(запись); //по мере создания записей добавляем их в табличную часть документа
     }
 
@@ -100,42 +115,49 @@ public class Производство extends Документ {
             return false;
     }
 
-//    @Override
-//    public boolean ЗаписатьРегистры() {
-//        boolean result1 = true;
-//        boolean result2 = true;
-//        for (int i = 0; i < table_part_material_consuption_.size(); i ++) {
-//            ЗаписьТЧРасходМатериалов записьТЧРасходМатериалов =
-//                    table_part_material_consuption_.get(i);
-//            ЗаписьРегистраТоварыНаСкладах СтрРегистраРасход = new ЗаписьРегистраТоварыНаСкладах();
-//            СтрРегистраРасход.setRegistrarDoc(this);
-//            СтрРегистраРасход.setNomenclature_(записьТЧРасходМатериалов.getNomenclature_());
-//            СтрРегистраРасход.setAmount(записьТЧРасходМатериалов.getAmount());
-//            СтрРегистраРасход.setSum((double)0);
-//            if(СтрРегистраРасход.save() == false) {
-//                result1 = false;
-//            }
-//        }
-//
-//        for (int i = 0; i < table_part_produced_of_products_.size(); i ++) {
-//            ЗаписьТЧПроизведеноПродукции записьТЧПроизведеноПродукции =
-//                    table_part_produced_of_products_.get(i);
-//            ЗаписьРегистраТоварыНаСкладах СтрРегистраПроизведено = new ЗаписьРегистраТоварыНаСкладах();
-//            СтрРегистраПроизведено.setRegistrarDoc(this);
-//            СтрРегистраПроизведено.setNomenclature_(записьТЧПроизведеноПродукции.getNomenclature_());
-//            СтрРегистраПроизведено.setAmount(записьТЧПроизведеноПродукции.getAmount());
-//            СтрРегистраПроизведено.setSum((double) 0);
-//            if(СтрРегистраПроизведено.save() == false) {
-//                result2 = false;
-//            }
-//        }
-//
-//        if(result1 == true && result2 == true)
-//            return true;
-//        else
-//            return false;
-//
-//    }
+    @Override
+    public boolean ЗаписатьРегистры() {
+        boolean result1 = true;
+        boolean result2 = true;
+        for (int i = 0; i < table_part_material_consuption_.size(); i ++) {
+            ЗаписьТЧРасходМатериалов записьТЧРасходМатериалов =
+                    table_part_material_consuption_.get(i);
+            ЗаписьРегистраТоварыНаСкладах СтрРегистраРасход = new ЗаписьРегистраТоварыНаСкладах();
+
+            СтрРегистраРасход.setNomenclature_(записьТЧРасходМатериалов.getNomenclature_());
+            СтрРегистраРасход.setAmount(записьТЧРасходМатериалов.getAmount());
+            СтрРегистраРасход.setSum((double)0);
+
+            СтрРегистраРасход.setTypeDoc(getType());
+            СтрРегистраРасход.setIdDoc(this.getId());
+
+            if(СтрРегистраРасход.save() == false) {
+                result1 = false;
+            }
+        }
+
+        for (int i = 0; i < table_part_produced_of_products_.size(); i ++) {
+            ЗаписьТЧПроизведеноПродукции записьТЧПроизведеноПродукции =
+                    table_part_produced_of_products_.get(i);
+            ЗаписьРегистраТоварыНаСкладах СтрРегистраПроизведено = new ЗаписьРегистраТоварыНаСкладах();
+
+            СтрРегистраПроизведено.setNomenclature_(записьТЧПроизведеноПродукции.getNomenclature_());
+            СтрРегистраПроизведено.setAmount(записьТЧПроизведеноПродукции.getAmount());
+            СтрРегистраПроизведено.setSum((double) 0);
+
+            СтрРегистраПроизведено.setTypeDoc(this.getType());
+            СтрРегистраПроизведено.setIdDoc(this.getId());
+
+            if(СтрРегистраПроизведено.save() == false) {
+                result2 = false;
+            }
+        }
+
+        if(result1 == true && result2 == true)
+            return true;
+        else
+            return false;
+    }
 
     @Override
     public String toString() {

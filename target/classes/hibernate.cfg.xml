@@ -33,6 +33,7 @@
 
 
     <mapping class="com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты"/>
+    <mapping class="com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах"/>
 
   </session-factory>
 </hibernate-configuration>

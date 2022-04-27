@@ -1,10 +1,14 @@
 package com.stuart.models.entity.документы.продажа;
 
+import com.stuart.dao.записьБД.DataAccessObject;
+import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
+import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
-import org.hibernate.annotations.Any;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,6 +25,20 @@ import java.util.UUID;
 @Table(name = "doc_sale",schema = "study_db")
 public class Реализация extends Документ {
 
+    public static Реализация findObjectByValue(String fieldName, Object fieldValue) {
+        return (Реализация) DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
+    }
+
+    public static List<Реализация> findObjectsByValue(String fieldName, Object fieldValue){
+        List<Реализация> Result = new ArrayList<Реализация>();
+        List<ЗаписьБД> Записи = DataAccessObject.findObjectsByValue(getType(), fieldName, fieldValue);
+        for(var Запись:Записи) Result.add((Реализация)Запись);
+        return Result;
+    }
+    public static String getType() {
+        return "Реализация";
+    }
+
     @Id
     @Column(columnDefinition = "BINARY(16)")
     private UUID id = UUID.randomUUID();
@@ -34,7 +52,17 @@ public class Реализация extends Документ {
     private Double finalSum;
     @OneToMany (mappedBy = "doc_sale_", fetch = FetchType.LAZY)
     private List<ЗаписьТЧСписокТоваров> table_part_list_of_products_ = new ArrayList<>(); //Реализация-ЗаписьТЧСписокТоваров
-                                                                                           //таблица БД "doc_sale"-"table_part_list_of_products"
+
+    @Transient
+    public List<ЗаписьРегистраТоварыНаСкладах> registerProductsInStock;
+    @Transient
+    public List<ЗаписьРегистраВзаиморасчеты> registerCalculations;
+
+    public void initRegisterCalculation () {
+        this.registerCalculations = ЗаписьРегистраВзаиморасчеты.findObjectsByValue("idDoc", this.id);
+        this.registerProductsInStock = ЗаписьРегистраТоварыНаСкладах.findObjectsByValue("idDoc", this.id);
+    }
+
 
 //    @OneToMany(mappedBy = doc_sale_, fetch = FetchType.LAZY)
 //    private List<ЗаписьРегистраВзаиморасчеты> register_calculation_ = new ArrayList<>();
@@ -54,17 +82,11 @@ public class Реализация extends Документ {
         contragent_ = contragent;
     }
 
-    public void ЗаполнитьТЧ(ЗаписьТЧСписокТоваров Запись) {
-        if(table_part_list_of_products_.isEmpty()) {
-            Запись.setLineNumber(1);
-        }
-        else {
-            Запись.setLineNumber(table_part_list_of_products_.size() + 1);
-        }
+    public void initTableParts(ЗаписьТЧСписокТоваров Запись) {
         this.table_part_list_of_products_.add(Запись); //по мере создания записей добавляем их в табличную часть документа
     }
 
-    public void ПосчитатьИтоговуюСумму() {
+    public void setFinalSum() {
         double sum = 0;
         for (int i = 0; i < table_part_list_of_products_.size(); i++) {
             ЗаписьТЧСписокТоваров запись = table_part_list_of_products_.get(i);
@@ -118,10 +140,14 @@ public class Реализация extends Документ {
     public boolean ЗаписатьРегистры() {
         boolean result = true;
         var СтрРегистра = new ЗаписьРегистраВзаиморасчеты() ;
-//        СтрРегистра.setRegistrarDoc(this);
+
         СтрРегистра.setDate(this.getDate());
         СтрРегистра.setContragent_(this.getContragent_());
-        СтрРегистра.setSum((double)0);
+        СтрРегистра.setSum(this.getFinalSum());
+
+        СтрРегистра.setTypeDoc(getType());
+        СтрРегистра.setIdDoc(this.getId());
+
         if(СтрРегистра.save() == false) {
             result = false;
         }

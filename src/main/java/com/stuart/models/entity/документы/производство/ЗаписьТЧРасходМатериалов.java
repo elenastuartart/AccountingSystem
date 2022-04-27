@@ -1,5 +1,6 @@
 package com.stuart.models.entity.документы.производство;
 
+import com.stuart.dao.записьБД.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;
@@ -7,6 +8,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.print.attribute.standard.MediaSize;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -17,6 +20,22 @@ import java.util.UUID;
 @Entity
 @Table(name = "table_part_material_consuption", schema = "study_db")
 public class ЗаписьТЧРасходМатериалов extends ЗаписьБД {
+
+    public static ЗаписьТЧРасходМатериалов findObjectByValue(String fieldName, Object fieldValue) {
+        return (ЗаписьТЧРасходМатериалов) DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
+    }
+
+    public static List<ЗаписьТЧРасходМатериалов> findObjectsByValue(String fieldName, Object fieldValue){
+        List<ЗаписьТЧРасходМатериалов> Result = new ArrayList<ЗаписьТЧРасходМатериалов>();
+        List<ЗаписьБД> Записи = DataAccessObject.findObjectsByValue(getType(), fieldName, fieldValue);
+        for(var Запись:Записи) Result.add((ЗаписьТЧРасходМатериалов)Запись);
+        return Result;
+    }
+
+    public static String getType() {
+        return "ЗаписьТЧРасходМатериалов";
+    }
+
     @Id
     @GeneratedValue
     private UUID id;

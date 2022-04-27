@@ -1,11 +1,15 @@
 package com.stuart.models.entity.документы.продажа;
 
+import com.stuart.dao.записьБД.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.закупка.Закупка;
+import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -16,6 +20,21 @@ import java.util.UUID;
 @Entity
 @Table(name = "table_part_list_of_products", schema = "study_db")
 public class ЗаписьТЧСписокТоваров extends ЗаписьБД {
+
+    public static ЗаписьТЧСписокТоваров findObjectByValue(String fieldName, Object fieldValue) {
+        return (ЗаписьТЧСписокТоваров) DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
+    }
+
+    public static List<ЗаписьТЧСписокТоваров> findObjectsByValue(String fieldName, Object fieldValue){
+        List<ЗаписьТЧСписокТоваров> Result = new ArrayList<ЗаписьТЧСписокТоваров>();
+        List<ЗаписьБД> Записи = DataAccessObject.findObjectsByValue(getType(), fieldName, fieldValue);
+        for(var Запись:Записи) Result.add((ЗаписьТЧСписокТоваров)Запись);
+        return Result;
+    }
+    public static String getType() {
+        return "ЗаписьТЧСписокТоваров";
+    }
+
     @Id
     @Column(columnDefinition = "BINARY(16)")
     private UUID id = UUID.randomUUID();
