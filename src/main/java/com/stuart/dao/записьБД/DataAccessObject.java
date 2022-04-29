@@ -127,7 +127,6 @@ public class DataAccessObject {
         return result;
     }
 
-
     public static List<ЗаписьБД> findObjectsByValue(String tableName, String fieldName, Object fieldValue) {
 
         List<ЗаписьБД> result = null;
@@ -157,4 +156,34 @@ public class DataAccessObject {
         }
         return result;
     }
+
+//    public static int getSizeTable(String tableName) {
+//        Integer result = null;
+//
+//        if (_session == null) {
+//            try (final Session newSession = getFactory().openSession()){
+//
+//                Query<Integer> query = newSession.createQuery("select " + "count(*) " +
+//                        "from " + tableName + " table where table." + " = :param");
+//                query.setParameter("param", tableName);
+//                result = query.getSingleResult();
+//
+//                newSession.close();
+//            }
+//            catch (Exception e) {
+//                System.out.println("Не удалось найти записи: " + e.getMessage());
+//            }
+//        }
+//        else {
+//            try {
+//                Query<ЗаписьБД> query = _session.createQuery("from " + tableName + " table where table." + fieldName + " = :param");
+//                query.setParameter("param", fieldValue);
+//                result = query.getResultList();
+//            }
+//            catch (Exception e) {
+//                System.out.println("Не удалось найти записи: " + e.getMessage());
+//            }
+//        }
+//        return result;
+//    }
 }

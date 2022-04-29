@@ -7,20 +7,17 @@ import com.stuart.models.entity.регистры.ЗаписьРегистраВ�
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Builder
 @Entity
 @Table(name = "doc_purchase", schema = "study_db")
 public class Закупка extends Документ {
@@ -40,15 +37,20 @@ public class Закупка extends Документ {
     @OneToMany(mappedBy = "doc_purchase_", fetch = FetchType.LAZY)
     private List<ЗаписьТЧ_Закупка> table_part_purchase_ = new ArrayList<>();
     @Transient
-    public List<ЗаписьРегистраТоварыНаСкладах> registerProductsInStock;
+    private List<ЗаписьРегистраТоварыНаСкладах> registerProductsInStock;
     @Transient
-    public List<ЗаписьРегистраВзаиморасчеты> registerCalculations;
+    private List<ЗаписьРегистраВзаиморасчеты> registerCalculations;
 
-    public Закупка(Date date, Integer number, ЗаписьКонтрагент contragent_) {
+    public Закупка(Date date, ЗаписьКонтрагент contragent_) {
         this.date = date;
-        this.number = number;
+        this.number = Документ.GetRandomNum();
         this.pometkaProvedeniya = false;
         this.contragent_ = contragent_;
+    }
+
+    public void initRegisterCalculation () {
+        this.registerCalculations = ЗаписьРегистраВзаиморасчеты.findObjectsByValue("idDoc", this.id);
+        this.registerProductsInStock = ЗаписьРегистраТоварыНаСкладах.findObjectsByValue("idDoc", this.id);
     }
 
     public void setPometkaProvedeniya() {
@@ -63,6 +65,10 @@ public class Закупка extends Документ {
             sum1 = sum1 + запись.getSum();
         }
         this.finalSum = sum1;
+    }
+
+    public void setNumber() {
+        this.number = Документ.GetRandomNum();
     }
 
     public static Закупка findObjectByValue(String fieldName, Object fieldValue) {
@@ -80,115 +86,158 @@ public class Закупка extends Документ {
         return "Закупка";
     }
 
-    public void initRegisterCalculation () {
-        this.registerCalculations = ЗаписьРегистраВзаиморасчеты.findObjectsByValue("idDoc", this.id);
-        this.registerProductsInStock = ЗаписьРегистраТоварыНаСкладах.findObjectsByValue("idDoc", this.id);
-    }
+    public ЗаписьТЧ_Закупка ДобавитьЗаписьВТЧ() {
+        var ЗаписьТЧ = new ЗаписьТЧ_Закупка();
+        ЗаписьТЧ.setDoc_purchase_(this);
+        ЗаписьТЧ.setIdDoc(this.getId());
+        this.table_part_purchase_.add(ЗаписьТЧ); //по мере создания записей добавляем их в табличную часть документа
 
-    public void ДобавитьЗаписьВТЧ(ЗаписьТЧ_Закупка запись) {
-        this.table_part_purchase_.add(запись); //по мере создания записей добавляем их в табличную часть документа
+        return ЗаписьТЧ;
     }
 
     @Override
     public boolean ЗаписатьТабЧасти() {
-        boolean result = true;
 
         List<ЗаписьТЧ_Закупка> записиТЧ =
                 ЗаписьТЧ_Закупка.findObjectsByValue("idDoc", this.id);
 
         for (int i = 0; i < записиТЧ.size(); i++) {
             var строка = записиТЧ.get(i);
-            if(строка.delete() == false) {
-                result = false;
-                break;
-            }
+
+            if(!строка.delete())
+                return false;
         }
 
-        if(result!=false) {
-            for (int i = 0; i < table_part_purchase_.size(); i ++) {
-                var СтрТЧ = table_part_purchase_.get(i);
-                СтрТЧ.setLineNumber(i+1);
-                if(СтрТЧ.save() == false) {
-                    result = false;
-                }
-            }
+        for (int i = 0; i < table_part_purchase_.size(); i ++) {
+            var СтрТЧ = table_part_purchase_.get(i);
+            СтрТЧ.setLineNumber(i+1);
+
+            if(!СтрТЧ.save())
+                    return false;
         }
-//
-        return result;
+
+        return true;
     }
 
     @Override
-    public boolean ЗаписатьРегистры() {
-        boolean result = true;
+    public boolean ЗаписатьРегистрыВзаиморасчетов() {
 
-        List<ЗаписьРегистраВзаиморасчеты> записиРегистраДокумента =
+        var СтрРегистра = new ЗаписьРегистраВзаиморасчеты();
+        СтрРегистра.setDate(this.getDate());
+        СтрРегистра.setContragent_(this.getContragent_());
+        СтрРегистра.setSum(-(this.getFinalSum()));
+        СтрРегистра.setTypeDoc(getType());
+        СтрРегистра.setIdDoc(this.getId());
+
+        if(!СтрРегистра.save())
+            return  false;
+
+        return true;
+    }
+
+    @Override
+    public boolean ЗаписатьРегистрыТоварыНаСкладе() {
+
+        for (int i = 0; i < this.getTable_part_purchase_().size(); i++) {
+
+            var СтрРегистра = new ЗаписьРегистраТоварыНаСкладах();
+            СтрРегистра.setDate(this.getDate());
+            СтрРегистра.setNomenclature_(this.getTable_part_purchase_().get(i).getNomenclature_());
+            СтрРегистра.setAmount(this.getTable_part_purchase_().get(i).getAmount());
+            СтрРегистра.setSum(0D);
+            СтрРегистра.setTypeDoc(this.getType());
+            СтрРегистра.setIdDoc(this.getId());
+
+            if(!СтрРегистра.save())
+                return  false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean ОчисткаРегистров() {
+        List<ЗаписьРегистраВзаиморасчеты> записиРегистраДокумента1 =
                 ЗаписьРегистраВзаиморасчеты.findObjectsByValue(
-                "idDoc", this.id);
+                        "idDoc", this.id);
+
+        for (int i = 0; i < записиРегистраДокумента1.size(); i++) {
+            var строка = записиРегистраДокумента1.get(i);
+
+            if(!строка.delete())
+                return false;
+        }
+
+        List<ЗаписьРегистраТоварыНаСкладах> записиРегистраДокумента =
+                ЗаписьРегистраТоварыНаСкладах.findObjectsByValue(
+                        "idDoc", this.id);
 
         for (int i = 0; i < записиРегистраДокумента.size(); i++) {
             var строка = записиРегистраДокумента.get(i);
-            if(строка.delete() == false) {
-                 result = false;
-                 break;
-            }
+
+            if(!строка.delete())
+                return false;
         }
-
-        if(result!=false) {
-            var СтрРегистра = new ЗаписьРегистраВзаиморасчеты();
-
-            СтрРегистра.setDate(this.getDate());
-            СтрРегистра.setContragent_(this.getContragent_());
-            СтрРегистра.setSum(this.getFinalSum());
-            СтрРегистра.setTypeDoc(getType());
-            СтрРегистра.setIdDoc(this.getId());
-
-            if(СтрРегистра.save() == false) {
-                result = false;
-            }
-        }
-        return result;
+        return true;
     }
 
     @Override
     public boolean ЗаписатьДокумент() {
-        boolean result = true;
 
-        if(this.ПередЗаписью() == false) {
-            System.out.println("Не прошло проверку перед записью");
-            result = false;
+        if(!this.ПередЗаписью()) {
+            System.out.println("Не удалось записать документ: Не прошло проверку перед записью");
+            return false;
         }
-        if(result!=false) {
-            if (this.save() == false) {
-                System.out.println("Ошибка при записи документа");
-                result = false;
-            }
-        }
-        if(result!=false) {
-            if(this.ЗаписатьТабЧасти()==false) {
-                System.out.println("Не удалось записать табличную часть");
-                result = false;
-            }
-        }
-        if (result!=false && pometkaProvedeniya==true) {
-            if(this.ЗаписатьРегистры()==false) {
-                System.out.println("Не удалось записать регистры");
-                result = false;
-            }
-        }
-        if(result==false)
-            System.out.println("Не удалось записать документ");
 
-        return  result;
+        if (!this.save()) {
+            System.out.println("Ошибка при записи документа");
+            return false;
+        }
+
+        if(!this.ЗаписатьТабЧасти()) {
+            System.out.println("Не удалось записать документ: Ошибка записи табличной части Закупка");
+            return false;
+        }
+
+        if(!this.ОчисткаРегистров()) {
+            System.out.println("Не удалось записать документ: Ошибка очистки регистров");
+            return false;
+        }
+
+        if (pometkaProvedeniya) {
+
+            if(!this.ЗаписатьРегистрыВзаиморасчетов()) {
+                System.out.println("Не удалось записать документ: Ошибка записи регистра Взаиморасчеты");
+                return false;
+            }
+
+            if(!this.ЗаписатьРегистрыТоварыНаСкладе()) {
+                System.out.println("Не удалось записать документ: Ошибка записи регистра ТоварыНаСкладе");
+                return false;
+            }
+        }
+        return  true;
     }
 
     @Override
     public boolean Проведение() {
-        boolean result = true;
+
         pometkaProvedeniya = true;
-        if (ЗаписатьДокумент()==false) {
-            result = false;
-        }
-        return result;
+
+        if (!ЗаписатьДокумент())
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public boolean ОтменаПроведения() {
+        this.pometkaProvedeniya = false;
+
+        if (!ЗаписатьДокумент())
+            return false;
+
+        return true;
     }
 
     @Override
@@ -200,12 +249,6 @@ public class Закупка extends Документ {
             return false;
         else
             return true;
-    }
-
-
-    public static ЗаписьТЧ_Закупка ПолучитьСтрокуТЧ(Закупка закупка) {
-
-        return null;
     }
 
     @Override

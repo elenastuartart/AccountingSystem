@@ -3,16 +3,9 @@ package com.stuart.models.entity.регистры;
 import com.stuart.dao.записьБД.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
-import com.stuart.models.entity.документы.закупка.Закупка;
-import com.stuart.models.entity.документы.продажа.Реализация;
-import com.stuart.models.entity.документы.производство.Производство;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import lombok.*;
-import org.hibernate.Session;
-import org.hibernate.annotations.ManyToAny;
-import org.hibernate.query.Query;
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -24,6 +17,21 @@ import java.util.*;
 @Entity
 @Table(name = "register_calculation", schema = "study_db")
 public class ЗаписьРегистраВзаиморасчеты extends ЗаписьРегистра {
+    @Id
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
+    private Date date;
+    private Double sum;
+    //ЗаписьРегистраВзаиморасчеты-ЗаписьКонтрагент
+    //таблица БД "register_calculation"-"contragent"
+    @ManyToOne
+    @JoinColumn(name = "contragent_id", referencedColumnName = "id")
+    private ЗаписьКонтрагент contragent_;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID idDoc;
+    private String typeDoc;
+    @Transient
+    private Документ registrarDoc;
 
     public static ЗаписьРегистраВзаиморасчеты findObjectByValue(String fieldName, Object fieldValue) {
         return (ЗаписьРегистраВзаиморасчеты) DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
@@ -40,39 +48,6 @@ public class ЗаписьРегистраВзаиморасчеты extends За
         return "ЗаписьРегистраВзаиморасчеты";
     }
 
-    @Id
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id = UUID.randomUUID();
-
-    private Date date;
-    private Double sum;
-    //ЗаписьРегистраВзаиморасчеты-ЗаписьКонтрагент
-    //таблица БД "register_calculation"-"contragent"
-    @ManyToOne
-    @JoinColumn(name = "contragent_id", referencedColumnName = "id")
-    private ЗаписьКонтрагент contragent_;
-    private UUID idDoc;
-    @Column(columnDefinition = "BINARY(16)")
-    private String typeDoc;
-
-    @Transient
-    private Документ registrarDoc;
-
-
-
-   //если нам не нужна таблица register_calculation_doctype и ее данные -
-    //мы можем сразу получить все документы регистра//
-    // таблица document ссылается на регистр register_calculation через
-    // промежуточную таблицу "register_calculation_doctype"
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "register_calculation_doctype",
-//            joinColumns = @JoinColumn(name = "register_calculation_id"),
-//            inverseJoinColumns = @JoinColumn(name = "document_id"))
-//    private Set<Документ> documents_;
-//
-//    @Transient
-//    private Документ doc;
-
     @Override
     public boolean ПередЗаписью() {
         if (
@@ -84,7 +59,6 @@ public class ЗаписьРегистраВзаиморасчеты extends За
         else
             return true;
     }
-
 
     @Override
     public String toString() {

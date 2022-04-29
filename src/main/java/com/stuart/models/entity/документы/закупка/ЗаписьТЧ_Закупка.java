@@ -15,7 +15,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "table_part_purchase", schema = "study_db")
 public class ЗаписьТЧ_Закупка extends ЗаписьБД {
@@ -75,7 +74,8 @@ public class ЗаписьТЧ_Закупка extends ЗаписьБД {
     public boolean ПередЗаписью() {
         if (this.getNomenclature_() == null
                 || this.getAmount() == null || this.getPrice() == null
-                || this.getSum() == null )
+                || this.getSum() == null || this.doc_purchase_== null
+                || this.idDoc == null)
             return false;
         else
             return true;

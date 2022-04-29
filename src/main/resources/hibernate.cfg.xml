@@ -19,7 +19,6 @@
     <mapping class="com.stuart.models.entity.справочники.ЗаписьКонтрагент"/>
     <mapping class="com.stuart.models.entity.справочники.ЗаписьНоменклатура"/>
     <mapping class="com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства"/>
-    <mapping class="com.stuart.models.entity.справочники.test"/>
 
     <mapping class="com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка"/>
     <mapping class="com.stuart.models.entity.документы.продажа.ЗаписьТЧСписокТоваров"/>
@@ -29,8 +28,6 @@
     <mapping class="com.stuart.models.entity.документы.закупка.Закупка"/>
     <mapping class="com.stuart.models.entity.документы.продажа.Реализация"/>
     <mapping class="com.stuart.models.entity.документы.производство.Производство"/>
-    <mapping class="com.stuart.models.entity.документы.Документ"/>
-
 
     <mapping class="com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты"/>
     <mapping class="com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах"/>

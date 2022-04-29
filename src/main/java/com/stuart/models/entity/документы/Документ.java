@@ -1,28 +1,24 @@
 package com.stuart.models.entity.документы;
 
 import com.stuart.models.entity.ЗаписьБД;
-import com.stuart.models.entity.документы.закупка.Закупка;
-import com.stuart.models.entity.документы.продажа.Реализация;
-import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
-import jdk.jfr.MetadataDefinition;
 import lombok.*;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.AnyMetaDef;
-import org.hibernate.annotations.MetaValue;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.Random;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Документ extends ЗаписьБД {
+
+    private static Random _rnd;
+    public static Integer GetRandomNum(){
+        if (_rnd == null)
+            _rnd = new Random();
+
+        return _rnd.nextInt(99999999);
+    }
 
     private boolean ПометкаПроведения;
 
@@ -35,7 +31,11 @@ public class Документ extends ЗаписьБД {
         return super.ПередЗаписью();
     }
 
-    public boolean ЗаписатьРегистры() {
+    public boolean ЗаписатьРегистрыВзаиморасчетов() {
+        return true;
+    }
+
+    public boolean ЗаписатьРегистрыТоварыНаСкладе() {
         return true;
     }
 
@@ -64,7 +64,7 @@ public class Документ extends ЗаписьБД {
             }
         }
         if (result!=false && ПометкаПроведения==true) {
-            if(this.ЗаписатьРегистры()==false) {
+            if(this.ЗаписатьРегистрыВзаиморасчетов()==false) {
                 System.out.println("Не удалось записать регистры");
                 result = false;
             }
@@ -75,12 +75,15 @@ public class Документ extends ЗаписьБД {
         return  result;
     }
 
-    public static ЗаписьБД ПолучитьСтрокуТЧ() {
-        return null;
+    public boolean Проведение() {
+        return true;
     }
 
-    public boolean Проведение() {
+    public boolean ОтменаПроведения() {
+        return true;
+    }
 
+    public boolean ОчисткаРегистров() {
         return true;
     }
 }

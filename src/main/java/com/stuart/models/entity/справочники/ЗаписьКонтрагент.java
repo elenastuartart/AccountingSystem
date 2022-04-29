@@ -11,16 +11,53 @@ import javax.persistence.*;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 @Entity
 @Table(name = "contragent", schema = "study_db")
 public class ЗаписьКонтрагент extends ЭлементСправочника {
+
+    @Id
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
+    private Integer code;
+    private String name;
+    private String contact_person;
+    private String address;
+    private String type_KA; //поставщик/покупатель
+    //ЗаписьКонтрагент-Закупка
+    //таблица БД "contragent"-"doc_purchase"
+    @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
+    private List<Закупка> doc_purchase_;
+    //  ЗАПИСЬ_КОНТРАГЕНТ-ЗАПИСЬ_НОМЕНКЛАТУРА связь с классом "ЗаписьНоменклатура" (таблица БД "nomenclature")
+    //(таблица БД "contragent"-"nomenclature") list nomenclaturies_
+    @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
+    private List<ЗаписьНоменклатура> nomenclaturies_;
+    //ЗаписьКонтрагент-Реализация
+    //таблица БД БД "contragent"-"doc_sale"
+    @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
+    private List<Реализация> doc_sale_;
+    //ЗаписьКонтрагент-ЗаписьРегистраВзаиморасчеты
+    //таблица БД "contragent"-"register_calculation"
+    @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
+    private List<ЗаписьРегистраВзаиморасчеты> register_calculation_;
+
+    public ЗаписьКонтрагент(String name, String contact_person, String address, String type_KA) {
+        this.code = ЭлементСправочника.GetRandomCode();
+        this.name = name;
+        this.contact_person = contact_person;
+        this.address = address;
+        this.type_KA = type_KA;
+    }
+
+    public void setCode() {
+        this.code = ЭлементСправочника.GetRandomCode();
+    }
 
     public static ЗаписьКонтрагент findObjectByValue(String fieldName, Object fieldValue) {
         return (ЗаписьКонтрагент)DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
@@ -36,28 +73,6 @@ public class ЗаписьКонтрагент extends ЭлементСправо
     public static String getType() {
         return "ЗаписьКонтрагент";
     }
-
-    @Id
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id = UUID.randomUUID();
-    private Integer code;
-    private String name;
-    private String contact_person;
-    private String address;
-    private String type_KA; //поставщик/покупатель
-    @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
-    private List<Закупка> doc_purchase_;//ЗаписьКонтрагент-Закупка
-                                        //таблица БД "contragent"-"doc_purchase"
-    @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
-    private List<ЗаписьНоменклатура> nomenclaturies_; //  ЗАПИСЬ_КОНТРАГЕНТ-ЗАПИСЬ_НОМЕНКЛАТУРА связь с классом "ЗаписьНоменклатура" (таблица БД "nomenclature")
-                                                     //(таблица БД "contragent"-"nomenclature") list nomenclaturies_
-    @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
-    private List<Реализация> doc_sale_;//ЗаписьКонтрагент-Реализация
-                                        //таблица БД БД "contragent"-"doc_sale"
-
-    @OneToMany(mappedBy = "contragent_", fetch = FetchType.LAZY)
-    private List<ЗаписьРегистраВзаиморасчеты> register_calculation_; //ЗаписьКонтрагент-ЗаписьРегистраВзаиморасчеты
-                                                                    //таблица БД "contragent"-"register_calculation"
 
     @Override
     public boolean ПередЗаписью() {
@@ -79,5 +94,6 @@ public class ЗаписьКонтрагент extends ЭлементСправо
                 ", ТипКонтрагента='" + type_KA + '\'' +
                 '}';
     }
+
 
 }

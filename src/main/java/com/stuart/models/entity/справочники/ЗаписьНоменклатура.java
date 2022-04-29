@@ -18,10 +18,61 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 @Entity
 @Table(name = "nomenclature", schema = "study_db")
 public class ЗаписьНоменклатура extends ЭлементСправочника {
+
+    @Id
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
+    private Integer code;
+    private String name;
+    private Integer article_number;
+    private String category;
+    private String subcategory;
+    //  ЗаписьНоменклатура-ЗаписьКонтрагент
+    //(таблица БД " nomenclature "-"contragent") list nomenclaturies_
+    @ManyToOne
+    @JoinColumn(name = "contragent_id", referencedColumnName = "id")
+    private ЗаписьКонтрагент contragent_;
+    //ЗаписьНоменклатура-ЗаписьТЧЗакупка
+    // (таблица БД "nomenclature"-"table_part_purchase")
+    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
+    private List<ЗаписьТЧ_Закупка> table_part_purchase_;
+    //ЗаписьНоменклатура-ЗаписьТЧ_списокТоваров
+    //(таблица БД "nomenclature"-table_part_list_of_products")
+    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
+    private List<ЗаписьТЧСписокТоваров> table_part_ListOfProducts_;
+    //ЗаписьНоменклатура-ЗаписьТЧ_ПроизведеноПродукции
+    //(таблица БД "nomenclature"-table_part_produced_of_products")
+    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
+    private List<ЗаписьТЧПроизведеноПродукции> table_part_produced_of_products_;
+    //ЗаписьНоменклатура-ЗаписьТЧРасходМатериалов
+    //(таблица БД "nomenclature"-table_part_material_consuption")
+    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
+    private List<ЗаписьТЧРасходМатериалов> table_part_material_consuption_;
+    //ЗаписьНоменклатура-ЗаписьРегистраТоварыНаСкладе
+    //(таблица БД "nomenclature"-"register_products_in_stock")
+    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
+    private List<ЗаписьРегистраТоварыНаСкладах> register_products_in_stock_;
+
+    public ЗаписьНоменклатура(String name, String category,
+                              String subcategory, ЗаписьКонтрагент contragent_) {
+        this.code = ЭлементСправочника.GetRandomCode();
+        this.name = name;
+        this.article_number = this.code;
+        this.category = category;
+        this.subcategory = subcategory;
+        this.contragent_ = contragent_;
+    }
+
+    public void setCode() {
+        this.code = ЭлементСправочника.GetRandomCode();
+    }
+
+    public void setArticle_number() {
+        this.article_number = this.code;
+    }
 
     public static ЗаписьНоменклатура findObjectByValue(String fieldName, Object fieldValue) {
         return (ЗаписьНоменклатура) DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
@@ -38,39 +89,12 @@ public class ЗаписьНоменклатура extends ЭлементСпра
         return "ЗаписьНоменклатура";
     }
 
-    @Id
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id = UUID.randomUUID();
-    private Integer code;
-    private String name;
-    private Integer article_number;
-    private String category;
-    private String subcategory;
-    @ManyToOne
-    @JoinColumn(name = "contragent_id", referencedColumnName = "id")
-    private ЗаписьКонтрагент contragent_;//  ЗАПИСЬ_НОМЕНКЛАТУРА-ЗАПИСЬ_КОНТРАГЕНТ связь с классом "ЗаписьКонтрагент" (таблица БД "contragent")
-                                     //(таблица БД " nomenclature "-"contragent") list nomenclaturies_
-
-    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
-    private List<ЗаписьТЧ_Закупка> table_part_purchase_; //НОМЕНКЛАТУРА-ТЧ_ЗАКУПКА связь с классом ЗаписьТЧ_Закупка
-                                                        // (таблица БД "nomenclature"-"table_part_purchase")
-    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
-    private List<ЗаписьТЧСписокТоваров> table_part_ListOfProducts_; //НОМЕНКЛАТУРА-ТЧ_СПИСОКТОВАРОВ  связь с классом ЗаписьТЧ_списокТоваров
-                                                                    //(таблица БД "nomenclature"-table_part_list_of_products")
-    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
-    private List<ЗаписьТЧПроизведеноПродукции> table_part_produced_of_products_; //НОМЕНКЛАТУРА-ТЧ_ПРОИЗВЕДЕНОПРОДУЦИИ  связь с классом ЗаписьТЧ_ПроизведеноПродукции
-                                                                                //(таблица БД "nomenclature"-table_part_produced_of_products")
-    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
-    private List<ЗаписьТЧРасходМатериалов> table_part_material_consuption_;//НОМЕНКЛАТУРА-ТЧ_РАСХОД_МАТЕРИАЛОВ  связь с классом ЗаписьТЧРасходМатериалов
-                                                                            //(таблица БД "nomenclature"-table_part_material_consuption")
-    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
-    private List<ЗаписьРегистраТоварыНаСкладах> register_products_in_stock_;
-
     @Override
     public boolean ПередЗаписью() {
         if ( this.getCode() == null
                 || this.getName() == null || this.getArticle_number() == 0
-                || this.getCategory() == null || this.getSubcategory() == null)
+                || this.getCategory() == null || this.getSubcategory() == null
+                || this.getContragent_() == null)
             return false;
         else
             return true;

@@ -2,18 +2,10 @@ package com.stuart.application;
 
 import com.stuart.dao.записьБД.DataAccessObject;
 import com.stuart.models.entity.документы.закупка.Закупка;
-import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
-import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
-import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
-import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.*;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.Random;
 
 @Log4j2
 public class HelloApplication {
@@ -46,12 +38,19 @@ public class HelloApplication {
 ////
 //            закупка.ЗаписатьДокумент();
 
-            Закупка закупка1 = Закупка.findObjectByValue("number", 1001001); //получаем документ из базы / юзер ищет по какому-то полю докумета
-            List <ЗаписьТЧ_Закупка> табчасти = ЗаписьТЧ_Закупка.findObjectsByValue("idDoc", закупка1.getId()); //ищем все записи таб частей, которые принаддлежат этому документу
-
-
-            ЗаписьТЧ_Закупка запись = ЗаписьТЧ_Закупка.findObjectByValue("id", UUID.fromString("c885c10f-3b5b-4bf4-ae4e-b0600211a411")); //получили строку табчасти конкретного документа
+//            Закупка закупка1 = Закупка.findObjectByValue("number", 1001001); //получаем документ из базы / юзер ищет по какому-то полю докумета
+//            var НоваяСтр = закупка1.ДобавитьЗаписьВТЧ();
+//            НоваяСтр.setNomenclature_(ЗаписьНоменклатура.findObjectByValue("code", 201007));
+//            НоваяСтр.setAmount(3D);
+//            НоваяСтр.setPrice(150D);
+//            НоваяСтр.setSum();
 //
+//
+////            List <ЗаписьТЧ_Закупка> табчасти = ЗаписьТЧ_Закупка.findObjectsByValue("idDoc", закупка1.getId()); //ищем все записи таб частей, которые принаддлежат этому документу
+//            закупка1.Проведение();
+//            DataAccessObject.commitTransactionCloseSession();
+//            ЗаписьТЧ_Закупка запись = ЗаписьТЧ_Закупка.findObjectByValue("id", UUID.fromString("c885c10f-3b5b-4bf4-ae4e-b0600211a411")); //получили строку табчасти конкретного документа
+////
 ////            запись.setPrice(53D); //обновляем записьТЧ - работает
 ////            запись.setSum();
 //
@@ -60,15 +59,58 @@ public class HelloApplication {
 //            ЗаписьТЧ_Закупка записьТЧ1 = new ЗаписьТЧ_Закупка(ЗаписьНоменклатура
 //                    .findObjectByValue("code", 201005), 9D, 18D, закупка1);
 //            List <ЗаписьТЧ_Закупка> табчасти = ЗаписьТЧ_Закупка.findObjectsByValue("idDoc", закупка1.getId());
-//
 //            табчасти.add(записьТЧ1); //добавляем новую запись в табличную часть - работает
-////
 //            закупка1.setTable_part_purchase_(табчасти); //обновленные табчасти прицепляем документу в базу
+//
+//            закупка1.Проведение();
 
-            закупка1.Проведение();
+
+
+
+//            Реализация реализация = new Реализация();
+//            реализация.setDate(new Date());
+//            реализация.setNumber(2002001);
+//            реализация.setPometkaProvedeniya();
+//            реализация.setContragent_(ЗаписьКонтрагент.findObjectByValue("code", 101006));
+//
+//            ЗаписьТЧСписокТоваров запись1 = new ЗаписьТЧСписокТоваров(ЗаписьНоменклатура
+//                    .findObjectByValue("code", 201001), 4D, 150D, реализация);
+//            реализация.ДобавитьЗаписьВТЧ(запись1);
+//
+//            ЗаписьТЧСписокТоваров запись2 = new ЗаписьТЧСписокТоваров(ЗаписьНоменклатура
+//                    .findObjectByValue("code", 201002), 5D, 600D, реализация);
+//            реализация.ДобавитьЗаписьВТЧ(запись2);
+//
+//            ЗаписьТЧСписокТоваров запись3 = new ЗаписьТЧСписокТоваров(ЗаписьНоменклатура
+//                    .findObjectByValue("code", 201003), 2D, 380D, реализация);
+//            реализация.ДобавитьЗаписьВТЧ(запись3);
+//
+//            ЗаписьТЧСписокТоваров запись4 = new ЗаписьТЧСписокТоваров(ЗаписьНоменклатура
+//                    .findObjectByValue("code", 201004), 1D, 500D, реализация);
+//            реализация.ДобавитьЗаписьВТЧ(запись4);
+//
+//            реализация.Проведение();
+
+//            Реализация реализация1 = Реализация.findObjectByValue("number", 2002001);
+//            реализация1.
+//            List <ЗаписьТЧСписокТоваров> табчасти = ЗаписьТЧСписокТоваров.findObjectsByValue("idDoc", реализация1.getId()); //ищем все записи таб частей, которые принаддлежат этому документу
+//            ЗаписьТЧСписокТоваров запись = ЗаписьТЧСписокТоваров.findObjectByValue("price", 820D); //получили строку табчасти конкретного документа
+//
+//            запись.setPrice(920D); //обновляем записьТЧ - работает
+//            запись.setSum();
+//
+//            реализация1.Проведение();
+//            DataAccessObject.commitTransactionCloseSession();
+//            DataAccessObject.rollbackTransactionCloseSession();
+
+            //в регистр взаиморасчеты поле приход/расход
+            //герерация кодов
+
+            //ЗаписьКонтрагент записьКонтрагент = new ЗаписьКонтрагент();
+
 
             DataAccessObject.commitTransactionCloseSession();
-//            DataAccessObject.rollbackTransactionCloseSession();
+
         }
 
     }

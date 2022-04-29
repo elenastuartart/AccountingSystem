@@ -16,6 +16,7 @@ import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,16 +32,17 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
     @Id
     @Column(columnDefinition = "BINARY(16)")
     private UUID id = UUID.randomUUID();
+    @Column(columnDefinition = "BINARY(16)")
     private UUID idDoc;
     private String typeDoc;
+    private Date date;
     //ЗаписьРегистраТоварыНаСкладах-ЗаписьНоменклатура
     //таблица БД "registrar_products_in_stock"-"nomenclature"
     @ManyToOne
     @JoinColumn(name = "nomenclature_id", referencedColumnName = "id")
     private ЗаписьНоменклатура nomenclature_;
-
     private Double amount;
-    private Double sum;
+    private Double sum; //0 пока
     @Transient
     private Документ registrarDoc;
 
@@ -59,46 +61,49 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
         return Result;
     }
 
-    public Документ getДокумент() {
-
-        final SessionFactory factory = new Configuration().configure().buildSessionFactory();
-        try (final Session session = factory.openSession()) {
-
-            if (registrarDoc ==null)
-                switch (typeDoc) {
-                    case "Закупка": {
-                        org.hibernate.query.Query<Закупка> query1 = session.createQuery("from Закупка node where node.id = :param");
-                        query1.setParameter("param", idDoc);
-                        Закупка закупка  = query1.uniqueResult();
-                        registrarDoc = закупка;
-                    }
-                    case "Реализация": {
-                        org.hibernate.query.Query<Реализация> query2 = session.createQuery("from Реализация node where node.id = :param");
-                        query2.setParameter("param", idDoc);
-                        Реализация реализация  = query2.uniqueResult();
-                        registrarDoc = реализация;
-                    }
-                    case "Производство": {
-                        Query<Производство> query3 = session.createQuery("from Производство node where node.id = :param");
-                        query3.setParameter("param", idDoc);
-                        Производство производство  = query3.uniqueResult();
-                        registrarDoc = производство;
-                    }
-                }
-            session.close();
-
-        } catch (Exception e) {
-            System.out.println("Не удалось создать запись: " + e.getMessage()); //обработать исключение БД и не дать записать в базу
-        }
-
-        return registrarDoc;
-    }
+//    public Документ getДокумент() {
+//
+//        !!! ЭТОТ МЕТОД НАДО ПЕРЕДАЛАТЬ !!!
+//            старый кусок кода, который для строки регистра ищет свой документ
+//
+//        final SessionFactory factory = new Configuration().configure().buildSessionFactory();
+//        try (final Session session = factory.openSession()) {
+//
+//            if (registrarDoc ==null)
+//                switch (typeDoc) {
+//                    case "Закупка": {
+//                        org.hibernate.query.Query<Закупка> query1 = session.createQuery("from Закупка node where node.id = :param");
+//                        query1.setParameter("param", idDoc);
+//                        Закупка закупка  = query1.uniqueResult();
+//                        registrarDoc = закупка;
+//                    }
+//                    case "Реализация": {
+//                        org.hibernate.query.Query<Реализация> query2 = session.createQuery("from Реализация node where node.id = :param");
+//                        query2.setParameter("param", idDoc);
+//                        Реализация реализация  = query2.uniqueResult();
+//                        registrarDoc = реализация;
+//                    }
+//                    case "Производство": {
+//                        Query<Производство> query3 = session.createQuery("from Производство node where node.id = :param");
+//                        query3.setParameter("param", idDoc);
+//                        Производство производство  = query3.uniqueResult();
+//                        registrarDoc = производство;
+//                    }
+//                }
+//            session.close();
+//
+//        } catch (Exception e) {
+//            System.out.println("Не удалось создать запись: " + e.getMessage()); //обработать исключение БД и не дать записать в базу
+//        }
+//
+//        return registrarDoc;
+//    }
 
     @Override
     public boolean ПередЗаписью() {
         if (this.getRegistrarDoc() == null || this.getNomenclature_() == null
                 || this.getAmount() == null
-                || this.getSum() == null)
+             )
             return false;
         else
             return true;
@@ -109,7 +114,6 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
         return "ЗаписьРегистраТоварыНаСкладах{" +
                 "Дата: " + nomenclature_.getName().toString() +
                 "; Контрагент: " + amount +
-                "; Сумма: " + sum +
                 '}';
     }
 

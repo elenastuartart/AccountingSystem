@@ -7,7 +7,6 @@ import com.stuart.models.entity.справочники.ЗаписьЭтапыП�
 import lombok.*;
 
 import javax.persistence.*;
-import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -16,10 +15,43 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
+@ToString
 @Table(name = "table_part_material_consuption", schema = "study_db")
 public class ЗаписьТЧРасходМатериалов extends ЗаписьБД {
+
+    @Id
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
+    private Integer lineNumber;
+    private Double amount;
+    //ЗаписьТЧРасходМатериалов-ЗаписьЭтапыПроизводства
+    //(таблица БД -table_part_material_consuption"-"production_stages")
+    @ManyToOne
+    @JoinColumn (name = "production_stages_id", referencedColumnName = "id")
+    private ЗаписьЭтапыПроизводства stage_;
+    //  ЗаписьТЧРасходМатериалов-ЗаписьНоменклатура
+    //(таблица БД "table_part_material_consuption"-"nomenclature") list table_part_material_consuption_
+    @ManyToOne
+    @JoinColumn(name = "nomenclature_id", referencedColumnName = "id")
+    private ЗаписьНоменклатура nomenclature_;
+    //ЗаписьТЧРасходМатериалов-Производство
+    //таблица БД "table_part_material_consuption"-"doc_manufacture№
+    @ManyToOne
+    @JoinColumn(name = "doc_manufacture_id", referencedColumnName = "id")
+    private Производство doc_manufacture_;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID idDoc;
+
+    public ЗаписьТЧРасходМатериалов(ЗаписьЭтапыПроизводства stage,
+                                    ЗаписьНоменклатура nomenclature,
+                                    Double amount, Производство производство) {
+        this.stage_ = stage;
+        this.nomenclature_ = nomenclature;
+        this.amount = amount;
+        this.doc_manufacture_ = производство;
+        this.idDoc = производство.getId();
+    }
 
     public static ЗаписьТЧРасходМатериалов findObjectByValue(String fieldName, Object fieldValue) {
         return (ЗаписьТЧРасходМатериалов) DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
@@ -36,32 +68,13 @@ public class ЗаписьТЧРасходМатериалов extends Запис
         return "ЗаписьТЧРасходМатериалов";
     }
 
-    @Id
-    @GeneratedValue
-    private UUID id;
-    private Integer lineNumber;
-
-    @ManyToOne
-    @JoinColumn (name = "production_stages_id", referencedColumnName = "id")
-    private ЗаписьЭтапыПроизводства stage_; //ТЧ_РАСХОД_МАТЕРИАЛОВ_ЭТАПЫ_ПРОИЗВОДСТВА- связь с классом ЗаписьЭтапыПроизводства
-                                        //(таблица БД -table_part_material_consuption"-"production_stages")
-    @ManyToOne
-    @JoinColumn(name = "doc_manufacture_id", referencedColumnName = "id")
-    private Производство doc_manufacture_; //ЗаписьТЧРасходМатериалов-Производство
-                                            //таблица БД "table_part_material_consuption"-"doc_manufacture№
-
-    @ManyToOne
-    @JoinColumn(name = "nomenclature_id", referencedColumnName = "id")
-    private ЗаписьНоменклатура nomenclature_;//  ТЧ_РАСХОД_МАТЕРИАЛОВ-НОМЕНКЛАТУРА связь с классом "ЗаписьНоменклатура" (таблица БД "nomenclature")
-                                            //(таблица БД "table_part_material_consuption"-"nomenclature") list table_part_material_consuption_
-    private Double amount;
-
-
-    public ЗаписьТЧРасходМатериалов(ЗаписьЭтапыПроизводства stage,
-                                    ЗаписьНоменклатура nomenclature, Double amount) {
-        this.stage_ = stage;
-        this.nomenclature_ = nomenclature;
-        this.amount = amount;
+    @Override
+    public boolean ПередЗаписью() {
+        if (this.getLineNumber() == null || this.getNomenclature_() == null
+                || this.getAmount() == null || this.getStage_() == null
+                || this.doc_manufacture_==null || this.idDoc == null)
+            return false;
+        else
+            return true;
     }
-
 }
