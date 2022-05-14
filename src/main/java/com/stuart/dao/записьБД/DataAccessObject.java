@@ -22,6 +22,10 @@ public class DataAccessObject {
         return _factory;
     }
 
+    public static Session getCurrentSession() {
+        return _session;
+    }
+
     public static Session openSessionBeginTransaction() {
         _session = getFactory().openSession();
         _session.beginTransaction();

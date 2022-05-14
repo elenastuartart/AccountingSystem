@@ -5,6 +5,8 @@ import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import lombok.*;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -49,11 +51,11 @@ public class Производство extends Документ {
         this.registerProductsInStock = ЗаписьРегистраТоварыНаСкладах.findObjectsByValue("idDoc", this.id);
     }
 
-    private void setPometkaProvedeniya() {
+    public void setPometkaProvedeniya() {
         this.pometkaProvedeniya = false;
     }
 
-    private void setNumber() {
+    public void setNumber() {
         this.number = Документ.GetRandomNum();
     }
 
@@ -68,7 +70,7 @@ public class Производство extends Документ {
         return Result;
     }
 
-    public static String getType() {
+    private static String getType() {
         return "Производство";
     }
 
@@ -88,7 +90,7 @@ public class Производство extends Документ {
         return ЗаписьТЧ;
     }
 
-    public boolean ЗаписатьТабЧасти_Расход() {
+    private boolean ЗаписатьТабЧасти_Расход() {
 
         List<ЗаписьТЧРасходМатериалов> записиТЧ =
                 ЗаписьТЧРасходМатериалов.findObjectsByValue("idDoc", this.id);
@@ -109,7 +111,7 @@ public class Производство extends Документ {
         return true;
     }
 
-    public boolean ЗаписатьТабЧасти_Произведено() {
+    private boolean ЗаписатьТабЧасти_Произведено() {
 
         List<ЗаписьТЧПроизведеноПродукции> записиТЧ =
                 ЗаписьТЧПроизведеноПродукции.findObjectsByValue("idDoc", this.id);
@@ -130,14 +132,14 @@ public class Производство extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьРегистрыТоварыНаСкладе() {
+    protected boolean ЗаписатьРегистрыТоварыНаСкладе() {
 
         //заполнение строк регистра на расход материалов по таблице Table_part_material_consuption_
         for (int i = 0; i < this.getTable_part_material_consuption_().size(); i++) {
             var стрРегистраРасход = new ЗаписьРегистраТоварыНаСкладах();
             стрРегистраРасход.setDate(this.getDate());
             стрРегистраРасход.setAmount(-(this.getTable_part_material_consuption_().get(i).getAmount()));
-            стрРегистраРасход.setNomenclature_(this.getTable_part_material_consuption_().get(i).getNomenclature_());
+            стрРегистраРасход.setIdNom(this.getTable_part_material_consuption_().get(i).getNomenclature_().getId());
             стрРегистраРасход.setIdDoc(this.getId());
             стрРегистраРасход.setTypeDoc(this.getType());
             стрРегистраРасход.setSum(-0D);
@@ -150,7 +152,7 @@ public class Производство extends Документ {
             var стрРегистраПриход = new ЗаписьРегистраТоварыНаСкладах();
             стрРегистраПриход.setDate(this.getDate());
             стрРегистраПриход.setAmount(+(this.getTable_part_produced_of_products_().get(i).getAmount()));
-            стрРегистраПриход.setNomenclature_(this.getTable_part_produced_of_products_().get(i).getNomenclature_());
+            стрРегистраПриход.setIdNom(this.getTable_part_produced_of_products_().get(i).getNomenclature_().getId());
             стрРегистраПриход.setIdDoc(this.getId());
             стрРегистраПриход.setTypeDoc(this.getType());
             стрРегистраПриход.setSum(+0D);
@@ -161,7 +163,7 @@ public class Производство extends Документ {
     }
 
     @Override
-    public boolean ОчисткаРегистров() {
+    protected boolean ОчисткаРегистров() {
         List<ЗаписьРегистраТоварыНаСкладах> записиРегистраДокумента =
                 ЗаписьРегистраТоварыНаСкладах.findObjectsByValue(
                         "idDoc", this.id);
@@ -232,10 +234,33 @@ public class Производство extends Документ {
     }
 
     @Override
-    public boolean ПередЗаписью() {
+    protected boolean ПроверкаНаличия() {
+        Session session = DataAccessObject.getCurrentSession();
+        boolean result = false;
+        for (int i = 0; i < table_part_material_consuption_.size(); i++) {
+            var номенклатура = this.table_part_material_consuption_.get(i).getNomenclature_();
+            Query<Double> query = session.createQuery("select " + "sum (zrts .amount ) " +
+                    "from ЗаписьРегистраТоварыНаСкладах zrts "
+                    + "where zrts.idNom =: param");
+            query.setParameter("param", this.table_part_material_consuption_.get(i).getNomenclature_().getId());
+            Double amountNom = query.uniqueResult(); //проверяем, достаточно ли позиций для списания по одной номенклатуре
+            if(amountNom >= table_part_material_consuption_.get(i).getAmount())
+                result = true;
+            else
+                System.out.println("Номенклатуры "
+                        + this.table_part_material_consuption_.get(i).getNomenclature_().getName().toString()
+                        + " недостаточно для списания! "
+                        + "Для реализации доступно " + amountNom + " единиц");
+        }
+        return result;
+    }
 
-        if ((this.getDate() == null || this.getNumber() == null
-        || this.getTable_part_produced_of_products_()==null || this.getTable_part_material_consuption_()==null))
+    @Override
+    protected boolean ПередЗаписью() {
+
+        if (this.getDate() == null || this.getNumber() == null
+                || this.getTable_part_produced_of_products_()==null
+                || this.getTable_part_material_consuption_()==null || !this.ПроверкаНаличия())
             return false;
         else
             return true;

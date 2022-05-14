@@ -6,7 +6,7 @@ import org.hibernate.cfg.Configuration;
 
 public class ЗаписьБД {
 
-    public boolean ПередЗаписью() {
+    protected boolean ПередЗаписью() {
         return false;
     }
 

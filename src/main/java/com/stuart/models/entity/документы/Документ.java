@@ -27,19 +27,19 @@ public class Документ extends ЗаписьБД {
     }
 
     @Override
-    public boolean ПередЗаписью() {
+    protected boolean ПередЗаписью() {
         return super.ПередЗаписью();
     }
 
-    public boolean ЗаписатьРегистрыВзаиморасчетов() {
+    protected boolean ЗаписатьРегистрыВзаиморасчетов() {
         return true;
     }
 
-    public boolean ЗаписатьРегистрыТоварыНаСкладе() {
+    protected boolean ЗаписатьРегистрыТоварыНаСкладе() {
         return true;
     }
 
-    public boolean ЗаписатьТабЧасти() {
+    protected boolean ЗаписатьТабЧасти() {
         return true;
     }
 
@@ -83,7 +83,9 @@ public class Документ extends ЗаписьБД {
         return true;
     }
 
-    public boolean ОчисткаРегистров() {
+    protected boolean ОчисткаРегистров() {
         return true;
     }
+
+    protected boolean ПроверкаНаличия() { return true; }
 }

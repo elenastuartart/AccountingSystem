@@ -7,6 +7,8 @@ import com.stuart.models.entity.регистры.ЗаписьРегистраВ�
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -96,7 +98,7 @@ public class Закупка extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьТабЧасти() {
+    protected boolean ЗаписатьТабЧасти() {
 
         List<ЗаписьТЧ_Закупка> записиТЧ =
                 ЗаписьТЧ_Закупка.findObjectsByValue("idDoc", this.id);
@@ -120,7 +122,7 @@ public class Закупка extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьРегистрыВзаиморасчетов() {
+    protected boolean ЗаписатьРегистрыВзаиморасчетов() {
 
         var СтрРегистра = new ЗаписьРегистраВзаиморасчеты();
         СтрРегистра.setDate(this.getDate());
@@ -136,13 +138,13 @@ public class Закупка extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьРегистрыТоварыНаСкладе() {
+    protected boolean ЗаписатьРегистрыТоварыНаСкладе() {
 
         for (int i = 0; i < this.getTable_part_purchase_().size(); i++) {
 
             var СтрРегистра = new ЗаписьРегистраТоварыНаСкладах();
             СтрРегистра.setDate(this.getDate());
-            СтрРегистра.setNomenclature_(this.getTable_part_purchase_().get(i).getNomenclature_());
+            СтрРегистра.setIdNom(this.getTable_part_purchase_().get(i).getNomenclature_().getId());
             СтрРегистра.setAmount(this.getTable_part_purchase_().get(i).getAmount());
             СтрРегистра.setSum(0D);
             СтрРегистра.setTypeDoc(this.getType());
@@ -156,10 +158,9 @@ public class Закупка extends Документ {
     }
 
     @Override
-    public boolean ОчисткаРегистров() {
-        List<ЗаписьРегистраВзаиморасчеты> записиРегистраДокумента1 =
-                ЗаписьРегистраВзаиморасчеты.findObjectsByValue(
-                        "idDoc", this.id);
+    protected boolean ОчисткаРегистров() {
+       List<ЗаписьРегистраВзаиморасчеты> записиРегистраДокумента1 =
+                ЗаписьРегистраВзаиморасчеты.findObjectsByValue("idDoc", this.id);
 
         for (int i = 0; i < записиРегистраДокумента1.size(); i++) {
             var строка = записиРегистраДокумента1.get(i);
@@ -179,6 +180,32 @@ public class Закупка extends Документ {
                 return false;
         }
         return true;
+    }
+
+    @Override
+    protected boolean ПередЗаписью() {
+        this.setFinalSum();
+        if (this.getDate() == null || this.getNumber() == null
+                || this.getContragent_() == null || this.getFinalSum() == null
+                || this.getTable_part_purchase_() == null  || !this.ПроверкаНаличия())
+            return false;
+        else
+            return true;
+    }
+    //проверка наличия денежных средств для осуществления Закупки
+    @Override
+    protected boolean ПроверкаНаличия() {
+        Session session = DataAccessObject.getCurrentSession();
+
+        Query<Double> query = session.createQuery("select " +
+                "sum (zrv.sum) from ЗаписьРегистраВзаиморасчеты zrv ");
+        Double sum = query.uniqueResult();
+
+        if(sum>=this.finalSum)
+            return true;
+        else
+            System.out.println("Недостаточно средств для осуществления закупки! Проверьте баланс и повторите попытку");
+            return false;
     }
 
     @Override
@@ -216,6 +243,7 @@ public class Закупка extends Документ {
                 return false;
             }
         }
+
         return  true;
     }
 
@@ -238,17 +266,6 @@ public class Закупка extends Документ {
             return false;
 
         return true;
-    }
-
-    @Override
-    public boolean ПередЗаписью() {
-        this.setFinalSum();
-        if (this.getDate() == null || this.getNumber() == null
-                || this.getContragent_() == null || this.getFinalSum() == null
-                || this.getTable_part_purchase_() == null)
-            return false;
-        else
-            return true;
     }
 
     @Override

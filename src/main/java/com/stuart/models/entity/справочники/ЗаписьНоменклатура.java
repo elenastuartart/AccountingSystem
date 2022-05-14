@@ -51,10 +51,6 @@ public class ЗаписьНоменклатура extends ЭлементСпра
     //(таблица БД "nomenclature"-table_part_material_consuption")
     @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
     private List<ЗаписьТЧРасходМатериалов> table_part_material_consuption_;
-    //ЗаписьНоменклатура-ЗаписьРегистраТоварыНаСкладе
-    //(таблица БД "nomenclature"-"register_products_in_stock")
-    @OneToMany(mappedBy = "nomenclature_", fetch = FetchType.LAZY)
-    private List<ЗаписьРегистраТоварыНаСкладах> register_products_in_stock_;
 
     public ЗаписьНоменклатура(String name, String category,
                               String subcategory, ЗаписьКонтрагент contragent_) {

@@ -8,6 +8,8 @@ import com.stuart.models.entity.регистры.ЗаписьРегистраВ�
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -83,7 +85,7 @@ public class Реализация extends Документ {
         return Result;
     }
 
-    public static String getType() {
+    private static String getType() {
         return "Реализация";
     }
 
@@ -96,7 +98,7 @@ public class Реализация extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьТабЧасти() {
+    protected boolean ЗаписатьТабЧасти() {
 
         List<ЗаписьТЧСписокТоваров> записиТЧ =
                 ЗаписьТЧСписокТоваров.findObjectsByValue("idDoc", this.id);
@@ -120,7 +122,7 @@ public class Реализация extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьРегистрыВзаиморасчетов() {
+    protected boolean ЗаписатьРегистрыВзаиморасчетов() {
 
         var СтрРегистра = new ЗаписьРегистраВзаиморасчеты();
         СтрРегистра.setDate(this.getDate());
@@ -136,12 +138,12 @@ public class Реализация extends Документ {
     }
 
     @Override
-    public boolean ЗаписатьРегистрыТоварыНаСкладе() {
+    protected boolean ЗаписатьРегистрыТоварыНаСкладе() {
         for (int i = 0; i < this.getTable_part_list_of_products_().size(); i++) {
 
             var СтрРегистра = new ЗаписьРегистраТоварыНаСкладах();
             СтрРегистра.setDate(this.getDate());
-            СтрРегистра.setNomenclature_(this.getTable_part_list_of_products_().get(i).getNomenclature_());
+            СтрРегистра.setIdNom(this.getTable_part_list_of_products_().get(i).getNomenclature_().getId());
             СтрРегистра.setAmount(-(this.getTable_part_list_of_products_().get(i).getAmount()));
             СтрРегистра.setSum(-0D);
             СтрРегистра.setTypeDoc(this.getType());
@@ -152,6 +154,28 @@ public class Реализация extends Документ {
         }
 
         return true;
+    }
+
+    @Override
+    protected boolean ПроверкаНаличия() {
+        Session session = DataAccessObject.getCurrentSession();
+        boolean result = false;
+        for (int i = 0; i < table_part_list_of_products_.size(); i++) {
+            var номенклатура = this.table_part_list_of_products_.get(i).getNomenclature_();
+            Query<Double> query = session.createQuery("select " + "sum (zrts .amount ) " +
+                    "from ЗаписьРегистраТоварыНаСкладах zrts "
+                    + "where zrts.idNom =: param");
+            query.setParameter("param", this.table_part_list_of_products_.get(i).getNomenclature_().getId());
+            Double amountNom = query.uniqueResult();
+            if(amountNom >= table_part_list_of_products_.get(i).getAmount())
+                result = true;
+            else
+                System.out.println("Номенклатуры "
+                        + this.table_part_list_of_products_.get(i).getNomenclature_().getName().toString()
+                        + " недостаточно для реализации! "
+                        + "В наличии только " + amountNom + " единиц");
+        }
+        return result;
     }
 
     @Override
@@ -215,7 +239,7 @@ public class Реализация extends Документ {
     }
 
     @Override
-    public boolean ОчисткаРегистров() {
+    protected boolean ОчисткаРегистров() {
         List<ЗаписьРегистраВзаиморасчеты> записиРегистраДокумента1 =
                 ЗаписьРегистраВзаиморасчеты.findObjectsByValue(
                         "idDoc", this.id);
@@ -242,11 +266,11 @@ public class Реализация extends Документ {
     }
 
     @Override
-    public boolean ПередЗаписью() {
+    protected boolean ПередЗаписью() {
         this.setFinalSum();
         if ((this.getDate() == null || this.getNumber() == null
                 || this.getContragent_() == null || this.getFinalSum() == null
-                || this.getTable_part_list_of_products_() == null))
+                || this.getTable_part_list_of_products_() == null) || !this.ПроверкаНаличия())
             return false;
         else
             return true;

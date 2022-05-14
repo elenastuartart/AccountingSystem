@@ -24,7 +24,6 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "register_products_in_stock", schema = "study_db")
 public class ЗаписьРегистраТоварыНаСкладах extends ЗаписьРегистра {
@@ -36,11 +35,8 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
     private UUID idDoc;
     private String typeDoc;
     private Date date;
-    //ЗаписьРегистраТоварыНаСкладах-ЗаписьНоменклатура
-    //таблица БД "registrar_products_in_stock"-"nomenclature"
-    @ManyToOne
-    @JoinColumn(name = "nomenclature_id", referencedColumnName = "id")
-    private ЗаписьНоменклатура nomenclature_;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID idNom;
     private Double amount;
     private Double sum; //0 пока
     @Transient
@@ -101,8 +97,8 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
 
     @Override
     public boolean ПередЗаписью() {
-        if (this.getRegistrarDoc() == null || this.getNomenclature_() == null
-                || this.getAmount() == null
+        if (this.getRegistrarDoc() == null ||
+                this.getAmount() == null
              )
             return false;
         else
@@ -112,7 +108,7 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
     @Override
     public String toString() {
         return "ЗаписьРегистраТоварыНаСкладах{" +
-                "Дата: " + nomenclature_.getName().toString() +
+                "Дата: "  +
                 "; Контрагент: " + amount +
                 '}';
     }
