@@ -146,7 +146,7 @@ public class Закупка extends Документ {
             СтрРегистра.setDate(this.getDate());
             СтрРегистра.setIdNom(this.getTable_part_purchase_().get(i).getNomenclature_().getId());
             СтрРегистра.setAmount(this.getTable_part_purchase_().get(i).getAmount());
-            СтрРегистра.setSum(0D);
+            СтрРегистра.setSum(this.getTable_part_purchase_().get(i).getSum());
             СтрРегистра.setTypeDoc(this.getType());
             СтрРегистра.setIdDoc(this.getId());
 
@@ -195,13 +195,10 @@ public class Закупка extends Документ {
     //проверка наличия денежных средств для осуществления Закупки
     @Override
     protected boolean ПроверкаНаличия() {
-        Session session = DataAccessObject.getCurrentSession();
 
-        Query<Double> query = session.createQuery("select " +
-                "sum (zrv.sum) from ЗаписьРегистраВзаиморасчеты zrv ");
-        Double sum = query.uniqueResult();
+        var sum = DataAccessObject.ПолучитьОстатокПоРегиструВзаиморасчеты(this.getId());
 
-        if(sum>=this.finalSum)
+        if(sum >= this.finalSum)
             return true;
         else
             System.out.println("Недостаточно средств для осуществления закупки! Проверьте баланс и повторите попытку");

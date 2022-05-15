@@ -38,7 +38,7 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
     @Column(columnDefinition = "BINARY(16)")
     private UUID idNom;
     private Double amount;
-    private Double sum; //0 пока
+    private Double sum;
     @Transient
     private Документ registrarDoc;
 
@@ -57,6 +57,29 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
         return Result;
     }
 
+    @Override
+    public boolean ПередЗаписью() {
+        if (this.getRegistrarDoc() == null
+                || this.getAmount() == null
+                || this.getDate() == null
+                || this.getIdDoc() == null
+                || this.getIdNom() == null
+                || this.getSum() == null
+                || this.getTypeDoc() == null)
+            return false;
+        else
+            return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ЗаписьРегистраТоварыНаСкладах{" +
+                "Дата: "  +
+                "; Контрагент: " + amount +
+                '}';
+    }
+
+}
 //    public Документ getДокумент() {
 //
 //        !!! ЭТОТ МЕТОД НАДО ПЕРЕДАЛАТЬ !!!
@@ -95,22 +118,4 @@ public class ЗаписьРегистраТоварыНаСкладах extends 
 //        return registrarDoc;
 //    }
 
-    @Override
-    public boolean ПередЗаписью() {
-        if (this.getRegistrarDoc() == null ||
-                this.getAmount() == null
-             )
-            return false;
-        else
-            return true;
-    }
 
-    @Override
-    public String toString() {
-        return "ЗаписьРегистраТоварыНаСкладах{" +
-                "Дата: "  +
-                "; Контрагент: " + amount +
-                '}';
-    }
-
-}

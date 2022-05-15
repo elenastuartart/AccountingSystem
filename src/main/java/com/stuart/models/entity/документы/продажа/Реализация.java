@@ -5,6 +5,7 @@ import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
 import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
+import com.stuart.models.entity.регистры.ЗаписьРегистраСебестоимостьЕдПродукции;
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
@@ -145,28 +146,56 @@ public class Реализация extends Документ {
             СтрРегистра.setDate(this.getDate());
             СтрРегистра.setIdNom(this.getTable_part_list_of_products_().get(i).getNomenclature_().getId());
             СтрРегистра.setAmount(-(this.getTable_part_list_of_products_().get(i).getAmount()));
-            СтрРегистра.setSum(-0D);
             СтрРегистра.setTypeDoc(this.getType());
             СтрРегистра.setIdDoc(this.getId());
 
-            if(!СтрРегистра.save())
-                    return false;
-        }
+            Double sum = DataAccessObject.ПолучитьСреднееПоРегиструТовары(this.getId(), СтрРегистра.getIdNom(),
+                    this.getTable_part_list_of_products_().get(i).getAmount());
+            СтрРегистра.setSum(-sum);
 
+            if(!СтрРегистра.save())
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected boolean ЗаписатьРегистрыСебестоимостьЕдПродукции() {
+        for (int i = 0; i < this.getTable_part_list_of_products_().size(); i++) {
+
+            var СтрРегистра = new ЗаписьРегистраСебестоимостьЕдПродукции();
+            СтрРегистра.setDate(this.getDate());
+            СтрРегистра.setIdNom(this.getTable_part_list_of_products_().get(i).getNomenclature_().getId());
+            СтрРегистра.setTypeDoc(this.getType());
+            СтрРегистра.setIdDoc(this.getId());
+            Double sum = DataAccessObject.ПолучитьСреднееПоРегиструТовары(this.getId(), СтрРегистра.getIdNom(),
+                    this.getTable_part_list_of_products_().get(i).getAmount());
+            СтрРегистра.setSumCostprice(+sum);
+            СтрРегистра.setSumSale(this.getTable_part_list_of_products_().get(i).getPrice()
+                    * this.getTable_part_list_of_products_().get(i).getAmount());
+            СтрРегистра.setAmount(+this.getTable_part_list_of_products_().get(i).getAmount());
+            СтрРегистра.setProfitByUnit(this.getTable_part_list_of_products_().get(i).getPrice()
+                    - (sum/this.getTable_part_list_of_products_().get(i).getAmount()));
+            СтрРегистра.setProfit(this.getTable_part_list_of_products_().get(i).getPrice()
+                    * this.getTable_part_list_of_products_().get(i).getAmount()
+                    - sum);
+
+            if(!СтрРегистра.save())
+                return false;
+        }
         return true;
     }
 
     @Override
     protected boolean ПроверкаНаличия() {
-        Session session = DataAccessObject.getCurrentSession();
+
         boolean result = false;
         for (int i = 0; i < table_part_list_of_products_.size(); i++) {
-            var номенклатура = this.table_part_list_of_products_.get(i).getNomenclature_();
-            Query<Double> query = session.createQuery("select " + "sum (zrts .amount ) " +
-                    "from ЗаписьРегистраТоварыНаСкладах zrts "
-                    + "where zrts.idNom =: param");
-            query.setParameter("param", this.table_part_list_of_products_.get(i).getNomenclature_().getId());
-            Double amountNom = query.uniqueResult();
+
+            var idDoc = this.getId();
+            var idNom = this.table_part_list_of_products_.get(i).getNomenclature_().getId();
+            var amountNom = DataAccessObject.ПолучитьОстатокПоРегиструТовары(idNom, "amount", idDoc);
+
             if(amountNom >= table_part_list_of_products_.get(i).getAmount())
                 result = true;
             else
@@ -210,6 +239,11 @@ public class Реализация extends Документ {
 
             if(!this.ЗаписатьРегистрыТоварыНаСкладе()) {
                 System.out.println("Не удалось записать документ: Ошибка записи регистра ТоварыНаСкладе");
+                return false;
+            }
+
+            if(!this.ЗаписатьРегистрыСебестоимостьЕдПродукции()) {
+                System.out.println("Не удалось записать документ: Ошибка записи регистра СебестоимостьЕдПродукции");
                 return false;
             }
 
@@ -257,6 +291,17 @@ public class Реализация extends Документ {
 
         for (int i = 0; i < записиРегистраДокумента2.size(); i++) {
             var строка = записиРегистраДокумента2.get(i);
+
+            if(!строка.delete())
+                return false;
+        }
+
+        List<ЗаписьРегистраСебестоимостьЕдПродукции> записиРегистраДокумента3 =
+                ЗаписьРегистраСебестоимостьЕдПродукции.findObjectsByValue(
+                        "idDoc", this.id);
+
+        for (int i = 0; i < записиРегистраДокумента3.size(); i++) {
+            var строка = записиРегистраДокумента3.get(i);
 
             if(!строка.delete())
                 return false;

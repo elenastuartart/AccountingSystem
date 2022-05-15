@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import javax.persistence.*;
+import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,6 +73,21 @@ public class Производство extends Документ {
 
     private static String getType() {
         return "Производство";
+    }
+
+    private Double ПолучитьСтоимостьЕдиницыПроизведеннойПродукции() {
+        var проводкиДокумента =
+                ЗаписьРегистраТоварыНаСкладах.findObjectsByValue("idDoc", this.getId());
+        Double sum = 0D;
+        for (int i = 0; i < проводкиДокумента.size(); i++) {
+            sum = sum + (проводкиДокумента.get(i).getSum() * -1);
+        }
+        Double amount = 0D;
+        for (int i = 0; i < this.table_part_produced_of_products_.size(); i++) {
+            amount = amount + this.table_part_produced_of_products_.get(i).getAmount();
+        }
+        Double стоимостьЕдиницы = sum/amount;
+        return стоимостьЕдиницы;
     }
 
     public ЗаписьТЧРасходМатериалов ДобавитьЗаписьВ_ТЧ_Расход() {
@@ -142,7 +158,10 @@ public class Производство extends Документ {
             стрРегистраРасход.setIdNom(this.getTable_part_material_consuption_().get(i).getNomenclature_().getId());
             стрРегистраРасход.setIdDoc(this.getId());
             стрРегистраРасход.setTypeDoc(this.getType());
-            стрРегистраРасход.setSum(-0D);
+
+            Double sum = DataAccessObject.ПолучитьСреднееПоРегиструТовары(this.getId(), стрРегистраРасход.getIdNom(),
+                    this.getTable_part_material_consuption_().get(i).getAmount());
+            стрРегистраРасход.setSum(-sum);
 
             if (!стрРегистраРасход.save()) return false;
         }
@@ -155,7 +174,9 @@ public class Производство extends Документ {
             стрРегистраПриход.setIdNom(this.getTable_part_produced_of_products_().get(i).getNomenclature_().getId());
             стрРегистраПриход.setIdDoc(this.getId());
             стрРегистраПриход.setTypeDoc(this.getType());
-            стрРегистраПриход.setSum(+0D);
+
+            Double sum = this.ПолучитьСтоимостьЕдиницыПроизведеннойПродукции() * стрРегистраПриход.getAmount();
+            стрРегистраПриход.setSum(+sum);
 
             if(!стрРегистраПриход.save()) return false;
         }
@@ -235,15 +256,14 @@ public class Производство extends Документ {
 
     @Override
     protected boolean ПроверкаНаличия() {
-        Session session = DataAccessObject.getCurrentSession();
+
         boolean result = false;
         for (int i = 0; i < table_part_material_consuption_.size(); i++) {
-            var номенклатура = this.table_part_material_consuption_.get(i).getNomenclature_();
-            Query<Double> query = session.createQuery("select " + "sum (zrts .amount ) " +
-                    "from ЗаписьРегистраТоварыНаСкладах zrts "
-                    + "where zrts.idNom =: param");
-            query.setParameter("param", this.table_part_material_consuption_.get(i).getNomenclature_().getId());
-            Double amountNom = query.uniqueResult(); //проверяем, достаточно ли позиций для списания по одной номенклатуре
+
+            var idDoc = this.getId();
+            var idNom = this.table_part_material_consuption_.get(i).getNomenclature_().getId();
+            var amountNom = DataAccessObject.ПолучитьОстатокПоРегиструТовары(idNom, "amount", idDoc);
+
             if(amountNom >= table_part_material_consuption_.get(i).getAmount())
                 result = true;
             else
@@ -265,6 +285,7 @@ public class Производство extends Документ {
         else
             return true;
     }
+
 
     @Override
     public String toString() {

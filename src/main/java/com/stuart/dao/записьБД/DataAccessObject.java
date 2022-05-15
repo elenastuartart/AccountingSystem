@@ -1,7 +1,9 @@
 package com.stuart.dao.записьБД;
 
 import com.stuart.models.entity.ЗаписьБД;
+import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
+import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,6 +11,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DataAccessObject {
 
@@ -22,15 +25,44 @@ public class DataAccessObject {
         return _factory;
     }
 
-    public static Session getCurrentSession() {
-        return _session;
-    }
-
     public static Session openSessionBeginTransaction() {
         _session = getFactory().openSession();
         _session.beginTransaction();
         return  _session;
     }
+
+    public static Double ПолучитьОстатокПоРегиструТовары(UUID idNom, String ИмяРесурса, UUID idDoc) {
+
+        Query<Double> query = _session.createQuery("select " + "sum (zrts ." + ИмяРесурса + " ) " +
+                "from ЗаписьРегистраТоварыНаСкладах zrts "
+                + "where zrts.idNom =: param and zrts.idDoc !=: param2");
+
+        query.setParameter("param", idNom);
+        query.setParameter("param2", idDoc);
+
+        return query.uniqueResult();
+    }
+
+    public static Double ПолучитьОстатокПоРегиструВзаиморасчеты(UUID idDoc) {
+
+        Query<Double> query = _session.createQuery("select " +
+                "sum (zrv.sum) from ЗаписьРегистраВзаиморасчеты zrv "
+                + "where zrv.idDoc !=: param");
+
+        query.setParameter("param", idDoc);
+
+        return query.uniqueResult();
+    }
+
+    public static Double ПолучитьСреднееПоРегиструТовары (UUID idDoc, UUID idNom, Double amountConsuption) {
+        Double amount = DataAccessObject.ПолучитьОстатокПоРегиструТовары(idNom, "amount", idDoc);
+        Double sum = DataAccessObject.ПолучитьОстатокПоРегиструТовары(idNom, "sum", idDoc);
+        Double price = sum / amount;
+        Double averagePrice = price * amountConsuption;
+        return averagePrice;
+    }
+
+
 
     public static void commitTransactionCloseSession()  {
         _session.getTransaction().commit();

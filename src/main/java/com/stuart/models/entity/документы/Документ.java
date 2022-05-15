@@ -39,6 +39,10 @@ public class Документ extends ЗаписьБД {
         return true;
     }
 
+    protected boolean ЗаписатьРегистрыСебестоимостьЕдПродукции() {
+        return true;
+    }
+
     protected boolean ЗаписатьТабЧасти() {
         return true;
     }
