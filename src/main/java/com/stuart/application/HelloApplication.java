@@ -1,28 +1,32 @@
 package com.stuart.application;
 
 import com.stuart.dao.записьБД.DataAccessObject;
-import com.stuart.models.entity.ЗаписьБД;
-import com.stuart.models.entity.документы.закупка.Закупка;
-import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
-import com.stuart.models.entity.документы.продажа.ЗаписьТЧСписокТоваров;
 import com.stuart.models.entity.документы.продажа.Реализация;
-import com.stuart.models.entity.документы.производство.ЗаписьТЧПроизведеноПродукции;
-import com.stuart.models.entity.документы.производство.ЗаписьТЧРасходМатериалов;
-import com.stuart.models.entity.документы.производство.Производство;
-import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
-import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
-import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.*;
-import org.hibernate.query.Query;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import org.hibernate.Session;
+
+import java.io.IOException;
 
 @Log4j2
-public class HelloApplication {
+public class HelloApplication extends Application {
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com.stuart/my-fxml.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        stage.setTitle("Hello!");
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public static void main(String[] args) {
+
+        launch();
 
         try (final Session newSession = DataAccessObject.openSessionBeginTransaction()) {
 
