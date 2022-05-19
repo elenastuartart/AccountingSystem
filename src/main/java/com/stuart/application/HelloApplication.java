@@ -4,7 +4,9 @@ import com.stuart.dao.записьБД.DataAccessObject;
 import com.stuart.models.entity.документы.продажа.Реализация;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.Session;
@@ -15,13 +17,24 @@ import java.io.IOException;
 public class HelloApplication extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com.stuart/my-fxml.fxml"));
+    public void start(Stage primaryStage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/tableContragent.fxml"));
+        primaryStage.setTitle("Справочник Контрагенты");
+        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(400);
+        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.show();
 
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+//        ScrollPane root = FXMLLoader.load(getClass().getResource("/fxml/tableContragent.fxml"));
+//        Scene scene = new Scene(root, 1100, 700);
+//        stage.setScene(scene);
+//        stage.show();
+
+//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com.stuart/my-fxml.fxml"));
+//        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+//        stage.setTitle("Hello!");
+//        stage.setScene(scene);
+//        stage.show();
     }
 
     public static void main(String[] args) {
