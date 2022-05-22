@@ -5,6 +5,7 @@ import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.закупка.Закупка;
 import com.stuart.models.entity.документы.продажа.Реализация;
 import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
+import javafx.beans.property.StringProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -59,6 +60,10 @@ public class ЗаписьКонтрагент extends ЭлементСправо
         this.code = ЭлементСправочника.GetRandomCode();
     }
 
+    public Integer getCode() {
+        return code;
+    }
+
     public static ЗаписьКонтрагент findObjectByValue(String fieldName, Object fieldValue) {
         return (ЗаписьКонтрагент)DataAccessObject.findObjectByValue(getType(), fieldName, fieldValue);
     }
@@ -94,6 +99,9 @@ public class ЗаписьКонтрагент extends ЭлементСправо
                 ", ТипКонтрагента='" + type_KA + '\'' +
                 '}';
     }
+
+
+
 
 
 }

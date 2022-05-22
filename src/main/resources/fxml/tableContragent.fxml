@@ -15,16 +15,19 @@
    <children>
       <HBox maxHeight="50.0" prefHeight="100.0">
          <children>
-            <Button fx:id="btnAddRecord" mnemonicParsing="false" onAction="#showDialogEdit" prefHeight="25.0" prefWidth="179.0" text="Добавить запись">
+            <Button fx:id="btnAddRecord" mnemonicParsing="false" onAction="#actionButtonPressed" prefHeight="25.0" prefWidth="179.0" text="Добавить запись">
                <HBox.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnEditRecord" mnemonicParsing="false" prefHeight="28.0" prefWidth="178.0" text="Редактировать запись">
+            <VBox>
                <HBox.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
-            </Button>
+               <children>
+                  <Button fx:id="btnEditRecord" mnemonicParsing="false" onAction="#actionButtonPressed" prefHeight="28.0" prefWidth="178.0" text="Редактировать запись" />
+               </children>
+            </VBox>
          </children>
       </HBox>
       <AnchorPane maxHeight="30.0" prefHeight="30.0">
@@ -40,11 +43,11 @@
          <children>
             <TableView fx:id="tableSprContragent" layoutX="14.0" prefHeight="400.0" prefWidth="357.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Код" />
-                <TableColumn prefWidth="89.0" text="Наименование" />
-                  <TableColumn prefWidth="90.0" text="Адрес" />
-                  <TableColumn prefWidth="136.0" text="Контактные данные" />
-                  <TableColumn prefWidth="129.0" text="Вид контрагента" />
+                <TableColumn fx:id="columnCode" prefWidth="75.0" text="Код" />
+                <TableColumn fx:id="columnName" prefWidth="89.0" text="Наименование" />
+                  <TableColumn fx:id="columnContacts" prefWidth="136.0" text="Контактные данные" />
+                  <TableColumn fx:id="columnAddress" prefWidth="90.0" text="Адрес" />
+                  <TableColumn fx:id="columnTypeKA" prefWidth="129.0" text="Вид контрагента" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
