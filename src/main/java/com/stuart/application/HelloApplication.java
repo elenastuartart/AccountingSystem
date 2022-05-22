@@ -17,7 +17,7 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/tableContragent.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/tableKA.fxml"));
         primaryStage.setTitle("Справочник Контрагенты");
         primaryStage.setMinHeight(600);
         primaryStage.setMinWidth(400);

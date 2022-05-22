@@ -15,7 +15,7 @@
    <children>
       <HBox maxHeight="50.0" prefHeight="100.0">
          <children>
-            <Button fx:id="btnAddRecord" mnemonicParsing="false" onAction="#actionButtonPressed" prefHeight="25.0" prefWidth="179.0" text="Добавить запись">
+            <Button fx:id="btnAddRecord" mnemonicParsing="false" onAction="#showDialog" prefHeight="25.0" prefWidth="179.0" text="Добавить запись">
                <HBox.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
@@ -25,7 +25,7 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
                <children>
-                  <Button fx:id="btnEditRecord" mnemonicParsing="false" onAction="#actionButtonPressed" prefHeight="28.0" prefWidth="178.0" text="Редактировать запись" />
+                  <Button fx:id="btnEditRecord" mnemonicParsing="false" onAction="#showDialog" prefHeight="28.0" prefWidth="178.0" text="Редактировать запись" />
                </children>
             </VBox>
          </children>
