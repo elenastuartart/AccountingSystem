@@ -2,6 +2,7 @@ package com.stuart.controllers;
 
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.models.entity.справочники.ТестСпрКА;
+import com.stuart.utils.DialogManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -44,6 +45,9 @@ public class EditDialogKAController {
 
     @FXML
     void actionSave(ActionEvent event) {
+        if(!checkValues()) {
+            return;
+        }
         записьКонтрагент.setCode(txtCode.getText());
         записьКонтрагент.setName(txtName.getText());
         записьКонтрагент.setType_KA(txtTypeCA.getText());
@@ -63,5 +67,17 @@ public class EditDialogKAController {
 
     public ТестСпрКА getЗаписьКонтрагент() {
         return записьКонтрагент;
+    }
+
+    private boolean checkValues() {
+        if(txtCode.getText().trim().length() == 0
+                || txtName.getText().trim().length() == 0
+                || txtTypeCA.getText().trim().length() == 0
+                || txtAddress.getText().trim().length() == 0
+                || txtContacts.getText().trim().length() == 0) {
+            DialogManager.showInfoDialog("Ошибка", "Заполните все поля!");
+            return false;
+        }
+        return true;
     }
 }

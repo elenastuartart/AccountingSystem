@@ -1,8 +1,8 @@
 package com.stuart.controllers;
 
 import com.stuart.interfaces.impls.CollectionISpravochnikKA;
-import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.models.entity.справочники.ТестСпрКА;
+import com.stuart.utils.DialogManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -11,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -19,13 +18,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Locale;
 
 public class TableKAController {
 
@@ -59,6 +56,7 @@ public class TableKAController {
     private EditDialogKAController editDialogController;
     private Stage editDialogStage;
     private Stage mainStage;
+//    private ТестСпрКА selectedRecord;
 
     @FXML
     private void initialize() {
@@ -69,7 +67,7 @@ public class TableKAController {
         columnContacts.setCellValueFactory(new PropertyValueFactory<ТестСпрКА, String>("contact_person"));
         setupClearButtonField(txtSearch);
         initListeners();
-        fillData();
+        fillTable();
         initLoader();
     }
 
@@ -81,8 +79,12 @@ public class TableKAController {
         if(!(source instanceof Button)) {
             return;
         }
+
+        ТестСпрКА selectedRecord = (ТестСпрКА) tableSprContragent.getSelectionModel().getSelectedItem();
+
         Button clickedButton = (Button) source;
 
+//        boolean research = false;
         switch (clickedButton.getId()) {
             case "btnAddRecord":
                 editDialogController.setЗаписьКонтрагент(new ТестСпрКА());
@@ -90,7 +92,10 @@ public class TableKAController {
                 sprKAimpl.add(editDialogController.getЗаписьКонтрагент());
                 break;
             case  "btnEditRecord":
-                editDialogController.setЗаписьКонтрагент((ТестСпрКА) tableSprContragent.getSelectionModel().getSelectedItem());
+                if(!recordKAisSelected(selectedRecord)) {
+                    return;
+                }
+                editDialogController.setЗаписьКонтрагент(selectedRecord);
                 showDialog();
                 break;
         }
@@ -111,6 +116,14 @@ public class TableKAController {
         editDialogStage.showAndWait(); //ожидание закрытия окна
     }
 
+    private boolean recordKAisSelected(ТестСпрКА selectedRecord) {
+        if(selectedRecord == null) {
+            DialogManager.showInfoDialog("Ошибка", "Выберите запись!");
+            return  false;
+        }
+        return true;
+    }
+
     private void setupClearButtonField(CustomTextField customTextField) {
         try {
             Method m = TextFields.class.getDeclaredMethod("setupClearButtonField", TextField.class, ObjectProperty.class);
@@ -121,7 +134,7 @@ public class TableKAController {
         }
     }
 
-    private void fillData() {
+    private void fillTable() {
         sprKAimpl.fillTestData();
         backupList = FXCollections.observableArrayList();
         backupList.addAll(sprKAimpl.getСписокКонтрагентов());
