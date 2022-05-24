@@ -3,7 +3,10 @@ package com.stuart.controllers;
 import com.stuart.interfaces.impls.CollectionISpravochnikKA;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.models.entity.справочники.ТестСпрКА;
+import javafx.beans.property.ObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,8 +20,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.controlsfx.control.textfield.CustomTextField;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Locale;
 
 public class TableKAController {
 
@@ -27,7 +34,7 @@ public class TableKAController {
     @FXML
     private Button btnEditRecord;
     @FXML
-    private TextField txtSearch;
+    private CustomTextField txtSearch;
     @FXML
     private Button btnSearch;
     @FXML
@@ -46,6 +53,7 @@ public class TableKAController {
     private Label labelCount;
 
     private CollectionISpravochnikKA sprKAimpl = new CollectionISpravochnikKA();
+    private ObservableList<ТестСпрКА> backupList;
     private Parent fxmlEdit;
     private FXMLLoader fxmlLoader = new FXMLLoader();
     private EditDialogKAController editDialogController;
@@ -59,14 +67,64 @@ public class TableKAController {
         columnTypeKA.setCellValueFactory(new PropertyValueFactory<ТестСпрКА, String>("type_KA"));
         columnAddress.setCellValueFactory(new PropertyValueFactory<ТестСпрКА, String>("address"));
         columnContacts.setCellValueFactory(new PropertyValueFactory<ТестСпрКА, String>("contact_person"));
-
+        setupClearButtonField(txtSearch);
         initListeners();
         fillData();
         initLoader();
     }
 
+    @FXML
+    public void actionButtonPressed(ActionEvent actionEvent) {
+        //получаем источник события
+        Object source = actionEvent.getSource();
+        //если нажата не кнопка выходим из метода
+        if(!(source instanceof Button)) {
+            return;
+        }
+        Button clickedButton = (Button) source;
+
+        switch (clickedButton.getId()) {
+            case "btnAddRecord":
+                editDialogController.setЗаписьКонтрагент(new ТестСпрКА());
+                showDialog();
+                sprKAimpl.add(editDialogController.getЗаписьКонтрагент());
+                break;
+            case  "btnEditRecord":
+                editDialogController.setЗаписьКонтрагент((ТестСпрКА) tableSprContragent.getSelectionModel().getSelectedItem());
+                showDialog();
+                break;
+        }
+    }
+
+    @FXML
+    private void showDialog() {
+        if(editDialogStage == null) {
+            editDialogStage = new Stage();
+            editDialogStage.setTitle("Создать/редактировать запись справочника Контрагент");
+            editDialogStage.setMinWidth(600);
+            editDialogStage.setMinHeight(400);
+            editDialogStage.setResizable(false);
+            editDialogStage.setScene(new Scene(fxmlEdit));
+            editDialogStage.initModality(Modality.WINDOW_MODAL);
+            editDialogStage.initOwner(mainStage); //получаем родительское окно - источник события
+        }
+        editDialogStage.showAndWait(); //ожидание закрытия окна
+    }
+
+    private void setupClearButtonField(CustomTextField customTextField) {
+        try {
+            Method m = TextFields.class.getDeclaredMethod("setupClearButtonField", TextField.class, ObjectProperty.class);
+            m.setAccessible(true);
+            m.invoke(null, customTextField, customTextField.rightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void fillData() {
         sprKAimpl.fillTestData();
+        backupList = FXCollections.observableArrayList();
+        backupList.addAll(sprKAimpl.getСписокКонтрагентов());
         tableSprContragent.setItems(sprKAimpl.getСписокКонтрагентов());
     }
 
@@ -108,41 +166,17 @@ public class TableKAController {
         labelCount.setText("Количество записей: "+ sprKAimpl.getСписокКонтрагентов().size());
     }
 
-    @FXML
-    public void actionButtonPressed(ActionEvent actionEvent) {
-        //получаем источник события
-        Object source = actionEvent.getSource();
-        //если нажата не кнопка выходим из метода
-        if(!(source instanceof Button)) {
-            return;
-        }
-        Button clickedButton = (Button) source;
-
-        switch (clickedButton.getId()) {
-            case "btnAddRecord":
-                editDialogController.setЗаписьКонтрагент(new ТестСпрКА());
-                showDialog();
-                sprKAimpl.add(editDialogController.getЗаписьКонтрагент());
-                break;
-            case  "btnEditRecord":
-                editDialogController.setЗаписьКонтрагент((ТестСпрКА) tableSprContragent.getSelectionModel().getSelectedItem());
-                showDialog();
-                break;
+    public void actionSearch(ActionEvent actionEvent) {
+        sprKAimpl.getСписокКонтрагентов().clear();
+        for (ТестСпрКА записьКонтрагент : backupList) {
+            if (записьКонтрагент.getCode().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
+                    записьКонтрагент.getName().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
+                    записьКонтрагент.getType_KA().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
+                    записьКонтрагент.getAddress().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
+                    записьКонтрагент.getContact_person().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
+                sprKAimpl.getСписокКонтрагентов().add(записьКонтрагент);
+            }
         }
     }
 
-    @FXML
-    private void showDialog() {
-        if(editDialogStage == null) {
-            editDialogStage = new Stage();
-            editDialogStage.setTitle("Создать/редактировать запись справочника Контрагент");
-            editDialogStage.setMinWidth(600);
-            editDialogStage.setMinHeight(400);
-            editDialogStage.setResizable(false);
-            editDialogStage.setScene(new Scene(fxmlEdit));
-            editDialogStage.initModality(Modality.WINDOW_MODAL);
-            editDialogStage.initOwner(mainStage); //получаем родительское окно - источник события
-        }
-        editDialogStage.showAndWait(); //ожидание закрытия окна
-    }
 }
