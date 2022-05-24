@@ -1,5 +1,6 @@
 package com.stuart.application;
 
+import com.stuart.controllers.TableKAController;
 import com.stuart.dao.записьБД.DataAccessObject;
 import com.stuart.interfaces.impls.CollectionISpravochnikKA;
 import javafx.application.Application;
@@ -17,20 +18,27 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/tableKA.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/fxml/tableKA.fxml"));
+        Parent fxmlMain = fxmlLoader.load();
+        TableKAController mainController = fxmlLoader.getController();
+        mainController.setMainStage(primaryStage);
+
         primaryStage.setTitle("Справочник Контрагенты");
         primaryStage.setMinHeight(600);
         primaryStage.setMinWidth(400);
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(fxmlMain, 300, 275));
         primaryStage.show();
+
+        testData();
 
     }
 
     private void testData() {
-
-        CollectionISpravochnikKA списокКА = new CollectionISpravochnikKA();
-        списокКА.fillTestData();
-        списокКА.print();
+//
+//        CollectionISpravochnikKA списокКА = new CollectionISpravochnikKA();
+//        списокКА.fillTestData();
+//        списокКА.print();
     }
 
     public static void main(String[] args) {
