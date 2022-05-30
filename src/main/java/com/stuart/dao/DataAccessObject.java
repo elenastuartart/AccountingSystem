@@ -232,6 +232,7 @@ public class DataAccessObject implements ISpravochnik {
     public ObservableList<ЗаписьБД> find(String text) {
         String s = null;
         return null;
+        /////
     }
 
 }
