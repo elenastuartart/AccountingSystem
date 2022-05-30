@@ -32,7 +32,9 @@ public class EditDialogKAController {
     @FXML
     private Button btnCansel;
 
-    private ЗаписьКонтрагентFX записьКонтрагент;
+    private ЗаписьКонтрагентFX записьКонтрагентFX;
+
+    private boolean saveClicked = false;
 
     @FXML
     void actionClose(ActionEvent event) {
@@ -42,29 +44,34 @@ public class EditDialogKAController {
     }
 
     @FXML
-    void actionSave(ActionEvent event) {
+    void actionSaveOrUpdate(ActionEvent event) {
         if(!checkValues()) {
             return;
         }
-        записьКонтрагент.setCode(Integer.valueOf(txtCode.getText()));
-        записьКонтрагент.setName(txtName.getText());
-        записьКонтрагент.setType_KA(txtTypeCA.getText());
-        записьКонтрагент.setAddress(txtAddress.getText());
-        записьКонтрагент.setContact_person(txtContacts.getText());
+        записьКонтрагентFX.setCode(Integer.valueOf(txtCode.getText()));
+        записьКонтрагентFX.setName(txtName.getText());
+        записьКонтрагентFX.setType_KA(txtTypeCA.getText());
+        записьКонтрагентFX.setAddress(txtAddress.getText());
+        записьКонтрагентFX.setContact_person(txtContacts.getText());
+        saveClicked = true;
         actionClose(event);
     }
 
-    public void setЗаписьКонтрагент(ЗаписьКонтрагентFX записьКонтрагент) {
-        this.записьКонтрагент = записьКонтрагент;
-        txtCode.setText(String.valueOf(записьКонтрагент.getCode()));
-        txtName.setText(записьКонтрагент.getName());
-        txtTypeCA.setText(записьКонтрагент.getType_KA());
-        txtAddress.setText(записьКонтрагент.getAddress());
-        txtContacts.setText(записьКонтрагент.getContact_person());
+    public void setЗаписьКонтрагентFX(ЗаписьКонтрагентFX записьКонтрагентFX) {
+        if (записьКонтрагентFX == null){
+            return;
+        }
+        saveClicked = false;
+        this.записьКонтрагентFX = записьКонтрагентFX;
+        txtCode.setText(записьКонтрагентFX.getCode().toString());
+        txtName.setText(записьКонтрагентFX.getName());
+        txtTypeCA.setText(записьКонтрагентFX.getType_KA());
+        txtAddress.setText(записьКонтрагентFX.getAddress());
+        txtContacts.setText(записьКонтрагентFX.getContact_person());
     }
 
-    public ЗаписьКонтрагентFX getЗаписьКонтрагент() {
-        return записьКонтрагент;
+    public ЗаписьКонтрагентFX getЗаписьКонтрагентFX() {
+        return записьКонтрагентFX;
     }
 
     private boolean checkValues() {
@@ -77,5 +84,9 @@ public class EditDialogKAController {
             return false;
         }
         return true;
+    }
+
+    public boolean isSaveClicked() {
+        return saveClicked;
     }
 }

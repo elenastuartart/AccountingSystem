@@ -96,7 +96,7 @@
    <bottom>
       <Pane prefHeight="115.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btnSaveOrUpdate" layoutX="241.0" layoutY="2.0" mnemonicParsing="false" onAction="#actionSave" prefHeight="25.0" prefWidth="140.0" text="Записать">
+            <Button fx:id="btnSaveOrUpdate" layoutX="241.0" layoutY="2.0" mnemonicParsing="false" onAction="#actionSaveOrUpdate" prefHeight="25.0" prefWidth="140.0" text="Записать">
                <font>
                   <Font size="14.0" />
                </font>

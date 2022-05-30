@@ -3,16 +3,17 @@ package com.stuart.objects;
 import com.stuart.models.entity.справочники.ЭлементСправочника;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
-
 public class ЗаписьКонтрагентFX extends ЭлементСправочника {
 
-    private SimpleIntegerProperty code = new SimpleIntegerProperty();
+    private SimpleIntegerProperty code = new SimpleIntegerProperty(0);
     private SimpleStringProperty name = new SimpleStringProperty("");
     private SimpleStringProperty contact_person = new SimpleStringProperty(""); ;
     private SimpleStringProperty address = new SimpleStringProperty("");
@@ -31,27 +32,22 @@ public class ЗаписьКонтрагентFX extends ЭлементСправ
         this.type_KA = new SimpleStringProperty(type_KA);
     }
 
-    @Column(name = "name")
     public String getName() {
         return name.get();
     }
 
-    @Column(name = "code")
     public Integer getCode() {
         return code.get();
     }
 
-    @Column(name = "type_ka")
     public String getType_KA() {
         return type_KA.get();
     }
 
-    @Column(name = "address")
     public String getAddress() {
         return address.get();
     }
 
-    @Column(name = "contacts")
     public String getContact_person() {
         return contact_person.get();
     }

@@ -24,8 +24,8 @@ public class HelloApplication extends Application {
         mainController.setMainStage(primaryStage);
 
         primaryStage.setTitle("Справочник Контрагенты");
-        primaryStage.setMinHeight(600);
-        primaryStage.setMinWidth(400);
+        primaryStage.setMinHeight(800);
+        primaryStage.setMinWidth(600);
         primaryStage.setScene(new Scene(fxmlMain, 300, 275));
         primaryStage.show();
 

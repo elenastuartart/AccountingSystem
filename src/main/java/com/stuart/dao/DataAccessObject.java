@@ -37,7 +37,6 @@ public class DataAccessObject implements ISpravochnik {
         Query<Double> query = _session.createQuery("select " + "sum (zrts ." + ИмяРесурса + " ) " +
                 "from ЗаписьРегистраТоварыНаСкладах zrts "
                 + "where zrts.idNom =: param and zrts.idDoc !=: param2");
-
         query.setParameter("param", idNom);
         query.setParameter("param2", idDoc);
 
@@ -201,16 +200,6 @@ public class DataAccessObject implements ISpravochnik {
     }
 
     @Override
-    public boolean add(ЗаписьБД запись) {
-        return false;
-    }
-
-    @Override
-    public boolean update(ЗаписьБД запись) {
-        return false;
-    }
-
-    @Override
     public ObservableList<ЗаписьКонтрагентFX> findAll() {
         Session newSession = getFactory().openSession();
         Query<ЗаписьКонтрагент> query = newSession.createQuery("select k from ЗаписьКонтрагент k");
@@ -225,7 +214,57 @@ public class DataAccessObject implements ISpravochnik {
             записьКонтрагентFX.setContact_person(res.getContact_person());
             this.contragentList.add(записьКонтрагентFX);
         }
-            return this.contragentList;
+        return this.contragentList;
+    }
+
+    @Override
+    public boolean add(ЗаписьКонтрагентFX записьКонтрагентFX) {
+        try (final Session newSession = DataAccessObject.openSessionBeginTransaction()) {
+            ЗаписьКонтрагент записьКонтрагент = new ЗаписьКонтрагент();
+            записьКонтрагент.setCode();
+            записьКонтрагент.setName(записьКонтрагентFX.getName());
+            записьКонтрагент.setType_KA(записьКонтрагентFX.getType_KA());
+            записьКонтрагент.setAddress(записьКонтрагентFX.getAddress());
+            записьКонтрагент.setContact_person(записьКонтрагентFX.getContact_person());
+
+            boolean result = DataAccessObject.save(записьКонтрагент);
+
+            DataAccessObject.commitTransactionCloseSession();
+
+            if (result) {
+                записьКонтрагентFX.setCode(записьКонтрагент.getCode());
+                contragentList.add(записьКонтрагентFX);
+                return true;
+            }
+            return false;
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(ЗаписьКонтрагентFX записьКонтрагентFX) {
+        try (final Session newSession = DataAccessObject.openSessionBeginTransaction()) {
+            ЗаписьКонтрагент записьКонтрагент = ЗаписьКонтрагент.findObjectByValue("code", записьКонтрагентFX.getCode());
+            записьКонтрагент.setCode(записьКонтрагентFX.getCode());
+            записьКонтрагент.setName(записьКонтрагентFX.getName());
+            записьКонтрагент.setType_KA(записьКонтрагентFX.getType_KA());
+            записьКонтрагент.setAddress(записьКонтрагентFX.getAddress());
+            записьКонтрагент.setContact_person(записьКонтрагентFX.getContact_person());
+
+            boolean result = DataAccessObject.save(записьКонтрагент);
+            DataAccessObject.commitTransactionCloseSession();
+            if(result) {
+                return true;
+            }
+            return false;
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
     }
 
     @Override

@@ -78,24 +78,33 @@ public class TableKAController {
         if(!(source instanceof Button)) {
             return;
         }
-
         ЗаписьКонтрагентFX selectedRecord = (ЗаписьКонтрагентFX) tableSprContragent.getSelectionModel().getSelectedItem();
 
         Button clickedButton = (Button) source;
 
-//        boolean research = false;
+        boolean research = false;
         switch (clickedButton.getId()) {
             case "btnAddRecord":
-                editDialogController.setЗаписьКонтрагент(new ЗаписьКонтрагентFX());
+                editDialogController.setЗаписьКонтрагентFX(new ЗаписьКонтрагентFX());
                 showDialog();
-                sprKAImpl.add(editDialogController.getЗаписьКонтрагент());
+//                sprKAImpl.add(editDialogController.getЗаписьКонтрагентFX());
+                if (editDialogController.isSaveClicked()) {
+                    sprKAImpl.add(editDialogController.getЗаписьКонтрагентFX());
+                    research = true;
+                }
                 break;
             case  "btnEditRecord":
                 if(!recordKAisSelected(selectedRecord)) {
                     return;
                 }
-                editDialogController.setЗаписьКонтрагент(selectedRecord);
+                editDialogController.setЗаписьКонтрагентFX(selectedRecord);
                 showDialog();
+//                sprKAImpl.update(selectedRecord);
+                if (editDialogController.isSaveClicked()) {
+                    // коллекция в addressBookImpl и так обновляется, т.к. мы ее редактируем в диалоговом окне и сохраняем при нажатии на ОК
+                    sprKAImpl.update(selectedRecord);
+                    research = true;
+                }
                 break;
         }
     }
@@ -160,7 +169,7 @@ public class TableKAController {
             @Override
             public void handle(MouseEvent event) {
                 if(event.getClickCount()==2) {
-                    editDialogController.setЗаписьКонтрагент(
+                    editDialogController.setЗаписьКонтрагентFX(
                             (ЗаписьКонтрагентFX) tableSprContragent.getSelectionModel().getSelectedItem());
                     showDialog();
                 }
