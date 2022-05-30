@@ -1,6 +1,7 @@
 package com.stuart.controllers;
 
 import com.stuart.dao.DataAccessObject;
+import com.stuart.interfaces.impls.DBSpravochnikKA;
 import com.stuart.objects.ЗаписьКонтрагентFX;
 import com.stuart.utils.DialogManager;
 import javafx.beans.property.ObjectProperty;
@@ -50,7 +51,8 @@ public class TableKAController {
     private Label labelCount;
 
     private static final String FXML_EDIT = "/fxml/editDialogKA.fxml";
-    private DataAccessObject sprKAImpl = new DataAccessObject();
+    private DBSpravochnikKA sprKAImpl = new  DBSpravochnikKA();
+//    private DataAccessObject sprKAImpl = new DataAccessObject();
     private Parent fxmlEdit;
     private FXMLLoader fxmlLoader = new FXMLLoader();
     private EditDialogKAController editDialogController;

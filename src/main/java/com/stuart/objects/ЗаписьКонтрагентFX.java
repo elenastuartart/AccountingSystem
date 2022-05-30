@@ -12,7 +12,9 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 public class ЗаписьКонтрагентFX extends ЭлементСправочника {
-
+    @Getter
+    @Setter
+    private UUID id;
     private SimpleIntegerProperty code = new SimpleIntegerProperty(0);
     private SimpleStringProperty name = new SimpleStringProperty("");
     private SimpleStringProperty contact_person = new SimpleStringProperty(""); ;
