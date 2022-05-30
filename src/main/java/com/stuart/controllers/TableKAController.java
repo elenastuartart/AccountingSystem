@@ -182,7 +182,7 @@ public class TableKAController {
     public void actionSearch(ActionEvent actionEvent) {
         sprKAimpl.getСписокКонтрагентов().clear();
         for (ТестСпрКА записьКонтрагент : backupList) {
-            if (записьКонтрагент.getCode().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
+            if (записьКонтрагент.getCode().toString().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
                     записьКонтрагент.getName().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
                     записьКонтрагент.getType_KA().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
                     записьКонтрагент.getAddress().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||

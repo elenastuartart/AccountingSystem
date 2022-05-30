@@ -1,10 +1,13 @@
 package com.stuart.dao.записьБД;
 
+import com.stuart.interfaces.ISpravochnik;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
+import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;
+import javafx.collections.ObservableList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -13,7 +16,7 @@ import org.hibernate.query.Query;
 import java.util.List;
 import java.util.UUID;
 
-public class DataAccessObject {
+public class DataAccessObject implements ISpravochnik {
 
     private static SessionFactory _factory;
     private static Session _session;
@@ -61,8 +64,6 @@ public class DataAccessObject {
         Double averagePrice = price * amountConsuption;
         return averagePrice;
     }
-
-
 
     public static void commitTransactionCloseSession()  {
         _session.getTransaction().commit();
@@ -193,33 +194,39 @@ public class DataAccessObject {
         return result;
     }
 
-//    public static int getSizeTable(String tableName) {
-//        Integer result = null;
+    @Override
+    public boolean add(ЗаписьБД записьБД) {
+        return false;
+    }
+
+    @Override
+    public boolean update(ЗаписьБД записьБД) {
+        return false;
+    }
+
+    @Override
+    public ObservableList<ЗаписьБД> findAll() {
+        Query<ЗаписьКонтрагент> query = _session.createQuery("select k from ЗаписьКонтрагент k");
+        var rs = query.getResultList();
+        while (rs.size() > 0) {
+            ЗаписьКонтрагент записьКонтрагент = new ЗаписьКонтрагент();
+            записьКонтрагент.setCode();
+        }
+        return null;
+    }
+
+    @Override
+    public ObservableList<ЗаписьБД> find(String text) {
+        String s = null;
+        return null;
+    }
+
+
+//    public ObservableList<ЗаписьБД> findAll() {
+//        Session session = openSessionBeginTransaction().getSession();
+//        Query<ЗаписьКонтрагент> query = session.createQuery("select k from ЗаписьКонтрагент k");
 //
-//        if (_session == null) {
-//            try (final Session newSession = getFactory().openSession()){
-//
-//                Query<Integer> query = newSession.createQuery("select " + "count(*) " +
-//                        "from " + tableName + " table where table." + " = :param");
-//                query.setParameter("param", tableName);
-//                result = query.getSingleResult();
-//
-//                newSession.close();
-//            }
-//            catch (Exception e) {
-//                System.out.println("Не удалось найти записи: " + e.getMessage());
-//            }
-//        }
-//        else {
-//            try {
-//                Query<ЗаписьБД> query = _session.createQuery("from " + tableName + " table where table." + fieldName + " = :param");
-//                query.setParameter("param", fieldValue);
-//                result = query.getResultList();
-//            }
-//            catch (Exception e) {
-//                System.out.println("Не удалось найти записи: " + e.getMessage());
-//            }
-//        }
-//        return result;
 //    }
+
+
 }

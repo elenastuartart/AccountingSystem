@@ -48,7 +48,7 @@ public class EditDialogKAController {
         if(!checkValues()) {
             return;
         }
-        записьКонтрагент.setCode(txtCode.getText());
+        записьКонтрагент.setCode(Integer.valueOf(txtCode.getText()));
         записьКонтрагент.setName(txtName.getText());
         записьКонтрагент.setType_KA(txtTypeCA.getText());
         записьКонтрагент.setAddress(txtAddress.getText());
@@ -58,7 +58,7 @@ public class EditDialogKAController {
 
     public void setЗаписьКонтрагент(ТестСпрКА записьКонтрагент) {
         this.записьКонтрагент = записьКонтрагент;
-        txtCode.setText(записьКонтрагент.getCode());
+        txtCode.setText(String.valueOf(записьКонтрагент.getCode()));
         txtName.setText(записьКонтрагент.getName());
         txtTypeCA.setText(записьКонтрагент.getType_KA());
         txtAddress.setText(записьКонтрагент.getAddress());

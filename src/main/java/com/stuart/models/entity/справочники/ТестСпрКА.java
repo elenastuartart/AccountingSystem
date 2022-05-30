@@ -1,53 +1,70 @@
 package com.stuart.models.entity.справочники;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.UUID;
 
-
+@Entity
 @Table(name = "test_KA", schema = "study_db")
 public class ТестСпрКА extends ЭлементСправочника {
+    @Id
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
 
-    private SimpleStringProperty code = new SimpleStringProperty("");
+    private SimpleIntegerProperty  code = new SimpleIntegerProperty();
     private SimpleStringProperty name = new SimpleStringProperty("");
     private SimpleStringProperty contact_person = new SimpleStringProperty(""); ;
     private SimpleStringProperty address = new SimpleStringProperty("");
-    private SimpleStringProperty type_KA =new SimpleStringProperty(""); //поставщик/покупатель
+    private SimpleStringProperty type_KA = new SimpleStringProperty(""); //поставщик/покупатель
 
     public ТестСпрКА() {
 
     }
 
-    public ТестСпрКА(String code, String name, String contact_person,
+    public ТестСпрКА(Integer code, String name, String contact_person,
                      String address, String type_KA ) {
-        this.code = new SimpleStringProperty(code);
+        this.code = new SimpleIntegerProperty(code);
         this.name = new SimpleStringProperty(name);
         this.contact_person = new SimpleStringProperty(contact_person);
         this.address = new SimpleStringProperty(address);
         this.type_KA = new SimpleStringProperty(type_KA);
     }
 
+    @Column(name = "name")
     public String getName() {
         return name.get();
     }
 
-    public String getCode() {
+    @Column(name = "code")
+    public Integer getCode() {
         return code.get();
     }
 
+    @Column(name = "type_ka")
     public String getType_KA() {
         return type_KA.get();
     }
 
+    @Column(name = "address")
     public String getAddress() {
         return address.get();
     }
 
+    @Column(name = "contacts")
     public String getContact_person() {
         return contact_person.get();
     }
 
-    public void setCode(String  code) {
+    public void setCode(Integer  code) {
         this.code.set(code);
     }
 
@@ -67,7 +84,7 @@ public class ТестСпрКА extends ЭлементСправочника {
         this.type_KA.set(type_KA);
     }
 
-    public SimpleStringProperty codeProperty() {
+    public SimpleIntegerProperty  codeProperty() {
         return code;
     }
 
