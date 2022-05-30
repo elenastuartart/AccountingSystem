@@ -1,37 +1,29 @@
-package com.stuart.models.entity.справочники;
+package com.stuart.objects;
 
+import com.stuart.models.entity.справочники.ЭлементСправочника;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
-@Entity
-@Table(name = "test_KA", schema = "study_db")
-public class ТестСпрКА extends ЭлементСправочника {
-    @Id
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id = UUID.randomUUID();
 
-    private SimpleIntegerProperty  code = new SimpleIntegerProperty();
+public class ЗаписьКонтрагентFX extends ЭлементСправочника {
+
+    private SimpleIntegerProperty code = new SimpleIntegerProperty();
     private SimpleStringProperty name = new SimpleStringProperty("");
     private SimpleStringProperty contact_person = new SimpleStringProperty(""); ;
     private SimpleStringProperty address = new SimpleStringProperty("");
     private SimpleStringProperty type_KA = new SimpleStringProperty(""); //поставщик/покупатель
 
-    public ТестСпрКА() {
+    public ЗаписьКонтрагентFX() {
 
     }
 
-    public ТестСпрКА(Integer code, String name, String contact_person,
-                     String address, String type_KA ) {
+    public ЗаписьКонтрагентFX(Integer code, String name, String contact_person,
+                              String address, String type_KA ) {
         this.code = new SimpleIntegerProperty(code);
         this.name = new SimpleStringProperty(name);
         this.contact_person = new SimpleStringProperty(contact_person);

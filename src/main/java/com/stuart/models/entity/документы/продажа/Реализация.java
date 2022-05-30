@@ -1,16 +1,13 @@
 package com.stuart.models.entity.документы.продажа;
 
-import com.stuart.dao.записьБД.DataAccessObject;
+import com.stuart.dao.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
-import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
 import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
 import com.stuart.models.entity.регистры.ЗаписьРегистраСебестоимостьЕдПродукции;
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import lombok.*;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.ArrayList;

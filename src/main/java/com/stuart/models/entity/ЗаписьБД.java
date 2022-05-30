@@ -1,8 +1,6 @@
 package com.stuart.models.entity;
 
-import com.stuart.dao.записьБД.DataAccessObject;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import com.stuart.dao.DataAccessObject;
 
 public class ЗаписьБД {
 

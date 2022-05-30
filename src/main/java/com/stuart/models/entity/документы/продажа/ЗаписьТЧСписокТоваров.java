@@ -1,9 +1,7 @@
 package com.stuart.models.entity.документы.продажа;
 
-import com.stuart.dao.записьБД.DataAccessObject;
+import com.stuart.dao.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
-import com.stuart.models.entity.документы.закупка.Закупка;
-import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import lombok.*;
 

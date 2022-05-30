@@ -1,6 +1,6 @@
 package com.stuart.models.entity.справочники;
 
-import com.stuart.dao.записьБД.DataAccessObject;
+import com.stuart.dao.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.производство.ЗаписьТЧРасходМатериалов;
 import lombok.*;

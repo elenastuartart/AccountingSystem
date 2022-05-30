@@ -1,13 +1,11 @@
 package com.stuart.controllers;
 
-import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
-import com.stuart.models.entity.справочники.ТестСпрКА;
+import com.stuart.objects.ЗаписьКонтрагентFX;
 import com.stuart.utils.DialogManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -34,7 +32,7 @@ public class EditDialogKAController {
     @FXML
     private Button btnCansel;
 
-    private ТестСпрКА записьКонтрагент;
+    private ЗаписьКонтрагентFX записьКонтрагент;
 
     @FXML
     void actionClose(ActionEvent event) {
@@ -56,7 +54,7 @@ public class EditDialogKAController {
         actionClose(event);
     }
 
-    public void setЗаписьКонтрагент(ТестСпрКА записьКонтрагент) {
+    public void setЗаписьКонтрагент(ЗаписьКонтрагентFX записьКонтрагент) {
         this.записьКонтрагент = записьКонтрагент;
         txtCode.setText(String.valueOf(записьКонтрагент.getCode()));
         txtName.setText(записьКонтрагент.getName());
@@ -65,7 +63,7 @@ public class EditDialogKAController {
         txtContacts.setText(записьКонтрагент.getContact_person());
     }
 
-    public ТестСпрКА getЗаписьКонтрагент() {
+    public ЗаписьКонтрагентFX getЗаписьКонтрагент() {
         return записьКонтрагент;
     }
 

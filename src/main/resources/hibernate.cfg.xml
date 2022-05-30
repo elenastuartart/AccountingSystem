@@ -33,7 +33,7 @@
     <mapping class="com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах"/>
     <mapping class="com.stuart.models.entity.регистры.ЗаписьРегистраСебестоимостьЕдПродукции"/>
 
-    <mapping class="com.stuart.models.entity.справочники.ТестСпрКА"/>
+
 
   </session-factory>
 </hibernate-configuration>

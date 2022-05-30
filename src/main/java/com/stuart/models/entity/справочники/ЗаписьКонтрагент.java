@@ -1,18 +1,16 @@
 package com.stuart.models.entity.справочники;
 
-import com.stuart.dao.записьБД.DataAccessObject;
+import com.stuart.dao.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.закупка.Закупка;
 import com.stuart.models.entity.документы.продажа.Реализация;
 import com.stuart.models.entity.регистры.ЗаписьРегистраВзаиморасчеты;
-import javafx.beans.property.StringProperty;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @NoArgsConstructor

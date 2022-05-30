@@ -1,12 +1,10 @@
-package com.stuart.dao.записьБД;
+package com.stuart.dao;
 
 import com.stuart.interfaces.ISpravochnik;
 import com.stuart.models.entity.ЗаписьБД;
-import com.stuart.models.entity.документы.Документ;
-import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
-import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
-import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;
+import com.stuart.objects.ЗаписьКонтрагентFX;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -194,25 +192,40 @@ public class DataAccessObject implements ISpravochnik {
         return result;
     }
 
+
+    //реализация для контрагента
+    private ObservableList<ЗаписьКонтрагентFX> contragentList = FXCollections.observableArrayList();
+
+    public ObservableList<ЗаписьКонтрагентFX> getContragentList() {
+        return contragentList;
+    }
+
     @Override
-    public boolean add(ЗаписьБД записьБД) {
+    public boolean add(ЗаписьБД запись) {
         return false;
     }
 
     @Override
-    public boolean update(ЗаписьБД записьБД) {
+    public boolean update(ЗаписьБД запись) {
         return false;
     }
 
     @Override
-    public ObservableList<ЗаписьБД> findAll() {
-        Query<ЗаписьКонтрагент> query = _session.createQuery("select k from ЗаписьКонтрагент k");
-        var rs = query.getResultList();
-        while (rs.size() > 0) {
-            ЗаписьКонтрагент записьКонтрагент = new ЗаписьКонтрагент();
-            записьКонтрагент.setCode();
+    public ObservableList<ЗаписьКонтрагентFX> findAll() {
+        Session newSession = getFactory().openSession();
+        Query<ЗаписьКонтрагент> query = newSession.createQuery("select k from ЗаписьКонтрагент k");
+        var resultList = query.getResultList();
+        for (int i = 0; i < resultList.size(); i++) {
+            var res = resultList.get(i);
+            ЗаписьКонтрагентFX записьКонтрагентFX = new ЗаписьКонтрагентFX();
+            записьКонтрагентFX.setCode(res.getCode());
+            записьКонтрагентFX.setName(res.getName());
+            записьКонтрагентFX.setType_KA(res.getType_KA());
+            записьКонтрагентFX.setAddress(res.getAddress());
+            записьКонтрагентFX.setContact_person(res.getContact_person());
+            this.contragentList.add(записьКонтрагентFX);
         }
-        return null;
+            return this.contragentList;
     }
 
     @Override
@@ -220,13 +233,5 @@ public class DataAccessObject implements ISpravochnik {
         String s = null;
         return null;
     }
-
-
-//    public ObservableList<ЗаписьБД> findAll() {
-//        Session session = openSessionBeginTransaction().getSession();
-//        Query<ЗаписьКонтрагент> query = session.createQuery("select k from ЗаписьКонтрагент k");
-//
-//    }
-
 
 }

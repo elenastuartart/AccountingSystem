@@ -1,15 +1,12 @@
 package com.stuart.models.entity.документы.производство;
 
-import com.stuart.dao.записьБД.DataAccessObject;
+import com.stuart.dao.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
 import com.stuart.models.entity.регистры.ЗаписьРегистраТоварыНаСкладах;
 import lombok.*;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 
 import javax.persistence.*;
-import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

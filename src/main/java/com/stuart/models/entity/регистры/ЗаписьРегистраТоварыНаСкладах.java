@@ -1,18 +1,9 @@
 package com.stuart.models.entity.регистры;
 
-import com.stuart.dao.записьБД.DataAccessObject;
+import com.stuart.dao.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.документы.Документ;
-import com.stuart.models.entity.документы.закупка.Закупка;
-import com.stuart.models.entity.документы.продажа.Реализация;
-import com.stuart.models.entity.документы.производство.Производство;
-import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import lombok.*;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.annotations.ManyToAny;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.stuart.models.entity.документы.производство;
 
-import com.stuart.dao.записьБД.DataAccessObject;
+import com.stuart.dao.DataAccessObject;
 import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;

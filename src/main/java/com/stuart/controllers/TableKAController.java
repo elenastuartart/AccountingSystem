@@ -1,10 +1,9 @@
 package com.stuart.controllers;
 
-import com.stuart.interfaces.impls.CollectionISpravochnikKA;
-import com.stuart.models.entity.справочники.ТестСпрКА;
+import com.stuart.dao.DataAccessObject;
+import com.stuart.objects.ЗаписьКонтрагентFX;
 import com.stuart.utils.DialogManager;
 import javafx.beans.property.ObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +22,7 @@ import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 
 public class TableKAController {
 
@@ -37,34 +37,33 @@ public class TableKAController {
     @FXML
     private TableView tableSprContragent;
     @FXML
-    private TableColumn<ТестСпрКА, String> columnCode;
+    private TableColumn<ЗаписьКонтрагентFX, String> columnCode;
     @FXML
-    private TableColumn<ТестСпрКА, String> columnName;
+    private TableColumn<ЗаписьКонтрагентFX, String> columnName;
     @FXML
-    private TableColumn<ТестСпрКА, String> columnAddress;
+    private TableColumn<ЗаписьКонтрагентFX, String> columnAddress;
     @FXML
-    private TableColumn<ТестСпрКА, String> columnTypeKA;
+    private TableColumn<ЗаписьКонтрагентFX, String> columnTypeKA;
     @FXML
-    private TableColumn<ТестСпрКА, String> columnContacts;
+    private TableColumn<ЗаписьКонтрагентFX, String> columnContacts;
     @FXML
     private Label labelCount;
 
-    private CollectionISpravochnikKA sprKAimpl = new CollectionISpravochnikKA();
-    private ObservableList<ТестСпрКА> backupList;
+    private static final String FXML_EDIT = "/fxml/editDialogKA.fxml";
+    private DataAccessObject sprKAImpl = new DataAccessObject();
     private Parent fxmlEdit;
     private FXMLLoader fxmlLoader = new FXMLLoader();
     private EditDialogKAController editDialogController;
     private Stage editDialogStage;
     private Stage mainStage;
-//    private ТестСпрКА selectedRecord;
 
     @FXML
-    private void initialize() {
-        columnCode.setCellValueFactory(new PropertyValueFactory<ТестСпрКА, String>("code"));
-        columnName.setCellValueFactory(new PropertyValueFactory<ТестСпрКА, String>("name"));
-        columnTypeKA.setCellValueFactory(new PropertyValueFactory<ТестСпрКА, String>("type_KA"));
-        columnAddress.setCellValueFactory(new PropertyValueFactory<ТестСпрКА, String>("address"));
-        columnContacts.setCellValueFactory(new PropertyValueFactory<ТестСпрКА, String>("contact_person"));
+    private void initialize() throws SQLException {
+        columnCode.setCellValueFactory(new PropertyValueFactory<ЗаписьКонтрагентFX, String>("code"));
+        columnName.setCellValueFactory(new PropertyValueFactory<ЗаписьКонтрагентFX, String>("name"));
+        columnTypeKA.setCellValueFactory(new PropertyValueFactory<ЗаписьКонтрагентFX, String>("type_KA"));
+        columnAddress.setCellValueFactory(new PropertyValueFactory<ЗаписьКонтрагентFX, String>("address"));
+        columnContacts.setCellValueFactory(new PropertyValueFactory<ЗаписьКонтрагентFX, String>("contact_person"));
         setupClearButtonField(txtSearch);
         initListeners();
         fillTable();
@@ -80,16 +79,16 @@ public class TableKAController {
             return;
         }
 
-        ТестСпрКА selectedRecord = (ТестСпрКА) tableSprContragent.getSelectionModel().getSelectedItem();
+        ЗаписьКонтрагентFX selectedRecord = (ЗаписьКонтрагентFX) tableSprContragent.getSelectionModel().getSelectedItem();
 
         Button clickedButton = (Button) source;
 
 //        boolean research = false;
         switch (clickedButton.getId()) {
             case "btnAddRecord":
-                editDialogController.setЗаписьКонтрагент(new ТестСпрКА());
+                editDialogController.setЗаписьКонтрагент(new ЗаписьКонтрагентFX());
                 showDialog();
-                sprKAimpl.add(editDialogController.getЗаписьКонтрагент());
+                sprKAImpl.add(editDialogController.getЗаписьКонтрагент());
                 break;
             case  "btnEditRecord":
                 if(!recordKAisSelected(selectedRecord)) {
@@ -116,7 +115,7 @@ public class TableKAController {
         editDialogStage.showAndWait(); //ожидание закрытия окна
     }
 
-    private boolean recordKAisSelected(ТестСпрКА selectedRecord) {
+    private boolean recordKAisSelected(ЗаписьКонтрагентFX selectedRecord) {
         if(selectedRecord == null) {
             DialogManager.showInfoDialog("Ошибка", "Выберите запись!");
             return  false;
@@ -134,11 +133,9 @@ public class TableKAController {
         }
     }
 
-    private void fillTable() {
-        sprKAimpl.fillTestData();
-        backupList = FXCollections.observableArrayList();
-        backupList.addAll(sprKAimpl.getСписокКонтрагентов());
-        tableSprContragent.setItems(sprKAimpl.getСписокКонтрагентов());
+    private void fillTable() throws SQLException {
+        ObservableList<ЗаписьКонтрагентFX> list = sprKAImpl.findAll();
+        tableSprContragent.setItems(list);
     }
 
     private void initLoader() {
@@ -152,9 +149,9 @@ public class TableKAController {
     }
 
     private void initListeners() {
-        this.sprKAimpl.getСписокКонтрагентов().addListener(new ListChangeListener<ТестСпрКА>() {
+        this.sprKAImpl.getContragentList().addListener(new ListChangeListener<ЗаписьКонтрагентFX>() {
             @Override
-            public void onChanged(Change<? extends ТестСпрКА> c) {
+            public void onChanged(Change<? extends ЗаписьКонтрагентFX> c) {
                 updateCountLabel();
             }
         });
@@ -164,7 +161,7 @@ public class TableKAController {
             public void handle(MouseEvent event) {
                 if(event.getClickCount()==2) {
                     editDialogController.setЗаписьКонтрагент(
-                            (ТестСпрКА) tableSprContragent.getSelectionModel().getSelectedItem());
+                            (ЗаписьКонтрагентFX) tableSprContragent.getSelectionModel().getSelectedItem());
                     showDialog();
                 }
             }
@@ -176,20 +173,20 @@ public class TableKAController {
     }
 
     private void updateCountLabel() {
-        labelCount.setText("Количество записей: "+ sprKAimpl.getСписокКонтрагентов().size());
+        labelCount.setText("Количество записей: "+sprKAImpl.getContragentList().size());
     }
 
     public void actionSearch(ActionEvent actionEvent) {
-        sprKAimpl.getСписокКонтрагентов().clear();
-        for (ТестСпрКА записьКонтрагент : backupList) {
-            if (записьКонтрагент.getCode().toString().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
-                    записьКонтрагент.getName().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
-                    записьКонтрагент.getType_KA().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
-                    записьКонтрагент.getAddress().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
-                    записьКонтрагент.getContact_person().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
-                sprKAimpl.getСписокКонтрагентов().add(записьКонтрагент);
-            }
-        }
+//        sprKAimpl.getСписокКонтрагентов().clear();
+//        for (ЗаписьКонтрагентFX записьКонтрагент : backupList) {
+//            if (записьКонтрагент.getCode().toString().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
+//                    записьКонтрагент.getName().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
+//                    записьКонтрагент.getType_KA().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
+//                    записьКонтрагент.getAddress().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
+//                    записьКонтрагент.getContact_person().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
+//                sprKAimpl.getСписокКонтрагентов().add(записьКонтрагент);
+//            }
+//        }
     }
 
 }
