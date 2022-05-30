@@ -263,7 +263,7 @@ public class DataAccessObject implements ISpravochnik {
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
-            return false;
+            return false;/////
         }
     }
 
