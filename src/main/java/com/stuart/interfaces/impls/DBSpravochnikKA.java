@@ -7,12 +7,14 @@ import com.stuart.models.entity.справочники.ЗаписьКонтра�
 import com.stuart.objects.ЗаписьКонтрагентFX;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.text.Text;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import java.util.List;
+
 public class DBSpravochnikKA extends DataAccessObject implements ISpravochnik {
 
-    //реализация для контрагента
     private ObservableList<ЗаписьКонтрагентFX> contragentList = FXCollections.observableArrayList();
 
     public ObservableList<ЗаписьКонтрагентFX> getContragentList() {
@@ -71,7 +73,6 @@ public class DBSpravochnikKA extends DataAccessObject implements ISpravochnik {
     public boolean update(ЗаписьКонтрагентFX записьКонтрагентFX) {
         try (final Session newSession = DataAccessObject.openSessionBeginTransaction()) {
             ЗаписьКонтрагент записьКонтрагент = ЗаписьКонтрагент.findObjectByValue("id", записьКонтрагентFX.getId());
-//            ЗаписьКонтрагент записьКонтрагент = ЗаписьКонтрагент.findObjectByValue("code", записьКонтрагентFX.getCode());
             записьКонтрагент.setCode(записьКонтрагентFX.getCode());
             записьКонтрагент.setName(записьКонтрагентFX.getName());
             записьКонтрагент.setType_KA(записьКонтрагентFX.getType_KA());
@@ -87,14 +88,49 @@ public class DBSpravochnikKA extends DataAccessObject implements ISpravochnik {
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
-            return false;///////
+            return false;
         }
     }
 
     @Override
-    public ObservableList<ЗаписьБД> find(String text) {
-        String s = null;
-        return null;
-        /////
+    public ObservableList<ЗаписьКонтрагентFX> findText(String text) {
+
+        Session newSession = DataAccessObject.get_session();
+        this.contragentList.clear();
+        Query<ЗаписьКонтрагент> query = newSession.createQuery
+                ("select zk from ЗаписьКонтрагент zk where zk.name =: param " +
+                        "or zk.type_KA =: param or zk.address =:param " +
+                        "or zk.contact_person =:param");
+        query.setParameter("param", text);
+        List<ЗаписьКонтрагент> resultList = query.getResultList();
+
+        for (int i = 0; i < resultList.size(); i++) {
+            var res = resultList.get(i);
+            ЗаписьКонтрагентFX записьКонтрагентFX = new ЗаписьКонтрагентFX();
+            записьКонтрагентFX.setCode(res.getCode());
+            записьКонтрагентFX.setName(res.getName());
+            записьКонтрагентFX.setType_KA(res.getType_KA());
+            записьКонтрагентFX.setAddress(res.getAddress());
+            записьКонтрагентFX.setContact_person(res.getContact_person());
+            записьКонтрагентFX.setId(res.getId());
+            this.contragentList.add(записьКонтрагентFX);
+        }
+        newSession.close();
+        return contragentList;
+    }
+
+    @Override
+    public ObservableList<ЗаписьКонтрагентFX> findInt(Integer value) {
+        this.contragentList.clear();
+        ЗаписьКонтрагент search = ЗаписьКонтрагент.findObjectByValue("code", value);
+        ЗаписьКонтрагентFX result = new ЗаписьКонтрагентFX();
+        result.setId(search.getId());
+        result.setCode(search.getCode());
+        result.setName(search.getName());
+        result.setType_KA(search.getType_KA());
+        result.setAddress(search.getAddress());
+        result.setContact_person(search.getContact_person());
+        this.contragentList.add(result);
+        return contragentList;
     }
 }

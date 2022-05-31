@@ -2,6 +2,7 @@ package com.stuart.application;
 
 import com.stuart.controllers.TableKAController;
 import com.stuart.dao.DataAccessObject;
+import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

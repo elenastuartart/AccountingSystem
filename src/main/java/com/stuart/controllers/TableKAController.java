@@ -1,6 +1,5 @@
 package com.stuart.controllers;
 
-import com.stuart.dao.DataAccessObject;
 import com.stuart.interfaces.impls.DBSpravochnikKA;
 import com.stuart.objects.ЗаписьКонтрагентFX;
 import com.stuart.utils.DialogManager;
@@ -52,7 +51,6 @@ public class TableKAController {
 
     private static final String FXML_EDIT = "/fxml/editDialogKA.fxml";
     private DBSpravochnikKA sprKAImpl = new  DBSpravochnikKA();
-//    private DataAccessObject sprKAImpl = new DataAccessObject();
     private Parent fxmlEdit;
     private FXMLLoader fxmlLoader = new FXMLLoader();
     private EditDialogKAController editDialogController;
@@ -101,7 +99,6 @@ public class TableKAController {
                 }
                 editDialogController.setЗаписьКонтрагентFX(selectedRecord);
                 showDialog();
-//                sprKAImpl.update(selectedRecord);
                 if (editDialogController.isSaveClicked()) {
                     // коллекция в addressBookImpl и так обновляется, т.к. мы ее редактируем в диалоговом окне и сохраняем при нажатии на ОК
                     sprKAImpl.update(selectedRecord);
@@ -174,6 +171,10 @@ public class TableKAController {
                     editDialogController.setЗаписьКонтрагентFX(
                             (ЗаписьКонтрагентFX) tableSprContragent.getSelectionModel().getSelectedItem());
                     showDialog();
+                    if (editDialogController.isSaveClicked()) {
+                        sprKAImpl.update((ЗаписьКонтрагентFX) tableSprContragent.getSelectionModel().getSelectedItem());
+                    }
+
                 }
             }
         });
@@ -188,16 +189,26 @@ public class TableKAController {
     }
 
     public void actionSearch(ActionEvent actionEvent) {
-//        sprKAimpl.getСписокКонтрагентов().clear();
-//        for (ЗаписьКонтрагентFX записьКонтрагент : backupList) {
-//            if (записьКонтрагент.getCode().toString().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
-//                    записьКонтрагент.getName().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
-//                    записьКонтрагент.getType_KA().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
-//                    записьКонтрагент.getAddress().toLowerCase().contains(txtSearch.getText().toLowerCase()) ||
-//                    записьКонтрагент.getContact_person().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
-//                sprKAimpl.getСписокКонтрагентов().add(записьКонтрагент);
+
+        if (txtSearch.getText().trim().length() == 0) {
+            sprKAImpl.findAll();
+        }
+        else {
+            sprKAImpl.findText(txtSearch.getText());
+
+//            if(sprKAImpl.findText(txtSearch.getText()) == null) {
+//                sprKAImpl.findInt(Integer.valueOf(txtSearch.getText()));
 //            }
-//        }
+
+//
+//            if (Integer.valueOf(txtSearch.getText())>0) {
+//                 sprKAImpl.findInt(Integer.valueOf(txtSearch.getText()));
+//            }
+//            else {
+//                sprKAImpl.findText(txtSearch.getText());
+//            }
+            //делаем доп метод с поиском по коду или номеру, и в зависимости от введенного значения вызываем нужнгый метод
+        }
     }
 
 }

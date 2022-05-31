@@ -13,7 +13,7 @@
    <center>
       <VBox prefHeight="267.0" prefWidth="311.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="txtCode">
+            <TextField fx:id="txtCode" disable="true" editable="false">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>

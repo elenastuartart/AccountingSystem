@@ -15,7 +15,7 @@ public class ЗаписьКонтрагентFX extends ЭлементСправ
     @Getter
     @Setter
     private UUID id;
-    private SimpleIntegerProperty code = new SimpleIntegerProperty(0);
+    private SimpleIntegerProperty code  = new SimpleIntegerProperty();
     private SimpleStringProperty name = new SimpleStringProperty("");
     private SimpleStringProperty contact_person = new SimpleStringProperty(""); ;
     private SimpleStringProperty address = new SimpleStringProperty("");

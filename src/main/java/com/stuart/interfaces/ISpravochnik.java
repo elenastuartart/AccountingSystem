@@ -1,7 +1,5 @@
 package com.stuart.interfaces;
 
-import com.stuart.models.entity.ЗаписьБД;
-import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.objects.ЗаписьКонтрагентFX;
 import javafx.collections.ObservableList;
 
@@ -15,7 +13,7 @@ public interface ISpravochnik {
 
     ObservableList<ЗаписьКонтрагентFX> findAll() throws SQLException;
 
-    ObservableList<ЗаписьБД> find(String text);
+    ObservableList<ЗаписьКонтрагентFX> findText(String text);
 
-
+    ObservableList<ЗаписьКонтрагентFX>  findInt(Integer value);
 }
