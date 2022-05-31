@@ -1,11 +1,6 @@
 package com.stuart.dao;
 
-import com.stuart.interfaces.ISpravochnik;
 import com.stuart.models.entity.ЗаписьБД;
-import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
-import com.stuart.objects.ЗаписьКонтрагентFX;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

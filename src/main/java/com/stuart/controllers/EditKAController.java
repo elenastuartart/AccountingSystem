@@ -1,6 +1,6 @@
 package com.stuart.controllers;
 
-import com.stuart.objects.ЗаписьКонтрагентFX;
+import com.stuart.objectsFX.ЗаписьКонтрагентFX;
 import com.stuart.utils.DialogManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class EditDialogKAController {
+public class EditKAController {
 
     @FXML
     private TextField txtCode;

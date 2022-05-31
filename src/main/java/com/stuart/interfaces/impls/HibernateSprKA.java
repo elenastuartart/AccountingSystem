@@ -2,18 +2,18 @@ package com.stuart.interfaces.impls;
 
 import com.stuart.dao.DataAccessObject;
 import com.stuart.interfaces.ISpravochnik;
-import com.stuart.models.entity.ЗаписьБД;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
-import com.stuart.objects.ЗаписьКонтрагентFX;
+import com.stuart.objectsFX.ObjectFX;
+import com.stuart.objectsFX.ЗаписьКонтрагентFX;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.text.Text;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import java.sql.SQLException;
 import java.util.List;
 
-public class DBSpravochnikKA extends DataAccessObject implements ISpravochnik {
+public class HibernateSprKA extends DataAccessObject implements ISpravochnik {
 
     private ObservableList<ЗаписьКонтрагентFX> contragentList = FXCollections.observableArrayList();
 
@@ -22,7 +22,7 @@ public class DBSpravochnikKA extends DataAccessObject implements ISpravochnik {
     }
 
     @Override
-    public ObservableList<ЗаписьКонтрагентFX> findAll() {
+    public ObservableList<ЗаписьКонтрагентFX> findAll() throws SQLException {
         Session newSession = DataAccessObject.get_session();
         Query<ЗаписьКонтрагент> query = newSession.createQuery("select k from ЗаписьКонтрагент k");
         var resultList = query.getResultList();
@@ -42,8 +42,9 @@ public class DBSpravochnikKA extends DataAccessObject implements ISpravochnik {
     }
 
     @Override
-    public boolean add(ЗаписьКонтрагентFX записьКонтрагентFX) {
+    public boolean add(ObjectFX objectFX) {
         try (final Session newSession = DataAccessObject.openSessionBeginTransaction()) {
+            ЗаписьКонтрагентFX записьКонтрагентFX = (ЗаписьКонтрагентFX) objectFX;
             ЗаписьКонтрагент записьКонтрагент = new ЗаписьКонтрагент();
             записьКонтрагент.setCode();
             записьКонтрагент.setName(записьКонтрагентFX.getName());
@@ -70,8 +71,9 @@ public class DBSpravochnikKA extends DataAccessObject implements ISpravochnik {
     }
 
     @Override
-    public boolean update(ЗаписьКонтрагентFX записьКонтрагентFX) {
+    public boolean update(ObjectFX objectFX) {
         try (final Session newSession = DataAccessObject.openSessionBeginTransaction()) {
+            ЗаписьКонтрагентFX записьКонтрагентFX = (ЗаписьКонтрагентFX) objectFX;
             ЗаписьКонтрагент записьКонтрагент = ЗаписьКонтрагент.findObjectByValue("id", записьКонтрагентFX.getId());
             записьКонтрагент.setCode(записьКонтрагентFX.getCode());
             записьКонтрагент.setName(записьКонтрагентFX.getName());

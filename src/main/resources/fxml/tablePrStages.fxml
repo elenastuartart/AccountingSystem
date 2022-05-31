@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.stuart.controllers.TableKAController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.stuart.controllers.TablePrStagesController">
    <children>
       <HBox maxHeight="50.0" prefHeight="100.0">
          <children>
@@ -44,13 +44,11 @@
       </AnchorPane>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <TableView fx:id="tableSprContragent" layoutX="14.0" prefHeight="400.0" prefWidth="357.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TableView fx:id="tablePrStages" layoutX="14.0" prefHeight="400.0" prefWidth="357.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
                 <TableColumn fx:id="columnCode" prefWidth="75.0" text="Код" />
-                <TableColumn fx:id="columnName" prefWidth="89.0" text="Наименование" />
-                  <TableColumn fx:id="columnContacts" prefWidth="136.0" text="Контактные данные" />
-                  <TableColumn fx:id="columnAddress" prefWidth="90.0" text="Адрес" />
-                  <TableColumn fx:id="columnTypeKA" prefWidth="129.0" text="Вид контрагента" />
+                <TableColumn fx:id="columnName" prefWidth="89.0" text="Название этапа" />
+                  <TableColumn fx:id="columnDescription" prefWidth="136.0" text="Описание этапа" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

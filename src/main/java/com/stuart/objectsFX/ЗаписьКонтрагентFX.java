@@ -1,17 +1,13 @@
-package com.stuart.objects;
+package com.stuart.objectsFX;
 
-import com.stuart.models.entity.справочники.ЭлементСправочника;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.UUID;
 
-public class ЗаписьКонтрагентFX extends ЭлементСправочника {
+public class ЗаписьКонтрагентFX extends ObjectFX {
     @Getter
     @Setter
     private UUID id;

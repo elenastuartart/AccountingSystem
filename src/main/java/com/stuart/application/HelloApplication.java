@@ -1,6 +1,7 @@
 package com.stuart.application;
 
 import com.stuart.controllers.TableKAController;
+import com.stuart.controllers.TablePrStagesController;
 import com.stuart.dao.DataAccessObject;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import javafx.application.Application;
@@ -18,28 +19,32 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(getClass().getResource("/fxml/tableKA.fxml"));
+//        Parent fxmlMain = fxmlLoader.load();
+//        TableKAController mainController = fxmlLoader.getController();
+//        mainController.setMainStage(primaryStage);
+//
+//        primaryStage.setTitle("Справочник Контрагенты");
+//        primaryStage.setMinHeight(800);
+//        primaryStage.setMinWidth(600);
+//        primaryStage.setScene(new Scene(fxmlMain, 300, 275));
+//        primaryStage.show();
+
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/fxml/tableKA.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/fxml/tablePrStages.fxml"));
         Parent fxmlMain = fxmlLoader.load();
-        TableKAController mainController = fxmlLoader.getController();
+        TablePrStagesController mainController = fxmlLoader.getController();
         mainController.setMainStage(primaryStage);
 
-        primaryStage.setTitle("Справочник Контрагенты");
+        primaryStage.setTitle("Справочник Этапы производства");
         primaryStage.setMinHeight(800);
         primaryStage.setMinWidth(600);
         primaryStage.setScene(new Scene(fxmlMain, 300, 275));
         primaryStage.show();
-
-        testData();
-
     }
 
-    private void testData() {
-//
-//        CollectionISpravochnikKA списокКА = new CollectionISpravochnikKA();
-//        списокКА.fillTestData();
-//        списокКА.print();
-    }
+
 
     public static void main(String[] args) {
 
