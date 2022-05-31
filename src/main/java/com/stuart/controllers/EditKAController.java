@@ -13,22 +13,16 @@ public class EditKAController {
 
     @FXML
     private TextField txtCode;
-
     @FXML
     private TextField txtName;
-
     @FXML
     private TextField txtTypeCA;
-
     @FXML
     private TextField txtAddress;
-
     @FXML
     private TextField txtContacts;
-
     @FXML
     private Button btnSaveOrUpdate;
-
     @FXML
     private Button btnCansel;
 

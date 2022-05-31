@@ -190,7 +190,7 @@ public class TableKAController {
 
     public void actionSearch(ActionEvent actionEvent) throws SQLException {
 
-        if (txtSearch.getText().trim().length() == 0) {
+        if ( txtSearch.getText().trim().length() == 0) {
             sprKAImpl.findAll();
         }
         else {

@@ -1,7 +1,9 @@
 package com.stuart.controllers;
 
-import com.stuart.interfaces.impls.HibernateSprPrStages;
-import com.stuart.objectsFX.ЗаписьЭтапыПроизводстваFX;
+import com.stuart.interfaces.impls.HibernateSprKA;
+import com.stuart.interfaces.impls.HibernateSprNom;
+import com.stuart.objectsFX.ЗаписьКонтрагентFX;
+import com.stuart.objectsFX.ЗаписьНоменклатураFX;
 import com.stuart.utils.DialogManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -24,7 +26,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 
-public class TablePrStagesController {
+public class TableNomController {
     @FXML
     private Button btnAddRecord;
     @FXML
@@ -34,29 +36,38 @@ public class TablePrStagesController {
     @FXML
     private Button btnSearch;
     @FXML
-    private TableView tablePrStages;
+    private TableView tableSprNomenclature;
     @FXML
-    private TableColumn<ЗаписьЭтапыПроизводстваFX, String> columnCode;
+    private TableColumn<ЗаписьНоменклатураFX, String> columnCode;
     @FXML
-    private TableColumn<ЗаписьЭтапыПроизводстваFX, String> columnName;
+    private TableColumn<ЗаписьНоменклатураFX, String> columnArticleNumber;
     @FXML
-    private TableColumn<ЗаписьЭтапыПроизводстваFX, String> columnDescription;
+    private TableColumn<ЗаписьНоменклатураFX, String> columnName;
+    @FXML
+    private TableColumn<ЗаписьНоменклатураFX, String> columnCategory;
+    @FXML
+    private TableColumn<ЗаписьНоменклатураFX, String> columnSubcategory;
+    @FXML
+    private TableColumn<ЗаписьКонтрагентFX, String> columnProducer;
     @FXML
     private Label labelCount;
 
-    private static final String FXML_EDIT = "/fxml/editDialogPrStages.fxml";
-    private HibernateSprPrStages sprPrStagesImpl = new HibernateSprPrStages();
+    private static final String FXML_EDIT = "/fxml/editDialogNom.fxml";
+    private HibernateSprNom sprNomImpl = new HibernateSprNom();
     private Parent fxmlEdit;
     private FXMLLoader fxmlLoader = new FXMLLoader();
-    private EditPrStagesController editDialogController;
+    private EditNomController editDialogController;
     private Stage editDialogStage;
     private Stage mainStage;
 
     @FXML
     private void initialize() throws SQLException {
-        columnCode.setCellValueFactory(new PropertyValueFactory<ЗаписьЭтапыПроизводстваFX, String>("code"));
-        columnName.setCellValueFactory(new PropertyValueFactory<ЗаписьЭтапыПроизводстваFX, String>("name"));
-        columnDescription.setCellValueFactory(new PropertyValueFactory<ЗаписьЭтапыПроизводстваFX, String>("description_stage"));
+        columnCode.setCellValueFactory(new PropertyValueFactory<ЗаписьНоменклатураFX, String>("code"));
+        columnArticleNumber.setCellValueFactory(new PropertyValueFactory<ЗаписьНоменклатураFX, String>("articleNumber"));
+        columnName.setCellValueFactory(new PropertyValueFactory<ЗаписьНоменклатураFX, String>("name"));
+        columnCategory.setCellValueFactory(new PropertyValueFactory<ЗаписьНоменклатураFX, String>("category"));
+        columnSubcategory.setCellValueFactory(new PropertyValueFactory<ЗаписьНоменклатураFX, String>("subcategory"));
+        //контрагент
         setupClearButtonField(txtSearch);
         initListeners();
         fillTable();
@@ -71,41 +82,41 @@ public class TablePrStagesController {
         if(!(source instanceof Button)) {
             return;
         }
-        ЗаписьЭтапыПроизводстваFX selectedRecord = (ЗаписьЭтапыПроизводстваFX) tablePrStages.getSelectionModel().getSelectedItem();
+        ЗаписьНоменклатураFX selectedRecord = (ЗаписьНоменклатураFX) tableSprNomenclature.getSelectionModel().getSelectedItem();
 
         Button clickedButton = (Button) source;
 
         boolean research = false;
         switch (clickedButton.getId()) {
             case "btnAddRecord":
-                editDialogController.setЗаписьЭтапыПроизводстваFX(new ЗаписьЭтапыПроизводстваFX());
+                editDialogController.setЗаписьНоменклатураFX(new ЗаписьНоменклатураFX());
                 showDialog();
 //                sprKAImpl.add(editDialogController.getЗаписьКонтрагентFX());
                 if (editDialogController.isSaveClicked()) {
-                    sprPrStagesImpl.add(editDialogController.getЗаписьЭтапыПроизводстваFX());
+                    sprNomImpl.add(editDialogController.getЗаписьНоменклатураFX());
                     research = true;
                 }
                 break;
             case  "btnEditRecord":
-                if(!recordPrStIsSelected(selectedRecord)) {
+                if(!recordNomIsSelected(selectedRecord)) {
                     return;
                 }
-                editDialogController.setЗаписьЭтапыПроизводстваFX(selectedRecord);
+                editDialogController.setЗаписьНоменклатураFX(selectedRecord);
                 showDialog();
                 if (editDialogController.isSaveClicked()) {
-                    // коллекция в addressBookImpl и так обновляется, т.к. мы ее редактируем в диалоговом окне и сохраняем при нажатии на ОК
-                    sprPrStagesImpl.update(selectedRecord);
+                    sprNomImpl.update(selectedRecord);
                     research = true;
                 }
                 break;
         }
+
     }
 
     @FXML
     private void showDialog() {
         if(editDialogStage == null) {
             editDialogStage = new Stage();
-            editDialogStage.setTitle("Создать/редактировать запись справочника Этапы производства");
+            editDialogStage.setTitle("Создать/редактировать запись справочника Номенклатура");
             editDialogStage.setMinWidth(600);
             editDialogStage.setMinHeight(400);
             editDialogStage.setResizable(false);
@@ -116,7 +127,7 @@ public class TablePrStagesController {
         editDialogStage.showAndWait(); //ожидание закрытия окна
     }
 
-    private boolean recordPrStIsSelected(ЗаписьЭтапыПроизводстваFX selectedRecord) {
+    private boolean recordNomIsSelected(ЗаписьНоменклатураFX selectedRecord) {
         if(selectedRecord == null) {
             DialogManager.showInfoDialog("Ошибка", "Выберите запись!");
             return  false;
@@ -135,13 +146,13 @@ public class TablePrStagesController {
     }
 
     private void fillTable() throws SQLException {
-        ObservableList<ЗаписьЭтапыПроизводстваFX> list = sprPrStagesImpl.findAll();
-        tablePrStages.setItems(list);
+        ObservableList<ЗаписьНоменклатураFX> list = sprNomImpl.findAll();
+        tableSprNomenclature.setItems(list);
     }
 
     private void initLoader() {
         try {
-            this.fxmlLoader.setLocation(getClass().getResource("/fxml/editDialogPrStages.fxml"));
+            this.fxmlLoader.setLocation(getClass().getResource("/fxml/editDialogNom.fxml"));
             fxmlEdit = fxmlLoader.load();
             editDialogController = fxmlLoader.getController();
         } catch (IOException e) {
@@ -150,22 +161,22 @@ public class TablePrStagesController {
     }
 
     private void initListeners() {
-        this.sprPrStagesImpl.getPrStagesList().addListener(new ListChangeListener<ЗаписьЭтапыПроизводстваFX>() {
+        this.sprNomImpl.getNomenclaturiesList().addListener(new ListChangeListener<ЗаписьНоменклатураFX>() {
             @Override
-            public void onChanged(Change<? extends ЗаписьЭтапыПроизводстваFX> c) {
+            public void onChanged(Change<? extends ЗаписьНоменклатураFX> c) {
                 updateCountLabel();
             }
         });
 
-        tablePrStages.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        tableSprNomenclature.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if(event.getClickCount()==2) {
-                    editDialogController.setЗаписьЭтапыПроизводстваFX(
-                            (ЗаписьЭтапыПроизводстваFX) tablePrStages.getSelectionModel().getSelectedItem());
+                    editDialogController.setЗаписьНоменклатураFX(
+                            (ЗаписьНоменклатураFX) tableSprNomenclature.getSelectionModel().getSelectedItem());
                     showDialog();
                     if (editDialogController.isSaveClicked()) {
-                        sprPrStagesImpl.update((ЗаписьЭтапыПроизводстваFX) tablePrStages.getSelectionModel().getSelectedItem());
+                        sprNomImpl.update((ЗаписьКонтрагентFX) tableSprNomenclature.getSelectionModel().getSelectedItem());
                     }
 
                 }
@@ -178,16 +189,16 @@ public class TablePrStagesController {
     }
 
     private void updateCountLabel() {
-        labelCount.setText("Количество записей: "+sprPrStagesImpl.getPrStagesList().size());
+        labelCount.setText("Количество записей: "+sprNomImpl.getNomenclaturiesList().size());
     }
 
     @FXML
     void actionSearch(ActionEvent event) throws SQLException {
-        if (txtSearch.getText().trim().length() == 0) {
-            sprPrStagesImpl.findAll();
+        if ( txtSearch.getText().trim().length() == 0) {
+            sprNomImpl.findAll();
         }
         else {
-            sprPrStagesImpl.findText(txtSearch.getText());
+            sprNomImpl.findText(txtSearch.getText());
             //делаем доп метод с поиском по коду или номеру, и в зависимости от введенного значения вызываем нужнгый метод
         }
     }

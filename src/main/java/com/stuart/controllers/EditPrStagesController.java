@@ -1,6 +1,5 @@
 package com.stuart.controllers;
 
-import com.stuart.objectsFX.ЗаписьКонтрагентFX;
 import com.stuart.objectsFX.ЗаписьЭтапыПроизводстваFX;
 import com.stuart.utils.DialogManager;
 import javafx.event.ActionEvent;
@@ -11,7 +10,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class EditPrStages {
+public class EditPrStagesController {
     @FXML
     private TextField txtCode;
 
