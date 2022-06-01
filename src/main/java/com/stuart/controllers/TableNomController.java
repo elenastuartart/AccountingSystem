@@ -48,7 +48,7 @@ public class TableNomController {
     @FXML
     private TableColumn<ЗаписьНоменклатураFX, String> columnSubcategory;
     @FXML
-    private TableColumn<ЗаписьКонтрагентFX, String> columnProducer;
+    private TableColumn<ЗаписьНоменклатураFX, String> columnProducer;
     @FXML
     private Label labelCount;
 
@@ -67,7 +67,7 @@ public class TableNomController {
         columnName.setCellValueFactory(new PropertyValueFactory<ЗаписьНоменклатураFX, String>("name"));
         columnCategory.setCellValueFactory(new PropertyValueFactory<ЗаписьНоменклатураFX, String>("category"));
         columnSubcategory.setCellValueFactory(new PropertyValueFactory<ЗаписьНоменклатураFX, String>("subcategory"));
-        //контрагент
+        columnProducer.setCellValueFactory(new PropertyValueFactory<ЗаписьНоменклатураFX, String>("contragent"));
         setupClearButtonField(txtSearch);
         initListeners();
         fillTable();
@@ -75,7 +75,7 @@ public class TableNomController {
     }
 
     @FXML
-    void actionButtonPressed(ActionEvent actionEvent) {
+    void actionButtonPressed(ActionEvent actionEvent) throws SQLException {
         //получаем источник события
         Object source = actionEvent.getSource();
         //если нажата не кнопка выходим из метода
@@ -101,7 +101,11 @@ public class TableNomController {
                 if(!recordNomIsSelected(selectedRecord)) {
                     return;
                 }
-                editDialogController.setЗаписьНоменклатураFX(selectedRecord);
+                try {
+                    editDialogController.setЗаписьНоменклатураFX(selectedRecord);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 showDialog();
                 if (editDialogController.isSaveClicked()) {
                     sprNomImpl.update(selectedRecord);
@@ -125,6 +129,7 @@ public class TableNomController {
             editDialogStage.initOwner(mainStage); //получаем родительское окно - источник события
         }
         editDialogStage.showAndWait(); //ожидание закрытия окна
+
     }
 
     private boolean recordNomIsSelected(ЗаписьНоменклатураFX selectedRecord) {
@@ -172,11 +177,20 @@ public class TableNomController {
             @Override
             public void handle(MouseEvent event) {
                 if(event.getClickCount()==2) {
-                    editDialogController.setЗаписьНоменклатураFX(
-                            (ЗаписьНоменклатураFX) tableSprNomenclature.getSelectionModel().getSelectedItem());
+                    try {
+                        editDialogController.setЗаписьНоменклатураFX(
+                                (ЗаписьНоменклатураFX) tableSprNomenclature.getSelectionModel().getSelectedItem());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     showDialog();
                     if (editDialogController.isSaveClicked()) {
-                        sprNomImpl.update((ЗаписьКонтрагентFX) tableSprNomenclature.getSelectionModel().getSelectedItem());
+                        sprNomImpl.update((ЗаписьНоменклатураFX) tableSprNomenclature.getSelectionModel().getSelectedItem());
+                        try {
+                            sprNomImpl.findAll();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                 }

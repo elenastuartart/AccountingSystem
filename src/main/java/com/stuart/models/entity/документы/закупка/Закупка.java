@@ -281,4 +281,8 @@ public class Закупка extends Документ {
         }
     }
 
+    public boolean getPometkaProvedeniya() {
+        return this.pometkaProvedeniya;
+    }
+
 }

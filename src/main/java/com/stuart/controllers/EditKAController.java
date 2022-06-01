@@ -47,6 +47,7 @@ public class EditKAController {
         записьКонтрагентFX.setType_KA(txtTypeCA.getText());
         записьКонтрагентFX.setAddress(txtAddress.getText());
         записьКонтрагентFX.setContact_person(txtContacts.getText());
+
         saveClicked = true;
         actionClose(event);
     }

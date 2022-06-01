@@ -1,5 +1,6 @@
 package com.stuart.objectsFX;
 
+import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
@@ -16,6 +17,12 @@ public class ЗаписьКонтрагентFX extends ObjectFX {
     private SimpleStringProperty contact_person = new SimpleStringProperty(""); ;
     private SimpleStringProperty address = new SimpleStringProperty("");
     private SimpleStringProperty type_KA = new SimpleStringProperty(""); //поставщик/покупатель
+    private ЗаписьКонтрагент записьКонтрагент;
+
+    @Override
+    public String toString() {
+        return name.getValue();
+    }
 
     public ЗаписьКонтрагентFX() {
 
@@ -28,6 +35,10 @@ public class ЗаписьКонтрагентFX extends ObjectFX {
         this.contact_person = new SimpleStringProperty(contact_person);
         this.address = new SimpleStringProperty(address);
         this.type_KA = new SimpleStringProperty(type_KA);
+    }
+
+    public ЗаписьКонтрагент getЗаписьКонтрагент() {
+        return записьКонтрагент;
     }
 
     public String getName() {
@@ -48,6 +59,10 @@ public class ЗаписьКонтрагентFX extends ObjectFX {
 
     public String getContact_person() {
         return contact_person.get();
+    }
+
+    public void setЗаписьКонтрагент(ЗаписьКонтрагент записьКонтрагент) {
+        this.записьКонтрагент = записьКонтрагент;
     }
 
     public void setCode(Integer  code) {
@@ -89,4 +104,5 @@ public class ЗаписьКонтрагентFX extends ObjectFX {
     public SimpleStringProperty type_KAProperty() {
         return type_KA;
     }
+
 }

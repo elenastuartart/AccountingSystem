@@ -1,8 +1,6 @@
 package com.stuart.application;
 
-import com.stuart.controllers.TableKAController;
-import com.stuart.controllers.TableNomController;
-import com.stuart.controllers.TablePrStagesController;
+import com.stuart.controllers.*;
 import com.stuart.dao.DataAccessObject;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import javafx.application.Application;
@@ -55,6 +53,19 @@ public class HelloApplication extends Application {
         primaryStage.setMinWidth(600);
         primaryStage.setScene(new Scene(fxmlMain, 300, 275));
         primaryStage.show();
+
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(getClass().getResource("/fxml/tableDocPurchase.fxml"));
+//        Parent fxmlMain = fxmlLoader.load();
+//        TableDocPurchaseController mainController = fxmlLoader.getController();
+//        mainController.setMainStage(primaryStage);
+//
+//        primaryStage.setTitle("Документы по закупкам");
+//        primaryStage.setMinHeight(800);
+//        primaryStage.setMinWidth(600);
+//        primaryStage.setScene(new Scene(fxmlMain, 300, 275));
+//        primaryStage.show();
+
     }
 
 

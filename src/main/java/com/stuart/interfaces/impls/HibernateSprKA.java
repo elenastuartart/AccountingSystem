@@ -35,6 +35,7 @@ public class HibernateSprKA extends DataAccessObject implements ISpravochnik {
             записьКонтрагентFX.setAddress(res.getAddress());
             записьКонтрагентFX.setContact_person(res.getContact_person());
             записьКонтрагентFX.setId(res.getId());
+            записьКонтрагентFX.setЗаписьКонтрагент(res);
             this.contragentList.add(записьКонтрагентFX);
         }
         newSession.close();
