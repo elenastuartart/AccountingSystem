@@ -110,6 +110,9 @@ public class Реализация extends Документ {
 
         for (int i = 0; i < table_part_list_of_products_.size(); i++) {
             var СтрТЧ = table_part_list_of_products_.get(i);
+            СтрТЧ.setDoc_sale_(this);
+            СтрТЧ.setIdDoc(this.getId());
+
             СтрТЧ.setLineNumber(i+1);
 
             if (!СтрТЧ.save())
@@ -206,6 +209,9 @@ public class Реализация extends Документ {
 
     @Override
     public boolean ЗаписатьДокумент() {
+
+        if (this.id == null)
+            this.id = UUID.randomUUID();
 
         if(!this.ПередЗаписью()) {
             System.out.println("Не удалось записать документ: Не прошло проверку перед записью");
@@ -312,7 +318,7 @@ public class Реализация extends Документ {
         this.setFinalSum();
         if ((this.getDate() == null || this.getNumber() == null
                 || this.getContragent_() == null || this.getFinalSum() == null
-                || this.getTable_part_list_of_products_() == null) || !this.ПроверкаНаличия())
+                || this.getTable_part_list_of_products_() == null) || !(!this.pometkaProvedeniya || this.ПроверкаНаличия()))
             return false;
         else
             return true;

@@ -1,6 +1,6 @@
-package com.stuart.controllers;
+package com.stuart.controllers.этапыПроизводства;
 
-import com.stuart.objectsFX.ЗаписьЭтапыПроизводстваFX;
+import com.stuart.objectsFX.справочники.ЗаписьЭтапыПроизводстваFX;
 import com.stuart.utils.DialogManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

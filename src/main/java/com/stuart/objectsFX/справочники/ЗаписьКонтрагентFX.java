@@ -1,6 +1,7 @@
-package com.stuart.objectsFX;
+package com.stuart.objectsFX.справочники;
 
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
+import com.stuart.objectsFX.ObjectFX;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class ЗаписьКонтрагентFX extends ObjectFX {
     private SimpleStringProperty contact_person = new SimpleStringProperty(""); ;
     private SimpleStringProperty address = new SimpleStringProperty("");
     private SimpleStringProperty type_KA = new SimpleStringProperty(""); //поставщик/покупатель
-    private ЗаписьКонтрагент записьКонтрагент;
+    private ЗаписьКонтрагент записьКонтрагент_;
 
     @Override
     public String toString() {
@@ -37,8 +38,8 @@ public class ЗаписьКонтрагентFX extends ObjectFX {
         this.type_KA = new SimpleStringProperty(type_KA);
     }
 
-    public ЗаписьКонтрагент getЗаписьКонтрагент() {
-        return записьКонтрагент;
+    public ЗаписьКонтрагент getЗаписьКонтрагент_() {
+        return записьКонтрагент_;
     }
 
     public String getName() {
@@ -61,8 +62,8 @@ public class ЗаписьКонтрагентFX extends ObjectFX {
         return contact_person.get();
     }
 
-    public void setЗаписьКонтрагент(ЗаписьКонтрагент записьКонтрагент) {
-        this.записьКонтрагент = записьКонтрагент;
+    public void setЗаписьКонтрагент_(ЗаписьКонтрагент записьКонтрагент_) {
+        this.записьКонтрагент_ = записьКонтрагент_;
     }
 
     public void setCode(Integer  code) {

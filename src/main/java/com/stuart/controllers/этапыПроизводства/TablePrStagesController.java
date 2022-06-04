@@ -1,7 +1,7 @@
-package com.stuart.controllers;
+package com.stuart.controllers.этапыПроизводства;
 
-import com.stuart.interfaces.impls.HibernateSprPrStages;
-import com.stuart.objectsFX.ЗаписьЭтапыПроизводстваFX;
+import com.stuart.interfaces.impls.справочники.HibernateSprPrStages;
+import com.stuart.objectsFX.справочники.ЗаписьЭтапыПроизводстваFX;
 import com.stuart.utils.DialogManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -161,13 +161,21 @@ public class TablePrStagesController {
             @Override
             public void handle(MouseEvent event) {
                 if(event.getClickCount()==2) {
-                    editDialogController.setЗаписьЭтапыПроизводстваFX(
-                            (ЗаписьЭтапыПроизводстваFX) tablePrStages.getSelectionModel().getSelectedItem());
+                    try {
+                        editDialogController.setЗаписьЭтапыПроизводстваFX(
+                                (ЗаписьЭтапыПроизводстваFX) tablePrStages.getSelectionModel().getSelectedItem());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     showDialog();
                     if (editDialogController.isSaveClicked()) {
                         sprPrStagesImpl.update((ЗаписьЭтапыПроизводстваFX) tablePrStages.getSelectionModel().getSelectedItem());
                     }
-
+                    try {
+                        sprPrStagesImpl.findAll();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

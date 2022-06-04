@@ -1,6 +1,6 @@
-package com.stuart.controllers;
+package com.stuart.controllers.контрагенты;
 
-import com.stuart.objectsFX.ЗаписьКонтрагентFX;
+import com.stuart.objectsFX.справочники.ЗаписьКонтрагентFX;
 import com.stuart.utils.DialogManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

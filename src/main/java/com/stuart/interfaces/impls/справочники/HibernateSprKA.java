@@ -1,10 +1,10 @@
-package com.stuart.interfaces.impls;
+package com.stuart.interfaces.impls.справочники;
 
 import com.stuart.dao.DataAccessObject;
 import com.stuart.interfaces.ISpravochnik;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.objectsFX.ObjectFX;
-import com.stuart.objectsFX.ЗаписьКонтрагентFX;
+import com.stuart.objectsFX.справочники.ЗаписьКонтрагентFX;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.hibernate.Session;
@@ -26,6 +26,7 @@ public class HibernateSprKA extends DataAccessObject implements ISpravochnik {
         Session newSession = DataAccessObject.get_session();
         Query<ЗаписьКонтрагент> query = newSession.createQuery("select k from ЗаписьКонтрагент k");
         var resultList = query.getResultList();
+        this.contragentList.clear();
         for (int i = 0; i < resultList.size(); i++) {
             var res = resultList.get(i);
             ЗаписьКонтрагентFX записьКонтрагентFX = new ЗаписьКонтрагентFX();
@@ -35,7 +36,7 @@ public class HibernateSprKA extends DataAccessObject implements ISpravochnik {
             записьКонтрагентFX.setAddress(res.getAddress());
             записьКонтрагентFX.setContact_person(res.getContact_person());
             записьКонтрагентFX.setId(res.getId());
-            записьКонтрагентFX.setЗаписьКонтрагент(res);
+            записьКонтрагентFX.setЗаписьКонтрагент_(res);
             this.contragentList.add(записьКонтрагентFX);
         }
         newSession.close();

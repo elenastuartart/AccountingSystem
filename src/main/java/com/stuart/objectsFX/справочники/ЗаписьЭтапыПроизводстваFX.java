@@ -1,5 +1,7 @@
-package com.stuart.objectsFX;
+package com.stuart.objectsFX.справочники;
 
+import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;
+import com.stuart.objectsFX.ObjectFX;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
@@ -14,6 +16,7 @@ public class ЗаписьЭтапыПроизводстваFX extends ObjectFX {
     private SimpleIntegerProperty code = new SimpleIntegerProperty();
     private SimpleStringProperty name = new SimpleStringProperty("");
     private SimpleStringProperty description_stage =  new SimpleStringProperty("");
+    private ЗаписьЭтапыПроизводства записьЭтапыПроизводства_;
 
     public ЗаписьЭтапыПроизводстваFX(Integer code, String name, String description_stage) {
         this.code = new SimpleIntegerProperty(code);
@@ -24,6 +27,7 @@ public class ЗаписьЭтапыПроизводстваFX extends ObjectFX {
     public ЗаписьЭтапыПроизводстваFX() {
 
     }
+
 
     public Integer getCode() {
         return code.get();
@@ -37,6 +41,11 @@ public class ЗаписьЭтапыПроизводстваFX extends ObjectFX {
         return description_stage.get();
     }
 
+    public ЗаписьЭтапыПроизводства getЗаписьЭтапыПроизводства_() {
+        return записьЭтапыПроизводства_;
+    }
+
+
     public void setCode(int code) {
         this.code.set(code);
     }
@@ -48,6 +57,11 @@ public class ЗаписьЭтапыПроизводстваFX extends ObjectFX {
     public void setDescription_stage(String description_stage) {
         this.description_stage.set(description_stage);
     }
+
+    public void setЗаписьЭтапыПроизводства_(ЗаписьЭтапыПроизводства записьЭтапыПроизводства_) {
+        this.записьЭтапыПроизводства_ = записьЭтапыПроизводства_;
+    }
+
 
     public SimpleIntegerProperty codeProperty() {
         return code;

@@ -1,9 +1,9 @@
-package com.stuart.controllers;
+package com.stuart.controllers.номенклатура;
 
-import com.stuart.interfaces.impls.HibernateSprKA;
+import com.stuart.interfaces.impls.справочники.HibernateSprKA;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
-import com.stuart.objectsFX.ЗаписьКонтрагентFX;
-import com.stuart.objectsFX.ЗаписьНоменклатураFX;
+import com.stuart.objectsFX.справочники.ЗаписьКонтрагентFX;
+import com.stuart.objectsFX.справочники.ЗаписьНоменклатураFX;
 import com.stuart.utils.DialogManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,8 +39,9 @@ public class EditNomController {
     private Button btnCansel;
 
     private ЗаписьНоменклатураFX записьНоменклатураFX;
-
     private boolean saveClicked = false;
+    private HibernateSprKA hibernateSprKA = new HibernateSprKA();
+    ЗаписьКонтрагент записьКонтрагент = new ЗаписьКонтрагент();
 
     @FXML
     void actionClose(ActionEvent event) {
@@ -48,6 +49,7 @@ public class EditNomController {
         Stage stage = (Stage) source.getScene().getWindow();
         stage.hide();
     }
+
     @FXML
     void actionSaveOrUpdate(ActionEvent event) {
         if(!checkValues()) {
@@ -58,11 +60,9 @@ public class EditNomController {
         записьНоменклатураFX.setName(txtName.getText());
         записьНоменклатураFX.setCategory(txtCategory.getText());
         записьНоменклатураFX.setSubcategory(txtSubcategory.getText());
-        записьНоменклатураFX.setContragent(choiseBoxProducer.getValue().getЗаписьКонтрагент());
-        записьНоменклатураFX.setContragent_(choiseBoxProducer.getValue());
+        записьНоменклатураFX.setContragent(choiseBoxProducer.getValue().getЗаписьКонтрагент_());
+        записьНоменклатураFX.setContragentFX_(choiseBoxProducer.getValue());
 
-//        записьНоменклатураFX.setProducer(записьКонтрагент);
-//        записьНоменклатураFX.setЗаписьКонтрагент(txtProducer.записьКонтрагентProperty);
         saveClicked = true;
         actionClose(event);
     }
@@ -79,7 +79,6 @@ public class EditNomController {
         txtCategory.setText(записьНоменклатураFX.getCategory());
         txtSubcategory.setText(записьНоменклатураFX.getSubcategory());
         this.initChoiseBox();
-//        txtProducer.setValue(записьНоменклатураFX.getЗаписьКонтрагент());
     }
 
     public ЗаписьНоменклатураFX getЗаписьНоменклатураFX() {
@@ -101,20 +100,15 @@ public class EditNomController {
         return saveClicked;
     }
 
-    private HibernateSprKA hibernateSprKA = new HibernateSprKA();
-
-    ЗаписьКонтрагент записьКонтрагент = new ЗаписьКонтрагент();
-
     private void initChoiseBox() throws SQLException {
         ObservableList<ЗаписьКонтрагентFX> contragentList = hibernateSprKA.findAll();
-//        ObservableList<String> list = FXCollections.observableArrayList();
 
         ObservableList<ЗаписьКонтрагентFX> list = FXCollections.observableArrayList();
         for (int i = 0; i < contragentList.size(); i++) {
             list.add(contragentList.get(i));
-        } //получили список с названиями контрагентов из БД
+        }
 
-        this.choiseBoxProducer.setValue(this.записьНоменклатураFX.getContragent_());
+        this.choiseBoxProducer.setValue(this.записьНоменклатураFX.getContragentFX_());
 
         this.choiseBoxProducer.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -128,17 +122,16 @@ public class EditNomController {
 
                     if (choiseBoxProducer.getValue() != null) {
 
-                        Label label = new Label();
+//                        Label label = new Label();
                         choiseBoxProducer.setOnAction(event1 ->
                         {
                             choiseBoxProducer.setValue(choiseBoxProducer.getValue());
-                            записьНоменклатураFX.setContragent_(choiseBoxProducer.getValue());
+                            записьНоменклатураFX.setContragentFX_(choiseBoxProducer.getValue());
                         });
                     }
                 }
             }
         });
-
 
     }
 }

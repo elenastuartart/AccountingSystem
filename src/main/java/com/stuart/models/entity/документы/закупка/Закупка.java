@@ -110,8 +110,15 @@ public class Закупка extends Документ {
 
         for (int i = 0; i < table_part_purchase_.size(); i ++) {
             var СтрТЧ = table_part_purchase_.get(i);
-            СтрТЧ.setLineNumber(i+1);
 
+            if(СтрТЧ.getId() == null) {
+                СтрТЧ.setId(UUID.randomUUID());
+            }
+
+            СтрТЧ.setDoc_purchase_(this);
+            СтрТЧ.setIdDoc(this.getId());
+
+            СтрТЧ.setLineNumber(i+1);
             if(!СтрТЧ.save())
                     return false;
         }
@@ -185,7 +192,7 @@ public class Закупка extends Документ {
         this.setFinalSum();
         if (this.getDate() == null || this.getNumber() == null
                 || this.getContragent_() == null || this.getFinalSum() == null
-                || this.getTable_part_purchase_() == null  || !this.ПроверкаНаличия())
+                || this.getTable_part_purchase_() == null  || !(!this.pometkaProvedeniya || this.ПроверкаНаличия()))
             return false;
         else
             return true;
@@ -205,6 +212,9 @@ public class Закупка extends Документ {
 
     @Override
     public boolean ЗаписатьДокумент() {
+
+        if (this.id == null)
+            this.id = UUID.randomUUID();
 
         if(!this.ПередЗаписью()) {
             System.out.println("Не удалось записать документ: Не прошло проверку перед записью");

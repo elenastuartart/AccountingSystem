@@ -116,6 +116,10 @@ public class Производство extends Документ {
 
         for (int i = 0; i < table_part_material_consuption_.size(); i++) {
             var СтрТЧ = table_part_material_consuption_.get(i);
+
+            СтрТЧ.setDoc_manufacture_(this);
+            СтрТЧ.setIdDoc(this.getId());
+
             СтрТЧ.setLineNumber(i + 1);
             if (!СтрТЧ.save())
                 return false;
@@ -137,6 +141,10 @@ public class Производство extends Документ {
 
         for (int i = 0; i < table_part_produced_of_products_.size(); i ++) {
             var СтрТЧ = table_part_produced_of_products_.get(i);
+
+            СтрТЧ.setDoc_manufacture_(this);
+            СтрТЧ.setIdDoc(this.getId());
+
             СтрТЧ.setLineNumber(i+1);
             if(!СтрТЧ.save())
                 return false;
@@ -196,6 +204,9 @@ public class Производство extends Документ {
 
     @Override
     public boolean ЗаписатьДокумент() {
+
+        if (this.id == null)
+            this.id = UUID.randomUUID();
 
         if(!this.ПередЗаписью()) {
             System.out.println("Не удалось записать документ: Не прошло проверку перед записью.");
@@ -277,7 +288,7 @@ public class Производство extends Документ {
 
         if (this.getDate() == null || this.getNumber() == null
                 || this.getTable_part_produced_of_products_()==null
-                || this.getTable_part_material_consuption_()==null || !this.ПроверкаНаличия())
+                || this.getTable_part_material_consuption_()==null || !(!this.pometkaProvedeniya || this.ПроверкаНаличия()))
             return false;
         else
             return true;

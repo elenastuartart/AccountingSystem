@@ -1,6 +1,9 @@
-package com.stuart.objectsFX;
+package com.stuart.objectsFX.справочники;
 
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
+import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
+import com.stuart.objectsFX.ObjectFX;
+import com.stuart.objectsFX.справочники.ЗаписьКонтрагентFX;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
@@ -19,7 +22,8 @@ public class ЗаписьНоменклатураFX extends ObjectFX {
     private SimpleStringProperty subcategory = new SimpleStringProperty("");
     private SimpleStringProperty contragent = new SimpleStringProperty("");
 
-    private ЗаписьКонтрагентFX contragent_ = new ЗаписьКонтрагентFX();
+    private ЗаписьНоменклатура записьНоменклатура_;
+    private ЗаписьКонтрагентFX contragentFX_ = new ЗаписьКонтрагентFX();
 
     public ЗаписьНоменклатураFX() {
 
@@ -32,6 +36,11 @@ public class ЗаписьНоменклатураFX extends ObjectFX {
         this.category = new SimpleStringProperty(category);
         this.subcategory = new SimpleStringProperty(subcategory);
         this.contragent = new SimpleStringProperty(contragent.getName());
+    }
+
+    @Override
+    public String toString() {
+        return name.getValue();
     }
 
     public String getName() {
@@ -58,13 +67,17 @@ public class ЗаписьНоменклатураFX extends ObjectFX {
         return contragent.get();
     } //поле для вывода в таблицу
 
-    public ЗаписьКонтрагентFX getContragent_() {
-        return contragent_;
+    public ЗаписьКонтрагентFX getContragentFX_() {
+        return contragentFX_;
     }
 
-    public void setContragent_(ЗаписьКонтрагентFX contragent_) {
-        this.contragent_ = contragent_;
-        this.contragent = contragent_.nameProperty();
+    public ЗаписьНоменклатура getЗаписьНоменклатура_() {
+        return записьНоменклатура_;
+    }
+
+    public void setContragentFX_(ЗаписьКонтрагентFX contragentFX_) {
+        this.contragentFX_ = contragentFX_;
+        this.contragent = contragentFX_.nameProperty();
     }
 
     public void setCode(Integer  code) {
@@ -87,13 +100,12 @@ public class ЗаписьНоменклатураFX extends ObjectFX {
         this.category.set(category);
     }
 
-//    public void setProducer(ЗаписьКонтрагент producer) {
-////        this.producer.set(String.valueOf(producer));
-//        this.producer = new SimpleStringProperty(producer.getName());
-//    }
-
     public void setContragent(ЗаписьКонтрагент записьКонтрагент) {
-        this.contragent =  this.contragent_.nameProperty();
+        this.contragent =  this.contragentFX_.nameProperty();
+    }
+
+    public void setЗаписьНоменклатура_(ЗаписьНоменклатура записьНоменклатура_) {
+        this.записьНоменклатура_ = записьНоменклатура_;
     }
 
     public SimpleIntegerProperty  codeProperty() {
@@ -115,6 +127,4 @@ public class ЗаписьНоменклатураFX extends ObjectFX {
     public SimpleStringProperty contragentProperty() {
         return contragent;
     }
-
-
 }

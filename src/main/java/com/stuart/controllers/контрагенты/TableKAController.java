@@ -1,7 +1,7 @@
-package com.stuart.controllers;
+package com.stuart.controllers.контрагенты;
 
-import com.stuart.interfaces.impls.HibernateSprKA;
-import com.stuart.objectsFX.ЗаписьКонтрагентFX;
+import com.stuart.interfaces.impls.справочники.HibernateSprKA;
+import com.stuart.objectsFX.справочники.ЗаписьКонтрагентFX;
 import com.stuart.utils.DialogManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -168,13 +168,21 @@ public class TableKAController {
             @Override
             public void handle(MouseEvent event) {
                 if(event.getClickCount()==2) {
-                    editDialogController.setЗаписьКонтрагентFX(
-                            (ЗаписьКонтрагентFX) tableSprContragent.getSelectionModel().getSelectedItem());
+                    try {
+                        editDialogController.setЗаписьКонтрагентFX(
+                                (ЗаписьКонтрагентFX) tableSprContragent.getSelectionModel().getSelectedItem());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     showDialog();
                     if (editDialogController.isSaveClicked()) {
                         sprKAImpl.update((ЗаписьКонтрагентFX) tableSprContragent.getSelectionModel().getSelectedItem());
                     }
-
+                    try {
+                        sprKAImpl.findAll();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -195,6 +203,7 @@ public class TableKAController {
         }
         else {
             sprKAImpl.findText(txtSearch.getText());
+//            sprKAImpl.findInt(Integer.valueOf(txtSearch.getText()));
             //делаем доп метод с поиском по коду или номеру, и в зависимости от введенного значения вызываем нужнгый метод
         }
     }

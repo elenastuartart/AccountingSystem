@@ -1,9 +1,7 @@
-package com.stuart.controllers;
+package com.stuart.controllers.номенклатура;
 
-import com.stuart.interfaces.impls.HibernateSprKA;
-import com.stuart.interfaces.impls.HibernateSprNom;
-import com.stuart.objectsFX.ЗаписьКонтрагентFX;
-import com.stuart.objectsFX.ЗаписьНоменклатураFX;
+import com.stuart.interfaces.impls.справочники.HibernateSprNom;
+import com.stuart.objectsFX.справочники.ЗаписьНоменклатураFX;
 import com.stuart.utils.DialogManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -91,7 +89,6 @@ public class TableNomController {
             case "btnAddRecord":
                 editDialogController.setЗаписьНоменклатураFX(new ЗаписьНоменклатураFX());
                 showDialog();
-//                sprKAImpl.add(editDialogController.getЗаписьКонтрагентFX());
                 if (editDialogController.isSaveClicked()) {
                     sprNomImpl.add(editDialogController.getЗаписьНоменклатураFX());
                     research = true;
@@ -129,7 +126,6 @@ public class TableNomController {
             editDialogStage.initOwner(mainStage); //получаем родительское окно - источник события
         }
         editDialogStage.showAndWait(); //ожидание закрытия окна
-
     }
 
     private boolean recordNomIsSelected(ЗаписьНоменклатураFX selectedRecord) {
@@ -213,6 +209,7 @@ public class TableNomController {
         }
         else {
             sprNomImpl.findText(txtSearch.getText());
+//            sprNomImpl.findInt(Integer.valueOf(txtSearch.getText()));
             //делаем доп метод с поиском по коду или номеру, и в зависимости от введенного значения вызываем нужнгый метод
         }
     }

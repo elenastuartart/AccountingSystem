@@ -1,6 +1,9 @@
-package com.stuart.objectsFX;
+package com.stuart.objectsFX.документы;
 
+import com.stuart.models.entity.документы.закупка.ЗаписьТЧ_Закупка;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
+import com.stuart.objectsFX.ObjectFX;
+import com.stuart.objectsFX.справочники.ЗаписьНоменклатураFX;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,9 +23,10 @@ public class ТабЧастьЗакупкаFX extends ObjectFX {
     private SimpleDoubleProperty amount = new SimpleDoubleProperty();
     private SimpleDoubleProperty price = new SimpleDoubleProperty();
     private SimpleDoubleProperty sum = new SimpleDoubleProperty();
-    private SimpleStringProperty nomenclature = new SimpleStringProperty();
+    private SimpleStringProperty nomenclature = new SimpleStringProperty("");
 
-    private ЗаписьНоменклатураFX nomenclature_ = new ЗаписьНоменклатураFX();
+    private ЗаписьНоменклатураFX nomenclatureFX_ = new ЗаписьНоменклатураFX();
+
     private UUID idDocPurchaseFX_;
 
     public Integer getNumberStr() {
@@ -45,8 +49,20 @@ public class ТабЧастьЗакупкаFX extends ObjectFX {
         return nomenclature.get();
     }
 
-    public ЗаписьНоменклатураFX getNomenclature_() {
-        return nomenclature_;
+    public ЗаписьНоменклатураFX getNomenclatureFX_(ЗаписьТЧ_Закупка записьТЧ_закупка) {
+        nomenclatureFX_.setId(записьТЧ_закупка.getNomenclature_().getId());
+        nomenclatureFX_.setCode(записьТЧ_закупка.getNomenclature_().getCode());
+        nomenclatureFX_.setArticleNumber(записьТЧ_закупка.getNomenclature_().getArticle_number());
+        nomenclatureFX_.setName(записьТЧ_закупка.getNomenclature_().getName());
+        nomenclatureFX_.setCategory(записьТЧ_закупка.getNomenclature_().getCategory());
+        nomenclatureFX_.setSubcategory(записьТЧ_закупка.getNomenclature_().getSubcategory());
+        nomenclatureFX_.setЗаписьНоменклатура_(записьТЧ_закупка.getNomenclature_());
+        nomenclatureFX_.setContragent(записьТЧ_закупка.getNomenclature_().getContragent_());
+        return nomenclatureFX_;
+    }
+
+    public ЗаписьНоменклатураFX getNomenclatureFX_() {
+        return nomenclatureFX_;
     }
 
     public UUID getIdDocPurchaseFX_() {
@@ -69,12 +85,9 @@ public class ТабЧастьЗакупкаFX extends ObjectFX {
         this.sum.set(sum);
     }
 
-    public void setNomenclature(ЗаписьНоменклатура записьНоменклатура) {
-        this.nomenclature = this.nomenclature_.nameProperty();
-    }
-
-    public void setNomenclature_(ЗаписьНоменклатураFX nomenclature_) {
-        this.nomenclature_ = nomenclature_;
+    public void setNomenclatureFX_(ЗаписьНоменклатураFX nomenclatureFX_) {
+        this.nomenclature = nomenclatureFX_.nameProperty();
+        this.nomenclatureFX_ = nomenclatureFX_;
     }
 
     public void setIdDocPurchaseFX_(UUID idDocPurchaseFX_) {

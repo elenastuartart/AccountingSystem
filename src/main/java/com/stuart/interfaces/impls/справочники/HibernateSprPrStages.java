@@ -1,12 +1,10 @@
-package com.stuart.interfaces.impls;
+package com.stuart.interfaces.impls.справочники;
 
 import com.stuart.dao.DataAccessObject;
 import com.stuart.interfaces.ISpravochnik;
-import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;
 import com.stuart.objectsFX.ObjectFX;
-import com.stuart.objectsFX.ЗаписьКонтрагентFX;
-import com.stuart.objectsFX.ЗаписьЭтапыПроизводстваFX;
+import com.stuart.objectsFX.справочники.ЗаписьЭтапыПроизводстваFX;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.hibernate.Session;
@@ -29,12 +27,14 @@ public class HibernateSprPrStages extends DataAccessObject implements ISpravochn
 
         Query<ЗаписьЭтапыПроизводства> query = newSession.createQuery("select st from ЗаписьЭтапыПроизводства st");
         var resultList = query.getResultList();
+        this.prStagesList.clear();
         for (int i = 0; i < resultList.size(); i++) {
             var res = resultList.get(i);
             ЗаписьЭтапыПроизводстваFX записьЭтапыПроизводстваFX = new ЗаписьЭтапыПроизводстваFX();
             записьЭтапыПроизводстваFX.setCode(res.getCode());
             записьЭтапыПроизводстваFX.setName(res.getName());
             записьЭтапыПроизводстваFX.setDescription_stage(res.getDescription_stage());
+            записьЭтапыПроизводстваFX.setЗаписьЭтапыПроизводства_(res);
             this.prStagesList.add(записьЭтапыПроизводстваFX);
         }
         newSession.close();

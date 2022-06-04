@@ -1,12 +1,11 @@
-package com.stuart.interfaces.impls;
+package com.stuart.interfaces.impls.справочники;
 
 import com.stuart.dao.DataAccessObject;
 import com.stuart.interfaces.ISpravochnik;
-import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import com.stuart.objectsFX.ObjectFX;
-import com.stuart.objectsFX.ЗаписьКонтрагентFX;
-import com.stuart.objectsFX.ЗаписьНоменклатураFX;
+import com.stuart.objectsFX.справочники.ЗаписьКонтрагентFX;
+import com.stuart.objectsFX.справочники.ЗаписьНоменклатураFX;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.hibernate.Session;
@@ -40,20 +39,19 @@ public class HibernateSprNom extends DataAccessObject implements ISpravochnik {
             записьНоменклатураFX.setId(res.getId());
             //заполняем поле объекта ЗаписьКонтрагентFX contragent_ (создаем объект контрагентFX и заполняем его данными
             //контрагента, который привязан к номенклатуре, из базы)
-                ЗаписьКонтрагентFX записьКонтрагентFX = записьНоменклатураFX.getContragent_();
+                ЗаписьКонтрагентFX записьКонтрагентFX = записьНоменклатураFX.getContragentFX_();
                 записьКонтрагентFX.setId(res.getContragent_().getId());
                 записьКонтрагентFX.setCode(res.getContragent_().getCode());
                 записьКонтрагентFX.setName(res.getContragent_().getName());
                 записьКонтрагентFX.setType_KA(res.getContragent_().getType_KA());
                 записьКонтрагентFX.setAddress(res.getContragent_().getAddress());
                 записьКонтрагентFX.setContact_person(res.getContragent_().getContact_person());
-                записьКонтрагентFX.setЗаписьКонтрагент(res.getContragent_());
+                записьКонтрагентFX.setЗаписьКонтрагент_(res.getContragent_());
 
-
-            записьНоменклатураFX.setContragent_(записьКонтрагентFX);
-            //для вывода в таблице заполняем отдельное поле Producer наименованием контрагента, который привязан к номенклатуре
+            записьНоменклатураFX.setContragentFX_(записьКонтрагентFX);
             записьНоменклатураFX.setContragent(res.getContragent_());
-            //контрагент
+            записьНоменклатураFX.setЗаписьНоменклатура_(res);
+
             this.nomenclaturiesList.add(записьНоменклатураFX);
         }
         newSession.close();
@@ -70,13 +68,14 @@ public class HibernateSprNom extends DataAccessObject implements ISpravochnik {
             записьНоменклатура.setName(записьНоменклатураFX.getName());
             записьНоменклатура.setCategory(записьНоменклатураFX.getCategory());
             записьНоменклатура.setSubcategory(записьНоменклатураFX.getSubcategory());
-            //контрагент
+            записьНоменклатура.setContragent_(записьНоменклатураFX.getContragentFX_().getЗаписьКонтрагент_());
 
             boolean result = DataAccessObject.save(записьНоменклатура);
 
             DataAccessObject.commitTransactionCloseSession();
 
             if (result) {
+                записьНоменклатураFX.setArticleNumber(записьНоменклатура.getArticle_number());
                 записьНоменклатураFX.setCode(записьНоменклатура.getCode());
                 записьНоменклатураFX.setId(записьНоменклатура.getId());
                 nomenclaturiesList.add(записьНоменклатураFX);
@@ -100,8 +99,7 @@ public class HibernateSprNom extends DataAccessObject implements ISpravochnik {
             записьНоменклатура.setName(записьНоменклатураFX.getName());
             записьНоменклатура.setCategory(записьНоменклатураFX.getCategory());
             записьНоменклатура.setSubcategory(записьНоменклатураFX.getSubcategory());
-            записьНоменклатура.setContragent_(записьНоменклатураFX.getContragent_().getЗаписьКонтрагент());
-            //контрагент
+            записьНоменклатура.setContragent_(записьНоменклатураFX.getContragentFX_().getЗаписьКонтрагент_());
 
             boolean result = DataAccessObject.save(записьНоменклатура);
             DataAccessObject.commitTransactionCloseSession();
@@ -136,8 +134,23 @@ public class HibernateSprNom extends DataAccessObject implements ISpravochnik {
             записьНоменклатураFX.setCategory(res.getCategory());
             записьНоменклатураFX.setSubcategory(res.getSubcategory());
             записьНоменклатураFX.setId(res.getId());
-            //контрагент
+            //заполняем поле объекта ЗаписьКонтрагентFX contragent_ (создаем объект контрагентFX и заполняем его данными
+            //контрагента, который привязан к номенклатуре, из базы)
+                ЗаписьКонтрагентFX записьКонтрагентFX = записьНоменклатураFX.getContragentFX_();
+                записьКонтрагентFX.setId(res.getContragent_().getId());
+                записьКонтрагентFX.setCode(res.getContragent_().getCode());
+                записьКонтрагентFX.setName(res.getContragent_().getName());
+                записьКонтрагентFX.setType_KA(res.getContragent_().getType_KA());
+                записьКонтрагентFX.setAddress(res.getContragent_().getAddress());
+                записьКонтрагентFX.setContact_person(res.getContragent_().getContact_person());
+                записьКонтрагентFX.setЗаписьКонтрагент_(res.getContragent_());
+
+            записьНоменклатураFX.setContragentFX_(записьКонтрагентFX);
+            записьНоменклатураFX.setContragent(res.getContragent_());
+            записьНоменклатураFX.setЗаписьНоменклатура_(res);
+
             this.nomenclaturiesList.add(записьНоменклатураFX);
+
         }
         newSession.close();
         return nomenclaturiesList;
@@ -155,13 +168,26 @@ public class HibernateSprNom extends DataAccessObject implements ISpravochnik {
 
         for (int i = 0; i < resultList.size(); i++) {
             var res = resultList.get(i);
-            ЗаписьНоменклатураFX записьНоменклатураFX =  new ЗаписьНоменклатураFX();
+            ЗаписьНоменклатураFX записьНоменклатураFX = new ЗаписьНоменклатураFX();
             записьНоменклатураFX.setCode(res.getCode());
             записьНоменклатураFX.setArticleNumber(res.getArticle_number());
             записьНоменклатураFX.setName(res.getName());
             записьНоменклатураFX.setCategory(res.getCategory());
             записьНоменклатураFX.setSubcategory(res.getSubcategory());
             записьНоменклатураFX.setId(res.getId());
+            //заполняем поле объекта ЗаписьКонтрагентFX contragent_ (создаем объект контрагентFX и заполняем его данными
+            //контрагента, который привязан к номенклатуре, из базы)
+                ЗаписьКонтрагентFX записьКонтрагентFX = записьНоменклатураFX.getContragentFX_();
+                записьКонтрагентFX.setId(res.getContragent_().getId());
+                записьКонтрагентFX.setCode(res.getContragent_().getCode());
+                записьКонтрагентFX.setName(res.getContragent_().getName());
+                записьКонтрагентFX.setType_KA(res.getContragent_().getType_KA());
+                записьКонтрагентFX.setAddress(res.getContragent_().getAddress());
+                записьКонтрагентFX.setContact_person(res.getContragent_().getContact_person());
+                записьКонтрагентFX.setЗаписьКонтрагент_(res.getContragent_());
+            записьНоменклатураFX.setContragentFX_(записьКонтрагентFX);
+            записьНоменклатураFX.setContragent(res.getContragent_());
+            записьНоменклатураFX.setЗаписьНоменклатура_(res);
             //контрагент
             this.nomenclaturiesList.add(записьНоменклатураFX);
         }
