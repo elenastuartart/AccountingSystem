@@ -110,6 +110,10 @@ public class Реализация extends Документ {
 
         for (int i = 0; i < table_part_list_of_products_.size(); i++) {
             var СтрТЧ = table_part_list_of_products_.get(i);
+
+            if(СтрТЧ.getId() == null) {
+                СтрТЧ.setId(UUID.randomUUID());
+            }
             СтрТЧ.setDoc_sale_(this);
             СтрТЧ.setIdDoc(this.getId());
 
@@ -340,6 +344,9 @@ public class Реализация extends Документ {
                     table_part_list_of_products_.get(i).getSum())  ;
             System.out.println( );
         }
+    }
+    public boolean getPometkaProvedeniya() {
+        return this.pometkaProvedeniya;
     }
 
 }

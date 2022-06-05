@@ -153,6 +153,7 @@ public class TableDocManufactureController {
         ObservableList<ДокументПроизводствоFX> list = listDocManufactureImpl.findAll();
         tableListDocManufacture.setItems(list);
         tableListDocManufacture.refresh();
+        updateCountLabel();
     }
 
     private void initListeners() {
@@ -186,7 +187,7 @@ public class TableDocManufactureController {
     }
 
     private void updateCountLabel() {
-        labelCount.setText("Количество записей: "+listDocManufactureImpl.getDocManufactureList().size());
+        labelCount.setText("Количество документов: "+listDocManufactureImpl.getDocManufactureList().size());
     }
 
 }
