@@ -41,7 +41,11 @@ public class DataAccessObject
         query.setParameter("param", idNom);
         query.setParameter("param2", idDoc);
 
-        return query.uniqueResult();
+        var Ostatok = query.uniqueResult();
+        if(Ostatok == null)
+            return 0.0;
+        else
+            return Ostatok;
     }
 
     public static Double ПолучитьОстатокПоРегиструВзаиморасчеты(UUID idDoc) {
@@ -52,7 +56,11 @@ public class DataAccessObject
 
         query.setParameter("param", idDoc);
 
-        return query.uniqueResult();
+        var Ostatok = query.uniqueResult();
+        if(Ostatok == null)
+            return 0.0;
+        else
+            return Ostatok;
     }
 
     public static Double ПолучитьСреднееПоРегиструТовары (UUID idDoc, UUID idNom, Double amountConsuption) {

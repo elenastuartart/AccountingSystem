@@ -117,6 +117,10 @@ public class Производство extends Документ {
         for (int i = 0; i < table_part_material_consuption_.size(); i++) {
             var СтрТЧ = table_part_material_consuption_.get(i);
 
+            if(СтрТЧ.getId() == null) {
+                СтрТЧ.setId(UUID.randomUUID());
+            }
+
             СтрТЧ.setDoc_manufacture_(this);
             СтрТЧ.setIdDoc(this.getId());
 
@@ -141,6 +145,10 @@ public class Производство extends Документ {
 
         for (int i = 0; i < table_part_produced_of_products_.size(); i ++) {
             var СтрТЧ = table_part_produced_of_products_.get(i);
+
+            if(СтрТЧ.getId() == null) {
+                СтрТЧ.setId(UUID.randomUUID());
+            }
 
             СтрТЧ.setDoc_manufacture_(this);
             СтрТЧ.setIdDoc(this.getId());
@@ -294,6 +302,9 @@ public class Производство extends Документ {
             return true;
     }
 
+    public boolean getPometkaProvedeniya() {
+        return this.pometkaProvedeniya;
+    }
 
     @Override
     public String toString() {

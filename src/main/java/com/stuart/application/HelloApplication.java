@@ -1,6 +1,7 @@
 package com.stuart.application;
 
 import com.stuart.controllers.документЗакупка.TableDocPurchaseController;
+import com.stuart.controllers.документПроизводство.TableDocManufactureController;
 import com.stuart.controllers.контрагенты.TableKAController;
 import com.stuart.controllers.номенклатура.TableNomController;
 import com.stuart.dao.DataAccessObject;
@@ -55,13 +56,25 @@ public class HelloApplication extends Application {
 //        primaryStage.setScene(new Scene(fxmlMain, 300, 275));
 //        primaryStage.show();
 
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(getClass().getResource("/fxml/tableDocPurchase.fxml"));
+//        Parent fxmlMain = fxmlLoader.load();
+//        TableDocPurchaseController mainController = fxmlLoader.getController();
+//        mainController.setMainStage(primaryStage);
+//
+//        primaryStage.setTitle("Документы по закупкам");
+//        primaryStage.setMinHeight(800);
+//        primaryStage.setMinWidth(600);
+//        primaryStage.setScene(new Scene(fxmlMain, 300, 275));
+//        primaryStage.show();
+
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/fxml/tableDocPurchase.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/fxml/tableDocManufacture.fxml"));
         Parent fxmlMain = fxmlLoader.load();
-        TableDocPurchaseController mainController = fxmlLoader.getController();
+        TableDocManufactureController mainController = fxmlLoader.getController();
         mainController.setMainStage(primaryStage);
 
-        primaryStage.setTitle("Документы по закупкам");
+        primaryStage.setTitle("Документы по производству");
         primaryStage.setMinHeight(800);
         primaryStage.setMinWidth(600);
         primaryStage.setScene(new Scene(fxmlMain, 300, 275));

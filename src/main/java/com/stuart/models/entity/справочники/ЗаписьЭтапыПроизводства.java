@@ -27,8 +27,8 @@ public class ЗаписьЭтапыПроизводства extends Элемен
     private String description_stage;
     //ЗаписьЭтапыПроизводства-ЗаписьТЧРасходМатериалов
     //(таблица БД "production_stages"-table_part_material_consuption")
-    @OneToMany(mappedBy = "stage_", fetch = FetchType.LAZY)
-    private List<ЗаписьТЧРасходМатериалов> table_part_material_consuption_1;
+//    @OneToMany(mappedBy = "stage_", fetch = FetchType.LAZY)
+//    private List<ЗаписьТЧРасходМатериалов> table_part_material_consuption_1;
 
     public ЗаписьЭтапыПроизводства(String name, String description_stage) {
         this.code = ЭлементСправочника.GetRandomCode();

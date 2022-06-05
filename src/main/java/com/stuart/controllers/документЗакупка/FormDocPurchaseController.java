@@ -1,17 +1,13 @@
 package com.stuart.controllers.документЗакупка;
 
-import com.stuart.interfaces.impls.документы.HibernateTabPurchase;
+import com.stuart.interfaces.impls.документы.закупка.HibernateTabPurchase;
 import com.stuart.interfaces.impls.справочники.HibernateSprKA;
-import com.stuart.models.entity.документы.закупка.Закупка;
 import com.stuart.models.entity.справочники.ЗаписьКонтрагент;
-import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
 import com.stuart.objectsFX.документы.ДокументЗакупкаFX;
 import com.stuart.objectsFX.документы.ТабЧастьЗакупкаFX;
 import com.stuart.objectsFX.справочники.ЗаписьКонтрагентFX;
-import com.stuart.objectsFX.справочники.ЗаписьНоменклатураFX;
 import com.stuart.utils.DialogManager;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -28,7 +24,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Struct;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -160,7 +155,7 @@ public class FormDocPurchaseController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        //вот тут вызвем инитлоадер
         showDialog();
 
         if (editTabPurchaseController.isSaveClicked()) {
@@ -241,7 +236,6 @@ public class FormDocPurchaseController {
         if (документЗакупкаFX == null){
             return;
         }
-
         saveClicked = false;
         this.документЗакупкаFX = документЗакупкаFX;
         txtNumber.setText(String.valueOf(документЗакупкаFX.getNumber()));
@@ -251,7 +245,6 @@ public class FormDocPurchaseController {
         this.initChoiseBox();
 
         fillTable();
-
     }
 
     public ДокументЗакупкаFX getДокументЗакупкаFX() {
@@ -307,6 +300,5 @@ public class FormDocPurchaseController {
         });
 
     }
-
 
 }

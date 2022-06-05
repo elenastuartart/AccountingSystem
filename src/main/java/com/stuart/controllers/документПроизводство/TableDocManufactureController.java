@@ -1,7 +1,8 @@
-package com.stuart.controllers.документЗакупка;
+package com.stuart.controllers.документПроизводство;
 
-import com.stuart.interfaces.impls.документы.закупка.HibernateDocPurchase;
+import com.stuart.interfaces.impls.документы.производство.HibernateDocManufacture;
 import com.stuart.objectsFX.документы.ДокументЗакупкаFX;
+import com.stuart.objectsFX.документы.ДокументПроизводствоFX;
 import com.stuart.utils.DialogManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
@@ -23,7 +24,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 
-public class TableDocPurchaseController {
+public class TableDocManufactureController {
+
     @FXML
     private Button btnCreateDoc;
     @FXML
@@ -33,35 +35,29 @@ public class TableDocPurchaseController {
     @FXML
     private Button btnSearch;
     @FXML
-    private TableView tableListDocPurchase;
+    private TableView tableListDocManufacture;
     @FXML
-    private TableColumn<ДокументЗакупкаFX, String> columnNumber;
+    private TableColumn<ДокументПроизводствоFX, String> columnNumber;
     @FXML
-    private TableColumn<ДокументЗакупкаFX, String> columnDate;
+    private TableColumn<ДокументПроизводствоFX, String> columnDate;
     @FXML
-    private TableColumn<ДокументЗакупкаFX, String> columnContragent;
-    @FXML
-    private TableColumn<ДокументЗакупкаFX, String> columnSum;
-    @FXML
-    private TableColumn<ДокументЗакупкаFX, String> columnProvedenie;
+    private TableColumn<ДокументПроизводствоFX, String> columnProvedenie;
     @FXML
     private Label labelCount;
 
-    private static final String FXML_EDIT = "/fxml/formDocPurchase.fxml";
-    private HibernateDocPurchase listDocPurchaseImpl = new HibernateDocPurchase();
+    private static final String FXML_EDIT = "/fxml/formDocManufacture.fxml";
+    private HibernateDocManufacture listDocManufactureImpl = new HibernateDocManufacture();
     private Parent fxmlEdit;
     private FXMLLoader fxmlLoader = new FXMLLoader();
-    private FormDocPurchaseController formDocPurchaseController;
+    private FormDocManufactureController formDocManufactureController;
     private Stage editDialogStage;
     private Stage mainStage;
 
     @FXML
     private void initialize() throws SQLException {
-        columnNumber.setCellValueFactory(new PropertyValueFactory<ДокументЗакупкаFX, String>("number"));
-        columnDate.setCellValueFactory(new PropertyValueFactory<ДокументЗакупкаFX, String>("date"));
-        columnContragent.setCellValueFactory(new PropertyValueFactory<ДокументЗакупкаFX, String>("contragent"));
-        columnSum.setCellValueFactory(new PropertyValueFactory<ДокументЗакупкаFX, String>("finalSum"));
-        columnProvedenie.setCellValueFactory(new PropertyValueFactory<ДокументЗакупкаFX, String>("provedenie"));
+        columnNumber.setCellValueFactory(new PropertyValueFactory<ДокументПроизводствоFX, String>("number"));
+        columnDate.setCellValueFactory(new PropertyValueFactory<ДокументПроизводствоFX, String>("date"));
+        columnProvedenie.setCellValueFactory(new PropertyValueFactory<ДокументПроизводствоFX, String>("provedenie"));
 
         setupClearButtonField(txtSearch);
         initListeners();
@@ -74,7 +70,7 @@ public class TableDocPurchaseController {
         if(!(source instanceof Button)) {
             return;
         }
-        ДокументЗакупкаFX selectedRecord = (ДокументЗакупкаFX) tableListDocPurchase.getSelectionModel().getSelectedItem();
+        ДокументПроизводствоFX selectedRecord = (ДокументПроизводствоFX) tableListDocManufacture.getSelectionModel().getSelectedItem();
         Button clickedButton = (Button) source;
 
         boolean research = false;
@@ -83,7 +79,7 @@ public class TableDocPurchaseController {
                 editDoc(selectedRecord, false);
                 break;
             case "btnCreateDoc":
-                editDoc(new ДокументЗакупкаFX(), true);
+                editDoc(new ДокументПроизводствоFX(), true);
                 break;
         }
         fillTable();
@@ -92,19 +88,18 @@ public class TableDocPurchaseController {
     @FXML
     void actionSearch(ActionEvent event) throws SQLException {
         if ( txtSearch.getText().trim().length() == 0) {
-            listDocPurchaseImpl.findAll();
+            listDocManufactureImpl.findAll();
         }
         else {
-            listDocPurchaseImpl.findInt(Integer.valueOf(txtSearch.getText()));
+            listDocManufactureImpl.findInt(Integer.valueOf(txtSearch.getText()));
         }
-
     }
 
     @FXML
     private void showDialog() {
         if(editDialogStage == null) {
             editDialogStage = new Stage();
-            editDialogStage.setTitle("Создать/редактировать документ Закупка");
+            editDialogStage.setTitle("Создать/редактировать документ Производство");
             editDialogStage.setMinWidth(600);
             editDialogStage.setMinHeight(400);
             editDialogStage.setResizable(false);
@@ -115,28 +110,28 @@ public class TableDocPurchaseController {
         editDialogStage.showAndWait(); //ожидание закрытия окна
     }
 
-    public void editDoc(ДокументЗакупкаFX selectedDoc, boolean add) {
-        if (!recordDocPurchaseIsSelected(selectedDoc)) {
+    public void editDoc(ДокументПроизводствоFX selectedDoc, boolean add) {
+        if (!recordDocIsSelected(selectedDoc)) {
             return;
         }
         try {
             initLoader();
-            formDocPurchaseController.setДокументЗакупкаFX(selectedDoc);
+            formDocManufactureController.setДокументПроизводствоFX(selectedDoc);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         showDialog();
 
-        if(formDocPurchaseController.isSaveClicked()) {
+        if(formDocManufactureController.isSaveClicked()) {
             if (add)
-                listDocPurchaseImpl.add(selectedDoc);
+                listDocManufactureImpl.add(selectedDoc);
             else
-                listDocPurchaseImpl.update(selectedDoc);
+                listDocManufactureImpl.update(selectedDoc);
         }
     }
 
-    private boolean recordDocPurchaseIsSelected(ДокументЗакупкаFX selectedRecord) {
+    private boolean recordDocIsSelected(ДокументПроизводствоFX selectedRecord) {
         if(selectedRecord == null) {
             DialogManager.showInfoDialog("Ошибка", "Выберите запись!");
             return  false;
@@ -155,17 +150,17 @@ public class TableDocPurchaseController {
     }
 
     private void fillTable() throws SQLException {
-        ObservableList<ДокументЗакупкаFX> list = listDocPurchaseImpl.findAll();
-        tableListDocPurchase.setItems(list);
-        tableListDocPurchase.refresh();
+        ObservableList<ДокументПроизводствоFX> list = listDocManufactureImpl.findAll();
+        tableListDocManufacture.setItems(list);
+        tableListDocManufacture.refresh();
     }
 
     private void initListeners() {
-        tableListDocPurchase.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        tableListDocManufacture.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount()==2) {
-                    editDoc((ДокументЗакупкаFX) tableListDocPurchase.getSelectionModel().getSelectedItem(), false);
+                    editDoc((ДокументПроизводствоFX) tableListDocManufacture.getSelectionModel().getSelectedItem(), false);
                     try {
                         fillTable();
                     } catch (SQLException e) {
@@ -178,9 +173,9 @@ public class TableDocPurchaseController {
 
     private void initLoader() {
         try {
-            this.fxmlLoader.setLocation(getClass().getResource("/fxml/formDocPurchase.fxml"));
+            this.fxmlLoader.setLocation(getClass().getResource("/fxml/formDocManufacture.fxml"));
             fxmlEdit = fxmlLoader.load();
-            formDocPurchaseController = fxmlLoader.getController();
+            formDocManufactureController = fxmlLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -191,7 +186,7 @@ public class TableDocPurchaseController {
     }
 
     private void updateCountLabel() {
-        labelCount.setText("Количество записей: "+listDocPurchaseImpl.getDocPurchaseList().size());
+        labelCount.setText("Количество записей: "+listDocManufactureImpl.getDocManufactureList().size());
     }
 
 }

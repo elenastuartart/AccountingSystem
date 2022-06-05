@@ -188,7 +188,6 @@ public class ДокументЗакупкаFX extends ObjectFX {
     }
 
     public void setTabPartsFX_(ObservableList<ТабЧастьЗакупкаFX> tabPartsFX_) {
-
         this.tabPartsFX_ = tabPartsFX_;
     }
 

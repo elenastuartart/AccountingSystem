@@ -1,8 +1,12 @@
-package com.stuart.controllers.документЗакупка;
+package com.stuart.controllers.документПроизводство;
 
 import com.stuart.interfaces.impls.справочники.HibernateSprNom;
+import com.stuart.interfaces.impls.справочники.HibernateSprPrStages;
 import com.stuart.models.entity.справочники.ЗаписьНоменклатура;
+import com.stuart.models.entity.справочники.ЗаписьЭтапыПроизводства;
 import com.stuart.objectsFX.документы.ТабЧастьЗакупкаFX;
+import com.stuart.objectsFX.документы.ТабЧастьИзрасходованоПроизводствоFX;
+import com.stuart.objectsFX.документы.ТабЧастьПроизведеноПроизводствоFX;
 import com.stuart.objectsFX.справочники.ЗаписьНоменклатураFX;
 import com.stuart.utils.DialogManager;
 import javafx.collections.FXCollections;
@@ -19,7 +23,7 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 
-public class EditTabPurchaseController {
+public class EditTabProducedManufactureController {
 
     @FXML
     private TextField txtNumberStr;
@@ -28,15 +32,11 @@ public class EditTabPurchaseController {
     @FXML
     private TextField txtAmount;
     @FXML
-    private TextField txtPrice;
-    @FXML
-    private TextField txtSum;
-    @FXML
     private Button btnSaveOrUpdate;
     @FXML
     private Button btnCansel;
 
-    private ТабЧастьЗакупкаFX табЧастьЗакупкаFX;
+    private ТабЧастьПроизведеноПроизводствоFX табЧастьПроизведеноПроизводствоFX;
     private boolean saveClicked = false;
     HibernateSprNom hibernateSprNom  = new HibernateSprNom();
     ЗаписьНоменклатура записьНоменклатура = new ЗаписьНоменклатура();
@@ -53,38 +53,31 @@ public class EditTabPurchaseController {
         if(!checkValues()) {
             return;
         }
-        табЧастьЗакупкаFX.setNumberStr(Integer.valueOf(txtNumberStr.getText()));
-        табЧастьЗакупкаFX.setAmount(Double.valueOf(txtAmount.getText()));
-        табЧастьЗакупкаFX.setPrice(Double.valueOf(txtPrice.getText()));
-        табЧастьЗакупкаFX.setSum(Double.valueOf(txtSum.getText()));
-        табЧастьЗакупкаFX.setNomenclatureFX_(choiseBoxNomenclature.getValue());
+        табЧастьПроизведеноПроизводствоFX.setNumberStr(Integer.valueOf(txtNumberStr.getText()));
+        табЧастьПроизведеноПроизводствоFX.setAmount(Double.valueOf(txtAmount.getText()));
+        табЧастьПроизведеноПроизводствоFX.setNomenclatureFX_(choiseBoxNomenclature.getValue());
 
         saveClicked = true;
         actionClose(event);
-
     }
 
-    public void setТабЧастьЗакупкаFX(ТабЧастьЗакупкаFX табЧастьЗакупкаFX) throws SQLException {
-        if (табЧастьЗакупкаFX == null){
+    public void setТабЧастьПроизведеноПроизводствоFX(ТабЧастьПроизведеноПроизводствоFX табЧастьПроизведеноПроизводствоFX) throws SQLException {
+        if (табЧастьПроизведеноПроизводствоFX == null) {
             return;
         }
         saveClicked = false;
-        this.табЧастьЗакупкаFX = табЧастьЗакупкаFX;
-        txtNumberStr.setText(String.valueOf(табЧастьЗакупкаFX.getNumberStr()));
-        txtAmount.setText(String.valueOf(табЧастьЗакупкаFX.getAmount()));
-        txtPrice.setText(String.valueOf(табЧастьЗакупкаFX.getPrice()));
-        txtSum.setText(String.valueOf(табЧастьЗакупкаFX.getSum()));
-        this.initChoiseBox();
+        this.табЧастьПроизведеноПроизводствоFX = табЧастьПроизведеноПроизводствоFX;
+        txtNumberStr.setText(String.valueOf(табЧастьПроизведеноПроизводствоFX.getNumberStr()));
+        txtAmount.setText(String.valueOf(табЧастьПроизведеноПроизводствоFX.getAmount()));
+        this.initChoiseBoxNomenclature();
     }
 
-    public ТабЧастьЗакупкаFX getТабЧастьЗакупкаFX() {
-        return табЧастьЗакупкаFX;
+    public ТабЧастьПроизведеноПроизводствоFX getТабЧастьПроизведеноПроизводствоFX() {
+        return табЧастьПроизведеноПроизводствоFX;
     }
 
     private boolean checkValues() {
         if(txtAmount.getText().trim().length() == 0
-                || txtPrice.getText().trim().length() == 0
-                || txtSum.getText().trim().length() == 0
                 || choiseBoxNomenclature.getValue() == null) {
             DialogManager.showInfoDialog("Ошибка", "Заполните все поля!");
             return false;
@@ -96,8 +89,7 @@ public class EditTabPurchaseController {
         return saveClicked;
     }
 
-    private void initChoiseBox() throws SQLException {
-
+    private void initChoiseBoxNomenclature() throws SQLException {
         ObservableList<ЗаписьНоменклатураFX> nomenclatureList = hibernateSprNom.findAll();
 
         ObservableList<ЗаписьНоменклатураFX> list = FXCollections.observableArrayList();
@@ -105,7 +97,7 @@ public class EditTabPurchaseController {
             list.add(nomenclatureList.get(i));
         }
 
-        this.choiseBoxNomenclature.setValue(this.табЧастьЗакупкаFX.getNomenclatureFX_());
+        this.choiseBoxNomenclature.setValue(this.табЧастьПроизведеноПроизводствоFX.getNomenclatureFX_());
 
         this.choiseBoxNomenclature.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -122,7 +114,7 @@ public class EditTabPurchaseController {
                         choiseBoxNomenclature.setOnAction(event1 ->
                         {
                             choiseBoxNomenclature.setValue(choiseBoxNomenclature.getValue());
-                            табЧастьЗакупкаFX.setNomenclatureFX_(choiseBoxNomenclature.getValue());
+                            табЧастьПроизведеноПроизводствоFX.setNomenclatureFX_(choiseBoxNomenclature.getValue());
                         });
                     }
                 }

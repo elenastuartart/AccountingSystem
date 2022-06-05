@@ -1,4 +1,4 @@
-package com.stuart.interfaces.impls.документы;
+package com.stuart.interfaces.impls.документы.закупка;
 
 import com.stuart.dao.DataAccessObject;
 import com.stuart.interfaces.ISpravochnik;
@@ -57,12 +57,9 @@ public class HibernateDocPurchase extends DataAccessObject implements ISpravochn
         try (final Session newSession = DataAccessObject.openSessionBeginTransaction()) {
             ДокументЗакупкаFX документЗакупкаFX = (ДокументЗакупкаFX) objectFX;
             Закупка документЗакупка = new Закупка();
-
             документЗакупка.setNumber();
             документЗакупка.setDate(документЗакупкаFX.getDate());
             документЗакупка.setTable_part_purchase_(документЗакупкаFX.getTabParts_());
-//            документЗакупка.setTable_part_purchase_(документЗакупкаFX.getTabParts_(документЗакупкаFX.getTabPartsFX_()));
-
             документЗакупка.setFinalSum();
             документЗакупка.setContragent_(документЗакупкаFX.getContragentFX_().getЗаписьКонтрагент_());
             документЗакупка.setPometkaProvedeniya(документЗакупкаFX.pometkaProvedenya);
@@ -110,30 +107,8 @@ public class HibernateDocPurchase extends DataAccessObject implements ISpravochn
     }
 
     @Override
-    public ObservableList<ДокументЗакупкаFX> findText(String text) {
-        Session newSession = DataAccessObject.get_session();
-        this.docPurchaseList.clear();
-        Query<Закупка> query = newSession.createQuery
-                ("select z from Закупка z where z.contragent_.name =: param ");
-        query.setParameter("param", text);
-        List<Закупка> resultList = query.getResultList();
-
-        for (int i = 0; i < resultList.size(); i++) {
-            Закупка res = resultList.get(i);
-            ДокументЗакупкаFX документЗакупкаFX = new ДокументЗакупкаFX();
-            документЗакупкаFX.setId(res.getId());
-            документЗакупкаFX.setNumber(res.getNumber());
-            документЗакупкаFX.setDate(res.getDate());
-            if(res.getPometkaProvedeniya()==true)  документЗакупкаFX.setProvedenie("Проведен"); else документЗакупкаFX.setProvedenie("Не проведен");
-            документЗакупкаFX.setFinalSum(res.getFinalSum());
-            документЗакупкаFX.setContragent(res.getContragent_());
-            документЗакупкаFX.setДокументЗакупка_(res);
-            документЗакупкаFX.setContragentFX_(документЗакупкаFX.getContragentFX_(res));
-            документЗакупкаFX.setTabParts_(документЗакупкаFX.getTabPartsFX_(res.getTable_part_purchase_()));
-            this.docPurchaseList.add(документЗакупкаFX);
-        }
-        newSession.close();
-        return docPurchaseList;
+    public ObservableList<?> findText(String text) {
+        return null;
     }
 
     @Override
@@ -141,8 +116,7 @@ public class HibernateDocPurchase extends DataAccessObject implements ISpravochn
         Session newSession = DataAccessObject.get_session();
         this.docPurchaseList.clear();
         Query<Закупка> query = newSession.createQuery
-                ("select zn from Закупка zn where zn.number =: param " +
-                        "or zn.finalSum =: param ");
+                ("select zn from Закупка zn where zn.number =: param ");
         query.setParameter("param", value);
         List<Закупка> resultList = query.getResultList();
 
@@ -157,6 +131,7 @@ public class HibernateDocPurchase extends DataAccessObject implements ISpravochn
             документЗакупкаFX.setContragent(res.getContragent_());
             документЗакупкаFX.setДокументЗакупка_(res);
             документЗакупкаFX.setContragentFX_(документЗакупкаFX.getContragentFX_(res));
+//            документЗакупкаFX.setTabParts_(res.getTable_part_purchase_());
             документЗакупкаFX.setTabParts_(документЗакупкаFX.getTabPartsFX_(res.getTable_part_purchase_()));
             this.docPurchaseList.add(документЗакупкаFX);
         }

@@ -6,11 +6,14 @@ import com.stuart.objectsFX.ObjectFX;
 import com.stuart.objectsFX.справочники.ЗаписьКонтрагентFX;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class ЗаписьНоменклатураFX extends ObjectFX {
     @Getter
     @Setter
@@ -24,19 +27,6 @@ public class ЗаписьНоменклатураFX extends ObjectFX {
 
     private ЗаписьНоменклатура записьНоменклатура_;
     private ЗаписьКонтрагентFX contragentFX_ = new ЗаписьКонтрагентFX();
-
-    public ЗаписьНоменклатураFX() {
-
-    }
-
-    public ЗаписьНоменклатураFX(Integer code, String name, String category,
-                                String subcategory, ЗаписьКонтрагент contragent) {
-        this.code = new SimpleIntegerProperty(code);
-        this.name = new SimpleStringProperty(name);
-        this.category = new SimpleStringProperty(category);
-        this.subcategory = new SimpleStringProperty(subcategory);
-        this.contragent = new SimpleStringProperty(contragent.getName());
-    }
 
     @Override
     public String toString() {
