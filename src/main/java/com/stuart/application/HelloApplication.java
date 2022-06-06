@@ -1,5 +1,6 @@
 package com.stuart.application;
 
+import com.stuart.controllers.MainWindowController;
 import com.stuart.controllers.документЗакупка.TableDocPurchaseController;
 import com.stuart.controllers.документПроизводство.TableDocManufactureController;
 import com.stuart.controllers.документРеализация.TableDocSaleController;
@@ -56,18 +57,18 @@ public class HelloApplication extends Application {
 //        primaryStage.setMinWidth(600);
 //        primaryStage.setScene(new Scene(fxmlMain, 300, 275));
 //        primaryStage.show();
-
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/fxml/tableDocPurchase.fxml"));
-        Parent fxmlMain = fxmlLoader.load();
-        TableDocPurchaseController mainController = fxmlLoader.getController();
-        mainController.setMainStage(primaryStage);
-
-        primaryStage.setTitle("Документы по закупкам");
-        primaryStage.setMinHeight(800);
-        primaryStage.setMinWidth(600);
-        primaryStage.setScene(new Scene(fxmlMain, 300, 275));
-        primaryStage.show();
+//
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(getClass().getResource("/fxml/tableDocPurchase.fxml"));
+//        Parent fxmlMain = fxmlLoader.load();
+//        TableDocPurchaseController mainController = fxmlLoader.getController();
+//        mainController.setMainStage(primaryStage);
+//
+//        primaryStage.setTitle("Документы по закупкам");
+//        primaryStage.setMinHeight(800);
+//        primaryStage.setMinWidth(600);
+//        primaryStage.setScene(new Scene(fxmlMain, 300, 275));
+//        primaryStage.show();
 
 //        FXMLLoader fxmlLoader = new FXMLLoader();
 //        fxmlLoader.setLocation(getClass().getResource("/fxml/tableDocManufacture.fxml"));
@@ -92,6 +93,19 @@ public class HelloApplication extends Application {
 //        primaryStage.setMinWidth(600);
 //        primaryStage.setScene(new Scene(fxmlMain, 300, 275));
 //        primaryStage.show();
+
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/fxml/mainWindow.fxml"));
+        Parent fxmlMain = fxmlLoader.load();
+        MainWindowController mainController = fxmlLoader.getController();
+        mainController.setMainStage(primaryStage);
+
+        primaryStage.setTitle("Учет хозяйственной деятельности художественной мастерской");
+        primaryStage.setMinHeight(540);
+        primaryStage.setMinWidth(768);
+        primaryStage.setResizable(false);
+        primaryStage.setScene(new Scene(fxmlMain, 768, 540));
+        primaryStage.show();
     }
 
 

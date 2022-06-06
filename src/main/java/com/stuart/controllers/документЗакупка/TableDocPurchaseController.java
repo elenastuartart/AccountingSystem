@@ -104,8 +104,8 @@ public class TableDocPurchaseController {
         if(editDialogStage == null) {
             editDialogStage = new Stage();
             editDialogStage.setTitle("Создать/редактировать документ Закупка");
-            editDialogStage.setMinWidth(600);
-            editDialogStage.setMinHeight(400);
+            editDialogStage.setMinWidth(520);
+            editDialogStage.setMinHeight(688);
             editDialogStage.setResizable(false);
             editDialogStage.setScene(new Scene(fxmlEdit));
             editDialogStage.initModality(Modality.WINDOW_MODAL);
