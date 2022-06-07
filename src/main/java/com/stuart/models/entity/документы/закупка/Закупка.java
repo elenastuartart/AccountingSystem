@@ -132,6 +132,7 @@ public class Закупка extends Документ {
         var СтрРегистра = new ЗаписьРегистраВзаиморасчеты();
         СтрРегистра.setDate(this.getDate());
         СтрРегистра.setContragent_(this.getContragent_());
+        СтрРегистра.setIdKontragent(this.getContragent_().getId());
         СтрРегистра.setSum(-(this.getFinalSum()));
         СтрРегистра.setTypeDoc(getType());
         СтрРегистра.setIdDoc(this.getId());

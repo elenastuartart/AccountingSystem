@@ -116,6 +116,53 @@ public class HelloApplication extends Application {
 
         try (final Session newSession = DataAccessObject.openSessionBeginTransaction()) {
 
+            // ЗАПРОС ОСТАТКИ
+//            select
+//            Nom.name AS Nomenclature, // Номенклатура
+//            SUM(Registr.amount) AS Amount, // Количество (остаток)
+//            SUM(Registr.sum) AS Sum // Стоимость остатков
+//            from
+//            register_products_in_stock AS Registr
+//            JOIN nomenclature AS Nom
+//            ON Registr.idNom = Nom.id
+//            GROUP BY Nom.name
+
+            // ЗАПРОС СЕБЕСТОИМОСТЬ
+//            select
+//            Nom.name AS Nomenclature, // Номенклатура
+//            SUM(Registr.amount) AS Amount, // Количество (реализовано)
+//            SUM(Registr.profit) AS Profit, // Сумма (прибыль)
+//            AVG(Registr.profitByUnit) AS profitByUnit, // Прибыль за единицу товара
+//            SUM(Registr.sumCostprice) AS sumCostprice // Себестоимость
+//            from
+//            register_costprice AS Registr
+//            JOIN nomenclature AS Nom
+//            ON Registr.idNom = Nom.id
+//            GROUP BY Nom.name
+
+            // ИСТОРИЯ ДВИЖЕНИЯ ДенСсретв
+//            select
+//            Registr.date AS date, // Дата
+//            contragent.name AS Contragent, // Контаргент
+//            Registr.sum AS Oborot // Оборот
+//                    from
+//            register_calculation AS Registr
+//            JOIN contragent AS contragent
+//            ON Registr.contragent_id = contragent.id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //            Закупка закупка = Закупка.findObjectByValue("number", 69038659);
 //            Реализация реализация = Реализация.findObjectByValue("number", 18116225);
 //////            закупка.Проведение();

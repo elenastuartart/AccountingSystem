@@ -6,16 +6,22 @@ import com.stuart.controllers.документРеализация.TableDocSaleC
 import com.stuart.controllers.контрагенты.TableKAController;
 import com.stuart.controllers.номенклатура.TableNomController;
 import com.stuart.controllers.этапыПроизводства.TablePrStagesController;
+import com.stuart.interfaces.impls.документы.HibernateReportCostprice;
+import com.stuart.interfaces.impls.документы.HibernateReportDvizhenieDS;
+import com.stuart.interfaces.impls.документы.HibernateReportGoodsInStock;
+import com.stuart.objectsFX.регистры.РегистрВзаиморасчетыFX;
+import com.stuart.objectsFX.регистры.РегистрСебестоимостьFX;
+import com.stuart.objectsFX.регистры.РегистрТовНаСкладеFX;
+import com.stuart.objectsFX.справочники.ЗаписьКонтрагентFX;
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -25,6 +31,7 @@ import org.hibernate.annotations.SqlFragmentAlias;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 
 public class MainWindowController {
     @FXML
@@ -41,16 +48,49 @@ public class MainWindowController {
     private Button btnDocSale;
     @FXML
     private Tab tabMain;
+
     @FXML
-    private Button btnOk;
+    private Tab tabReportAvailable;
     @FXML
-    private Tab tabReport1;
+    private TableView tableReportAvailable;
     @FXML
-    private Tab tabReport2;
+    private TableColumn<РегистрТовНаСкладеFX, String> columnNomenclatureAvailable;
     @FXML
-    private Label labelHello;
+    private TableColumn<РегистрТовНаСкладеFX, String> columnAmountAvailable;
     @FXML
-    private Label labelHello1;
+    private TableColumn<РегистрТовНаСкладеFX, String> columnPriceAvailable;
+    @FXML
+    private Button btnOkReportAvailable;
+
+    @FXML
+    private Tab tabReportCostprice;
+    @FXML
+    private TableView tableReportCostrice;
+    @FXML
+    private TableColumn<РегистрСебестоимостьFX, String> columnNomenclatureCostprice;
+    @FXML
+    private TableColumn<РегистрСебестоимостьFX, String> columnAmountCostprice;
+    @FXML
+    private TableColumn<РегистрСебестоимостьFX, String> columnProfitCostprice;
+    @FXML
+    private TableColumn<РегистрСебестоимостьFX, String> columnProfitByUnitCostprice;
+    @FXML
+    private TableColumn<РегистрСебестоимостьFX, String> columnCostpriceCostprice;
+    @FXML
+    private Button btnOkReportCostprice;
+
+    @FXML
+    private Tab tabReportCashMoney;
+    @FXML
+    private TableView tableReportCashe;
+    @FXML
+    private TableColumn<РегистрВзаиморасчетыFX, String> columnDateCash;
+    @FXML
+    private TableColumn<РегистрВзаиморасчетыFX, String> columnContragentCash;
+    @FXML
+    private TableColumn<РегистрВзаиморасчетыFX, String> columnVolumeCash;
+    @FXML
+    private Button btnOkReportCash;
 
     private static final String fxmlSprNom = "/fxml/tableNom.fxml";
     private static final String fxmlSprKa = "/fxml/tableKA.fxml";
@@ -89,6 +129,9 @@ public class MainWindowController {
     private boolean initDocManufactureController = false;
     private boolean initDocSaleController = false;
 
+    private HibernateReportGoodsInStock hibernateReportGoodsInStock = new HibernateReportGoodsInStock();
+    private HibernateReportCostprice hibernateReportCostprice = new HibernateReportCostprice();
+    private HibernateReportDvizhenieDS hibernateReportDvizhenieDS = new HibernateReportDvizhenieDS();
 
     @FXML
     private void showStageSprNom () {
@@ -240,15 +283,6 @@ public class MainWindowController {
             e.printStackTrace();
         }
     }
-    private void setupClearButtonField(CustomTextField customTextField) {
-        try {
-            Method m = TextFields.class.getDeclaredMethod("setupClearButtonField", TextField.class, ObjectProperty.class);
-            m.setAccessible(true);
-            m.invoke(null, customTextField, customTextField.rightProperty());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     void actionButtonPressed(ActionEvent actionEvent) {
@@ -302,10 +336,6 @@ public class MainWindowController {
                 }
                 showStageDocSale();
                 break;
-            case "btnOk" :
-                labelHello.setText("Добро пожаловать в систему");
-                labelHello1.setText("Учет хозяйственной деятельности художественной мастерской");
-                break;
         }
 
     }
@@ -314,7 +344,56 @@ public class MainWindowController {
         this.mainStage = mainStage;
     }
 
-    public boolean isInitSprNomController() {
-        return initSprNomController;
+    @FXML
+    private void initializeReportOstatki() throws SQLException {
+        columnNomenclatureAvailable.setCellValueFactory(new PropertyValueFactory<РегистрТовНаСкладеFX, String>("nomenclature"));
+        columnAmountAvailable.setCellValueFactory(new PropertyValueFactory<РегистрТовНаСкладеFX, String>("amount"));
+        columnPriceAvailable.setCellValueFactory(new PropertyValueFactory<РегистрТовНаСкладеFX, String>("price"));
+
+        ObservableList<РегистрТовНаСкладеFX> list = hibernateReportGoodsInStock.findAll();
+        tableReportAvailable.setItems(list);
+    }
+
+    @FXML
+    private void initializeReportCostprice() {
+        columnNomenclatureCostprice.setCellValueFactory(new PropertyValueFactory<РегистрСебестоимостьFX, String>("nomenclature"));
+        columnAmountCostprice.setCellValueFactory(new PropertyValueFactory<РегистрСебестоимостьFX, String>("amount"));
+        columnProfitCostprice.setCellValueFactory(new PropertyValueFactory<РегистрСебестоимостьFX, String>("profit"));
+        columnProfitByUnitCostprice.setCellValueFactory(new PropertyValueFactory<РегистрСебестоимостьFX, String>("profitByUnit"));
+        columnCostpriceCostprice.setCellValueFactory(new PropertyValueFactory<РегистрСебестоимостьFX, String>("costprice"));
+
+        ObservableList<РегистрСебестоимостьFX> list = hibernateReportCostprice.findAll();
+        tableReportCostrice.setItems(list);
+    }
+
+    @FXML
+    private void initializeReportDvizhenieDS() {
+        columnDateCash.setCellValueFactory(new PropertyValueFactory<РегистрВзаиморасчетыFX, String>("date"));
+        columnContragentCash.setCellValueFactory(new PropertyValueFactory<РегистрВзаиморасчетыFX, String>("contragent"));
+        columnVolumeCash.setCellValueFactory(new PropertyValueFactory<РегистрВзаиморасчетыFX, String>("sum"));
+
+        ObservableList<РегистрВзаиморасчетыFX> list = hibernateReportDvizhenieDS.findAll();
+        tableReportCashe.setItems(list);
+    }
+
+    @FXML
+    void actionOk(ActionEvent actionEvent) throws SQLException {
+        Object source = actionEvent.getSource();
+        if (!(source instanceof Button)) {
+            return;
+        }
+        Button clickedButton = (Button) source;
+
+        switch (clickedButton.getId()) {
+            case "btnOkReportAvailable":
+                initializeReportOstatki();
+                break;
+            case "btnOkReportCostprice":
+                initializeReportCostprice();
+                break;
+            case "btnOkReportCash":
+                initializeReportDvizhenieDS();
+                break;
+        }
     }
 }

@@ -28,6 +28,8 @@ public class ЗаписьРегистраВзаиморасчеты extends За
     @Column(columnDefinition = "BINARY(16)")
     private UUID idDoc;
     private String typeDoc;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID idKontragent;
     @Transient
     private Документ registrarDoc;
 
@@ -52,7 +54,8 @@ public class ЗаписьРегистраВзаиморасчеты extends За
                 || this.getContragent_()  == null
                 || this.getSum() == null
                 || this.idDoc == null
-                || this.typeDoc == null)
+                || this.typeDoc == null
+                || this.idKontragent == null)
             return false;
         else
             return true;
